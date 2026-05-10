@@ -124,8 +124,8 @@ Six files, four conformance commits, zero changes to behavior, zero changes to A
 
 ## Open questions for the reviewer
 
-1. **Cancellation-swallowing fix** — should the two `ARCPRuntime` catches be fixed in a separate PR? I have a one-line patch ready but bundling it here violates the "no behavioral drift" rule of a conformance pass.
-2. **TODO/FIXME convention** — `CONFORMANCE.md`'s claim of `// TODO(v0.2):` markers is currently false. Drop the claim, or unblock the convention via `ForbiddenComment` configuration?
+1. ~~**Cancellation-swallowing fix**~~ — resolved on branch `fix/runtime-cancellation-swallow` (commit `b1d408e`). Fix is the documented `catch (e: CancellationException) { throw e }` pattern at both sites. A clean unit-level regression test would require log-capture infrastructure or a non-supervisor scope wiring change; both are out of scope for the fix itself.
+2. ~~**TODO/FIXME convention**~~ — resolved on this branch by dropping the false claim from `CONFORMANCE.md`'s status legend. Per-row Notes already enumerate each deferral; the inline-marker convention was never implemented and is not worth introducing now (the new `ForbiddenComment` detekt rule would block it anyway).
 3. **API dump review** — `lib/api/lib.api` (3,317 lines) is now committed. Worth a one-pass human review before merging this branch — anything in there that's exposed by accident is now a backwards-compatibility commitment. The mangled-name signature `ARCPClient.send-WmJQgEs` (value-class param hash) in particular: if you ever unwrap that value class, the ABI break will be invisible without this validator.
 4. **CLAUDE.md** — there is no project-conventions doc. This pass would have been faster with one. Optional follow-up: write a short `CLAUDE.md` codifying the conventions that are now machine-enforced (`explicitApi()`, no wildcard imports, no TODOs in main, etc.) so future humans and future agents share the same rule set.
 

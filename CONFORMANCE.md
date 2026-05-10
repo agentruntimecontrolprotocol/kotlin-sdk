@@ -6,7 +6,7 @@ This document tracks the implementation status of every section of
 Status legend:
 
 - ✅ **Implemented** — full surface present, tests cover the spec wording.
-- 🟡 **Partial** — core present, edges deferred (v0.2 candidate). `// TODO(v0.2):` markers remain in code.
+- 🟡 **Partial** — core present, edges deferred (v0.2 candidate). The specific deferral is described in each row's Notes column.
 - ⏭️ **Deferred** — declared on the wire but unimplemented in runtime/client. `ARCPException.Unimplemented` is thrown if invoked.
 - ❌ **Not started** — neither wire nor runtime support.
 
