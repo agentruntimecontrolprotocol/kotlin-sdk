@@ -1,0 +1,51 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+complexity:
+  TooManyFunctions:
+    active: false
+  LongParameterList:
+    active: false
+  LongMethod:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+  LargeClass:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  ReturnCount:
+    active: false
+  UnusedPrivateMember:
+    active: true
+  ForbiddenComment:
+    active: false
+  WildcardImport:
+    active: false
+  MaxLineLength:
+    active: false
+  ThrowsCount:
+    active: false
+
+naming:
+  MatchingDeclarationName:
+    active: false
+  FunctionNaming:
+    active: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+  SwallowedException:
+    active: false
+
+comments:
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false

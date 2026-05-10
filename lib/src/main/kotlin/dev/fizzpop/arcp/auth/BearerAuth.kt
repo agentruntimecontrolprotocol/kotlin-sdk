@@ -1,0 +1,23 @@
+package dev.fizzpop.arcp.auth
+
+import dev.fizzpop.arcp.error.ARCPException
+
+/**
+ * Validates `bearer` tokens at session establishment (RFC §8.2).
+ *
+ * Implementations consult an external trust store and return a non-null
+ * principal on success or throw [ARCPException.Unauthenticated] on failure.
+ */
+public fun interface BearerAuth {
+    /** Returns the authenticated principal for [token], or throws on rejection. */
+    public fun verify(token: String): String
+}
+
+/** Pre-shared-secret bearer auth for tests and minimal deployments. */
+public class StaticBearerAuth(
+    private val tokens: Map<String, String>,
+) : BearerAuth {
+    override fun verify(token: String): String =
+        tokens[token]
+            ?: throw ARCPException.Unauthenticated("invalid bearer token")
+}

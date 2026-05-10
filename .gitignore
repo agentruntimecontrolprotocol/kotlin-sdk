@@ -1,0 +1,44 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-app.setting
+
+# Kotlin
+.kotlin/
+
+# Build outputs
+out/
+classes/
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE — IntelliJ / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE — VS Code
+.vscode/
+
+# IDE — Eclipse
+.settings/
+.classpath
+.project
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Local secrets
+local.properties
+.env
+.env.local
+
+# Conformance pass discovery (per Kotlin conformance prompt)
+.claude/kotlin-conformance-discovery.md
