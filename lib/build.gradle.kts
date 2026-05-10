@@ -60,7 +60,7 @@ publishing {
             pom {
                 name.set("ARCP Kotlin SDK")
                 description.set("Reference Kotlin implementation of the Agent Runtime Control Protocol (ARCP) v1.0.")
-                url.set("https://github.com/fizzpop/arcp")
+                url.set("https://github.com/agentruntimecontrolprotocol/kotlin-sdk")
                 licenses {
                     license {
                         name.set("Apache-2.0")
@@ -69,14 +69,14 @@ publishing {
                 }
                 developers {
                     developer {
-                        id.set("fizzpop")
-                        name.set("Fizzpop Engineering")
+                        id.set("arcp-project")
+                        name.set("ARCP project")
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/fizzpop/arcp.git")
-                    developerConnection.set("scm:git:ssh://github.com/fizzpop/arcp.git")
-                    url.set("https://github.com/fizzpop/arcp")
+                    connection.set("scm:git:git://github.com/agentruntimecontrolprotocol/kotlin-sdk.git")
+                    developerConnection.set("scm:git:ssh://github.com/agentruntimecontrolprotocol/kotlin-sdk.git")
+                    url.set("https://github.com/agentruntimecontrolprotocol/kotlin-sdk")
                 }
             }
         }

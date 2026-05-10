@@ -54,21 +54,21 @@ cd kotlin-sdk
               +-----------------+
 ```
 
-- The **envelope** (`dev.fizzpop.arcp.envelope.Envelope`) is the canonical
+- The **envelope** (`dev.arcp.envelope.Envelope`) is the canonical
   message container; its custom serializer hoists the `type` discriminator to
   the top level per RFC §6.1.
-- The **message catalog** (`dev.fizzpop.arcp.messages.*`) declares every RFC
+- The **message catalog** (`dev.arcp.messages.*`) declares every RFC
   §6.2 type as a `@SerialName(...) data class : MessageType`. `when` over a
   `MessageType` is exhaustive.
-- The **runtime** (`dev.fizzpop.arcp.runtime.ARCPRuntime`) drives the session
+- The **runtime** (`dev.arcp.runtime.ARCPRuntime`) drives the session
   handshake, dispatches incoming envelopes via exhaustive `when`, and emits
   responses.
-- The **client** (`dev.fizzpop.arcp.client.ARCPClient`) speaks the same
+- The **client** (`dev.arcp.client.ARCPClient`) speaks the same
   protocol from the other side.
-- The **transport** (`dev.fizzpop.arcp.transport.Transport`) abstracts wire
+- The **transport** (`dev.arcp.transport.Transport`) abstracts wire
   delivery. v0.1 ships `MemoryTransport` for tests; WebSocket and stdio are
   v0.2.
-- The **event log** (`dev.fizzpop.arcp.store.EventLog`) is an append-only
+- The **event log** (`dev.arcp.store.EventLog`) is an append-only
   SQLite store with `(session_id, message_id)` idempotency, replay, and
   logical idempotency-key persistence (RFC §6.4).
 

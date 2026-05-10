@@ -12,7 +12,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.fizzpop.arcp.samples.Sample01MinimalSessionKt")
+    mainClass.set("dev.arcp.samples.Sample01MinimalSessionKt")
 }
 
 dependencies {
@@ -24,12 +24,12 @@ dependencies {
 
 val sampleClasses =
     mapOf(
-        "run01" to "dev.fizzpop.arcp.samples.Sample01MinimalSessionKt",
-        "run02" to "dev.fizzpop.arcp.samples.Sample02ToolInvokeWithProgressKt",
-        "run03" to "dev.fizzpop.arcp.samples.Sample03HumanInputRequestKt",
-        "run04" to "dev.fizzpop.arcp.samples.Sample04PermissionChallengeKt",
-        "run05" to "dev.fizzpop.arcp.samples.Sample05ObserverSubscriptionKt",
-        "run06" to "dev.fizzpop.arcp.samples.Sample06RelayHumanInTheLoopKt",
+        "run01" to "dev.arcp.samples.Sample01MinimalSessionKt",
+        "run02" to "dev.arcp.samples.Sample02ToolInvokeWithProgressKt",
+        "run03" to "dev.arcp.samples.Sample03HumanInputRequestKt",
+        "run04" to "dev.arcp.samples.Sample04PermissionChallengeKt",
+        "run05" to "dev.arcp.samples.Sample05ObserverSubscriptionKt",
+        "run06" to "dev.arcp.samples.Sample06RelayHumanInTheLoopKt",
     )
 
 sampleClasses.forEach { (name, mainClassFqn) ->

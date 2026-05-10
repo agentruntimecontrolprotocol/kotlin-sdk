@@ -12,7 +12,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.fizzpop.arcp.cli.MainKt")
+    mainClass.set("dev.arcp.cli.MainKt")
     applicationName = "arcp"
 }
 

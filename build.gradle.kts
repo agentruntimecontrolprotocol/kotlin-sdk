@@ -8,7 +8,7 @@ plugins {
 }
 
 allprojects {
-    group = "dev.fizzpop.arcp"
+    group = "dev.arcp"
     version = "0.1.0"
 }
 
