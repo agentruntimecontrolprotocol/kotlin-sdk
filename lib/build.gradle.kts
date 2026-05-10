@@ -10,6 +10,7 @@ plugins {
 
 kotlin {
     jvmToolchain(21)
+    explicitApi()
     compilerOptions {
         allWarningsAsErrors = true
         freeCompilerArgs.addAll(

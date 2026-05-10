@@ -15,6 +15,7 @@ import dev.fizzpop.arcp.messages.SessionOpen
 import dev.fizzpop.arcp.messages.SessionRejected
 import dev.fizzpop.arcp.messages.SessionUnauthenticated
 import dev.fizzpop.arcp.transport.Transport
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 /**
@@ -89,7 +90,7 @@ public class ARCPClient(
     }
 
     /** Returns the underlying transport's incoming-envelope flow. */
-    public fun receive() = transport.receive()
+    public fun receive(): Flow<Envelope> = transport.receive()
 
     override fun close() {
         transport.close()
