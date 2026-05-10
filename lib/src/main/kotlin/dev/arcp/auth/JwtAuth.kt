@@ -4,6 +4,7 @@ import com.nimbusds.jose.JWSVerifier
 import com.nimbusds.jose.crypto.MACVerifier
 import com.nimbusds.jwt.SignedJWT
 import dev.arcp.error.ARCPException
+import java.util.Date
 
 /**
  * Validates `signed_jwt` tokens at session establishment (RFC §8.2).
@@ -38,6 +39,17 @@ public class JwtAuth(
         val sub = claims.subject
         if (sub.isNullOrBlank()) {
             throw ARCPException.Unauthenticated("JWT missing sub claim")
+        }
+        val now = Date()
+        claims.expirationTime?.let { exp ->
+            if (!exp.after(now)) {
+                throw ARCPException.Unauthenticated("JWT expired")
+            }
+        }
+        claims.notBeforeTime?.let { nbf ->
+            if (nbf.after(now)) {
+                throw ARCPException.Unauthenticated("JWT not yet valid")
+            }
         }
         return sub
     }

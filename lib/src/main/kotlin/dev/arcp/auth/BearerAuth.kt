@@ -1,6 +1,8 @@
 package dev.arcp.auth
 
 import dev.arcp.error.ARCPException
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 /**
  * Validates `bearer` tokens at session establishment (RFC §8.2).
@@ -17,7 +19,21 @@ public fun interface BearerAuth {
 public class StaticBearerAuth(
     private val tokens: Map<String, String>,
 ) : BearerAuth {
-    override fun verify(token: String): String =
-        tokens[token]
-            ?: throw ARCPException.Unauthenticated("invalid bearer token")
+    override fun verify(token: String): String {
+        val presented = token.toByteArray(StandardCharsets.UTF_8)
+        var principal: String? = null
+        for ((secret, sub) in tokens) {
+            val candidate = secret.toByteArray(StandardCharsets.UTF_8)
+            if (candidate.size != presented.size) {
+                continue
+            }
+            if (MessageDigest.isEqual(candidate, presented)) {
+                if (principal != null) {
+                    throw ARCPException.Unauthenticated("ambiguous bearer token")
+                }
+                principal = sub
+            }
+        }
+        return principal ?: throw ARCPException.Unauthenticated("invalid bearer token")
+    }
 }

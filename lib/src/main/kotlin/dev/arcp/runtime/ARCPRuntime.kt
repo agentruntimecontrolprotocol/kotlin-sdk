@@ -25,6 +25,7 @@ import dev.arcp.messages.SessionUnauthenticated
 import dev.arcp.messages.TrustLevel
 import dev.arcp.transport.Transport
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +77,8 @@ public class ARCPRuntime(
             val opener =
                 try {
                     transport.receive().first()
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     log.warn(e) { "transport closed before session.open" }
                     return@launch
@@ -96,6 +99,8 @@ public class ARCPRuntime(
             transport.receive().collect { env ->
                 handleEnvelope(env, transport)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             log.info(e) { "session ended" }
         }
