@@ -16,15 +16,32 @@ complexity:
 
 style:
   MagicNumber:
+    # Off intentionally: in this codebase the only matches are JDBC positional
+    # parameter indices (ps.setString(N, ...)), which is not what the rule is
+    # for. Re-evaluate if/when business logic with literal constants appears.
     active: false
   ReturnCount:
     active: false
   UnusedPrivateMember:
     active: true
   ForbiddenComment:
-    active: false
+    # Catches stray TODO:, FIXME:, STOPSHIP: in main source. Currently zero
+    # hits — the codebase tracks deferred work in CONFORMANCE.md and PLAN.md
+    # rather than inline. This locks that convention in.
+    active: true
+    comments:
+      - reason: 'TODO marker — track deferred work in CONFORMANCE.md / PLAN.md instead'
+        value: '\bTODO:'
+      - reason: 'FIXME marker — open an issue or fix it'
+        value: '\bFIXME:'
+      - reason: 'STOPSHIP marker — must not land'
+        value: '\bSTOPSHIP:'
+      - reason: 'XXX marker — clarify or replace'
+        value: '\bXXX:'
   WildcardImport:
-    active: false
+    # Codebase has zero wildcard imports. ktlint's no-wildcard-imports rule
+    # is also enabled in .editorconfig; this is detekt's belt-and-suspenders.
+    active: true
   MaxLineLength:
     active: false
   ThrowsCount:
