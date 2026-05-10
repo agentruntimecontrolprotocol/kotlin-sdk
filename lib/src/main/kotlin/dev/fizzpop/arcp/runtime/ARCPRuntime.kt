@@ -34,6 +34,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 
@@ -76,6 +77,8 @@ public class ARCPRuntime(
             val opener =
                 try {
                     transport.receive().first()
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     log.warn(e) { "transport closed before session.open" }
                     return@launch
@@ -96,6 +99,8 @@ public class ARCPRuntime(
             transport.receive().collect { env ->
                 handleEnvelope(env, transport)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             log.info(e) { "session ended" }
         }
