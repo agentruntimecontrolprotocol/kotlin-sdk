@@ -10,6 +10,8 @@ gradle-app.setting
 # Build outputs
 out/
 classes/
+bin/
+**/bin/
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
 
@@ -20,7 +22,11 @@ classes/
 *.ipr
 
 # IDE — VS Code
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
 
 # IDE — Eclipse
 .settings/
