@@ -3207,6 +3207,53 @@ public final class dev/fizzpop/arcp/runtime/ARCPRuntime$Companion {
 	public final fun getDEFAULT_SESSION_LEASE-UwyO8pc ()J
 }
 
+public final class dev/fizzpop/arcp/runtime/ArtifactBody {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[BLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-PZK2a5k ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()J
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lkotlinx/datetime/Instant;
+	public final fun component6 ()[B
+	public final fun copy-wKdI6os (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[B)Ldev/fizzpop/arcp/runtime/ArtifactBody;
+	public static synthetic fun copy-wKdI6os$default (Ldev/fizzpop/arcp/runtime/ArtifactBody;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[BILjava/lang/Object;)Ldev/fizzpop/arcp/runtime/ArtifactBody;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getBytes ()[B
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public final fun getMediaType ()Ljava/lang/String;
+	public final fun getSha256 ()Ljava/lang/String;
+	public final fun getSize ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/fizzpop/arcp/runtime/ArtifactStore : java/lang/AutoCloseable {
+	public static final field Companion Ldev/fizzpop/arcp/runtime/ArtifactStore$Companion;
+	public static final field SCHEMA_RESOURCE Ljava/lang/String;
+	public synthetic fun <init> (Ljava/sql/Connection;JJJZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	public final fun fetch-xsmdINA (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getDefaultRetention-UwyO8pc ()J
+	public final fun getMaxRetention-UwyO8pc ()J
+	public final fun put-MfojTlk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun put-MfojTlk$default (Ldev/fizzpop/arcp/runtime/ArtifactStore;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun putBase64-MfojTlk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun putBase64-MfojTlk$default (Ldev/fizzpop/arcp/runtime/ArtifactStore;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun release-xsmdINA (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun sweepExpired (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/fizzpop/arcp/runtime/ArtifactStore$Companion {
+	public final fun adopt-oW5mbrw (Ljava/sql/Connection;JJJ)Ldev/fizzpop/arcp/runtime/ArtifactStore;
+	public static synthetic fun adopt-oW5mbrw$default (Ldev/fizzpop/arcp/runtime/ArtifactStore$Companion;Ljava/sql/Connection;JJJILjava/lang/Object;)Ldev/fizzpop/arcp/runtime/ArtifactStore;
+	public final fun getDEFAULT_RETENTION-UwyO8pc ()J
+	public final fun getDEFAULT_SWEEP_INTERVAL-UwyO8pc ()J
+	public final fun getMAX_RETENTION-UwyO8pc ()J
+	public final fun openInMemory-WzaCiaA (JJJ)Ldev/fizzpop/arcp/runtime/ArtifactStore;
+	public static synthetic fun openInMemory-WzaCiaA$default (Ldev/fizzpop/arcp/runtime/ArtifactStore$Companion;JJJILjava/lang/Object;)Ldev/fizzpop/arcp/runtime/ArtifactStore;
+}
+
 public final class dev/fizzpop/arcp/runtime/CapabilityNegotiation {
 	public fun <init> (Ldev/fizzpop/arcp/messages/Capabilities;Ljava/util/List;)V
 	public final fun component1 ()Ldev/fizzpop/arcp/messages/Capabilities;
@@ -3277,6 +3324,24 @@ public final class dev/fizzpop/arcp/runtime/SessionState$Unauthenticated : dev/f
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/fizzpop/arcp/runtime/SubscriptionManager {
+	public static final field Companion Ldev/fizzpop/arcp/runtime/SubscriptionManager$Companion;
+	public static final field DEFAULT_EXTRA_BUFFER I
+	public static final field DEFAULT_REPLAY_BUFFER I
+	public fun <init> ()V
+	public fun <init> (Ldev/fizzpop/arcp/store/EventLog;I)V
+	public synthetic fun <init> (Ldev/fizzpop/arcp/store/EventLog;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun compile (Ldev/fizzpop/arcp/messages/SubscriptionFilter;)Lkotlin/jvm/functions/Function1;
+	public final fun getLiveEvents ()Lkotlinx/coroutines/flow/Flow;
+	public final fun open-Q0tPE-M (Ljava/lang/String;Ldev/fizzpop/arcp/messages/SubscriptionFilter;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun open-Q0tPE-M$default (Ldev/fizzpop/arcp/runtime/SubscriptionManager;Ljava/lang/String;Ldev/fizzpop/arcp/messages/SubscriptionFilter;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public final fun publish (Ldev/fizzpop/arcp/envelope/Envelope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun toSubscribeEvent-0aaxZY8 (Ldev/fizzpop/arcp/envelope/Envelope;Ljava/lang/String;)Ldev/fizzpop/arcp/envelope/Envelope;
+}
+
+public final class dev/fizzpop/arcp/runtime/SubscriptionManager$Companion {
+}
+
 public final class dev/fizzpop/arcp/store/EventLog : java/lang/AutoCloseable {
 	public static final field Companion Ldev/fizzpop/arcp/store/EventLog$Companion;
 	public static final field SCHEMA_RESOURCE Ljava/lang/String;
@@ -3293,6 +3358,32 @@ public final class dev/fizzpop/arcp/store/EventLog : java/lang/AutoCloseable {
 public final class dev/fizzpop/arcp/store/EventLog$Companion {
 	public final fun openFile (Ljava/nio/file/Path;)Ldev/fizzpop/arcp/store/EventLog;
 	public final fun openInMemory ()Ldev/fizzpop/arcp/store/EventLog;
+}
+
+public final class dev/fizzpop/arcp/trace/TraceContext : kotlin/coroutines/AbstractCoroutineContextElement {
+	public static final field Key Ldev/fizzpop/arcp/trace/TraceContext$Key;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-1OD-JnM ()Ljava/lang/String;
+	public final fun component2-Aw141zw ()Ljava/lang/String;
+	public final fun component3-lN-EnU8 ()Ljava/lang/String;
+	public final fun copy-mRlExQQ (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/fizzpop/arcp/trace/TraceContext;
+	public static synthetic fun copy-mRlExQQ$default (Ldev/fizzpop/arcp/trace/TraceContext;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/fizzpop/arcp/trace/TraceContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParentSpanId-lN-EnU8 ()Ljava/lang/String;
+	public final fun getSpanId-Aw141zw ()Ljava/lang/String;
+	public final fun getTraceId-1OD-JnM ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/fizzpop/arcp/trace/TraceContext$Key : kotlin/coroutines/CoroutineContext$Key {
+	public final fun newRoot ()Ldev/fizzpop/arcp/trace/TraceContext;
+}
+
+public final class dev/fizzpop/arcp/trace/TraceContextKt {
+	public static final fun currentTrace (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun withSpan (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/fizzpop/arcp/transport/MemoryTransport : dev/fizzpop/arcp/transport/Transport {
