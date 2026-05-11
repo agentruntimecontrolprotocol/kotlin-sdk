@@ -12,7 +12,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.arcp.samples.Sample01MinimalSessionKt")
+    mainClass.set("com.arcp.samples.subscriptions.MainKt")
 }
 
 dependencies {
@@ -24,13 +24,6 @@ dependencies {
 
 val sampleClasses =
     mapOf(
-        "run01" to "dev.arcp.samples.Sample01MinimalSessionKt",
-        "run02" to "dev.arcp.samples.Sample02ToolInvokeWithProgressKt",
-        "run03" to "dev.arcp.samples.Sample03HumanInputRequestKt",
-        "run04" to "dev.arcp.samples.Sample04PermissionChallengeKt",
-        "run05" to "dev.arcp.samples.Sample05ObserverSubscriptionKt",
-        "run06" to "dev.arcp.samples.Sample06RelayHumanInTheLoopKt",
-        // RFC-0001 v2 walkthroughs (com.arcp.samples.*).
         "runSubscriptions" to "com.arcp.samples.subscriptions.MainKt",
         "runLeases" to "com.arcp.samples.leases.MainKt",
         "runLeaseRevocation" to "com.arcp.samples.lease_revocation.MainKt",
