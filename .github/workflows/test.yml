@@ -1,0 +1,85 @@
+# CI workflow for kotlin-sdk (Gradle, JDK 21).
+#
+# Action pinning policy:
+#   - First-party actions (actions/*) are pinned to a major tag.
+#   - Third-party actions are pinned to a full commit SHA with a version
+#     comment alongside.
+name: test
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.editorconfig'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.editorconfig'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # lib/build.gradle.kts pins kotlin.jvmToolchain(21). foojay-resolver
+        # auto-provisions matching JDKs, but pre-installing speeds up cold runs.
+        java: ['21']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        # gradle/actions/wrapper-validation v4.4.4
+        uses: gradle/actions/wrapper-validation@ac638b010cf58a27ee6c972d7336334ccaf61c96
+
+      - name: ktlint
+        run: ./gradlew --no-daemon ktlintCheck
+
+      - name: detekt
+        run: ./gradlew --no-daemon detekt
+
+      - name: Build
+        run: ./gradlew --no-daemon assemble
+
+      - name: Test
+        run: ./gradlew --no-daemon test
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-jdk${{ matrix.java }}
+          path: |
+            **/build/reports/tests/
+            **/build/reports/ktlint/
+            **/build/reports/detekt/
+            **/build/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
