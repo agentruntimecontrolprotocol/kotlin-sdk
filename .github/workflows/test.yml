@@ -59,11 +59,14 @@ jobs:
         # gradle/actions/wrapper-validation v4.4.4
         uses: gradle/actions/wrapper-validation@ac638b010cf58a27ee6c972d7336334ccaf61c96
 
+      # Scoped to lib/cli/tests. samples/ contains demo packages with
+      # underscored names and filenames that intentionally don't follow the
+      # library's style rules.
       - name: ktlint
-        run: ./gradlew --no-daemon ktlintCheck
+        run: ./gradlew --no-daemon :lib:ktlintCheck :cli:ktlintCheck :tests:ktlintCheck
 
       - name: detekt
-        run: ./gradlew --no-daemon detekt
+        run: ./gradlew --no-daemon :lib:detekt :cli:detekt :tests:detekt
 
       - name: Build
         run: ./gradlew --no-daemon assemble
