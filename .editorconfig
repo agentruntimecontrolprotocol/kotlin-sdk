@@ -9,11 +9,19 @@ trim_trailing_whitespace = true
 
 [*.{kt,kts}]
 indent_size = 4
-max_line_length = 140
+# KOTLIN_STYLE §11: 100-char hard cap, 80-char target.
+max_line_length = 100
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ktlint_standard_no-wildcard-imports = enabled
 ktlint_standard_filename = enabled
+# Let function bodies wrap when the one-liner exceeds max_line_length.
+ktlint_function_signature_body_expression_wrapping = default
+# The multiline-expression-wrapping rule conflicts with the
+# function-signature single-line-body rule on `fun f(): T = expr { ... }`
+# patterns; the two cannot autocorrect to a stable form. Disable globally
+# (this is the same call upstream Kotlin SDKs make).
+ktlint_standard_multiline-expression-wrapping = disabled
 
 [*.md]
 trim_trailing_whitespace = false
