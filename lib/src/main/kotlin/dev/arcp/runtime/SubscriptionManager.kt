@@ -1,7 +1,6 @@
 package dev.arcp.runtime
 
 import dev.arcp.envelope.Envelope
-import dev.arcp.envelope.Priority
 import dev.arcp.error.ARCPException
 import dev.arcp.ids.SubscriptionId
 import dev.arcp.json.arcpJson
@@ -62,21 +61,8 @@ public class SubscriptionManager(
      * [ARCPException.PermissionDenied] before invoking [open].
      */
     public fun compile(filter: SubscriptionFilter): (Envelope) -> Boolean {
-        val sessionIds = filter.sessionId.toSet()
-        val traceIds = filter.traceId.toSet()
-        val jobIds = filter.jobId.toSet()
-        val streamIds = filter.streamId.toSet()
-        val types = filter.types.toSet()
-        val minPriority = filter.minPriority?.ordinal ?: Priority.LOW.ordinal
-
-        return { env ->
-            (sessionIds.isEmpty() || env.sessionId in sessionIds) &&
-                (traceIds.isEmpty() || env.traceId in traceIds) &&
-                (jobIds.isEmpty() || env.jobId in jobIds) &&
-                (streamIds.isEmpty() || env.streamId in streamIds) &&
-                (types.isEmpty() || env.type in types) &&
-                (env.priority.ordinal >= minPriority)
-        }
+        val compiled = CompiledSubscriptionFilter.from(filter)
+        return compiled::matches
     }
 
     /**
@@ -108,18 +94,17 @@ public class SubscriptionManager(
         }
     }
 
-    private fun backfillCompleteEnvelope(subscriptionId: SubscriptionId): Envelope =
-        Envelope(
-            id =
-                dev.arcp.ids.MessageId
-                    .random(),
-            subscriptionId = subscriptionId,
-            payload =
-                EventEmit(
-                    eventType = "subscription.backfill_complete",
-                    data = JsonObject(emptyMap()),
-                ),
-        )
+    private fun backfillCompleteEnvelope(subscriptionId: SubscriptionId): Envelope = Envelope(
+        id =
+            dev.arcp.ids.MessageId
+                .random(),
+        subscriptionId = subscriptionId,
+        payload =
+            EventEmit(
+                eventType = "subscription.backfill_complete",
+                data = JsonObject(emptyMap()),
+            ),
+    )
 
     /**
      * Wraps [event] in a `subscribe.event` envelope so a subscription channel

@@ -23,7 +23,8 @@ public data class TraceContext(
     /** [CoroutineContext.Key] for [TraceContext] lookup. */
     public companion object Key : CoroutineContext.Key<TraceContext> {
         /** Synthesizes a fresh root trace + span. */
-        public fun newRoot(): TraceContext = TraceContext(traceId = TraceId.random(), spanId = SpanId.random())
+        public fun newRoot(): TraceContext =
+            TraceContext(traceId = TraceId.random(), spanId = SpanId.random())
     }
 }
 

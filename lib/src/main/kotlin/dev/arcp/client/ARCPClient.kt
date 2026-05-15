@@ -39,38 +39,39 @@ public class ARCPClient(
      * @throws ARCPException for any other handshake failure.
      */
     public suspend fun open(): SessionAccepted {
-        val opener =
-            Envelope(
-                id = MessageId.random(),
-                payload =
-                    SessionOpen(
-                        auth = auth,
-                        client = client,
-                        capabilities = capabilities,
-                    ),
-            )
-        transport.send(opener)
+        transport.send(buildOpener())
         val reply = transport.receive().first()
-        return when (val payload = reply.payload) {
+        return interpretHandshakeReply(reply)
+    }
+
+    private fun buildOpener(): Envelope = Envelope(
+        id = MessageId.random(),
+        payload =
+            SessionOpen(
+                auth = auth,
+                client = client,
+                capabilities = capabilities,
+            ),
+    )
+
+    private fun interpretHandshakeReply(reply: Envelope): SessionAccepted =
+        when (val payload = reply.payload) {
             is SessionAccepted -> payload
             is SessionUnauthenticated ->
                 throw ARCPException.Unauthenticated(payload.message)
-            is SessionRejected ->
-                when (payload.code) {
-                    ErrorCode.UNIMPLEMENTED ->
-                        throw ARCPException.Unimplemented(
-                            section = "7",
-                            detail = payload.message,
-                        )
-                    ErrorCode.FAILED_PRECONDITION ->
-                        throw ARCPException.FailedPrecondition(payload.message)
-                    else -> throw ARCPException.Internal("session rejected: ${payload.message}")
-                }
-            else ->
-                throw ARCPException.FailedPrecondition(
-                    "unexpected handshake reply: ${reply.type}",
-                )
+            is SessionRejected -> throw rejectionFor(payload)
+            else -> throw ARCPException.FailedPrecondition(
+                "unexpected handshake reply: ${reply.type}",
+            )
         }
+
+    private fun rejectionFor(payload: SessionRejected): ARCPException = when (payload.code) {
+        ErrorCode.UNIMPLEMENTED ->
+            ARCPException.Unimplemented(section = "7", detail = payload.message)
+        ErrorCode.FAILED_PRECONDITION ->
+            ARCPException.FailedPrecondition(payload.message)
+        else ->
+            ARCPException.Internal("session rejected: ${payload.message}")
     }
 
     /** Sends [payload] tagged for [sessionId]. */
@@ -98,12 +99,11 @@ public class ARCPClient(
 
     public companion object {
         /** Convenience: build [ClientInfo] for this SDK. */
-        public fun defaultClientInfo(principal: String? = null): ClientInfo =
-            ClientInfo(
-                kind = Version.SDK_KIND,
-                version = Version.SDK_VERSION,
-                principal = principal,
-            )
+        public fun defaultClientInfo(principal: String? = null): ClientInfo = ClientInfo(
+            kind = Version.SDK_KIND,
+            version = Version.SDK_VERSION,
+            principal = principal,
+        )
 
         /** Convenience: build a `bearer` [Auth] block. */
         public fun bearer(token: String): Auth = Auth(scheme = AuthScheme.BEARER, token = token)

@@ -9,8 +9,21 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+
+private fun req(
+    id: String,
+    bytes: ByteArray = "x".toByteArray(),
+    expiresAt: Instant? = null,
+): ArtifactPutRequest = ArtifactPutRequest(
+    sessionId = null,
+    artifactId = ArtifactId(id),
+    mediaType = "text/plain",
+    data = bytes,
+    expiresAt = expiresAt,
+)
 
 class ArtifactStoreTest :
     StringSpec({
@@ -20,13 +33,15 @@ class ArtifactStoreTest :
                     val data = "hello world".toByteArray()
                     val ref =
                         store.put(
-                            sessionId = SessionId("sess_a"),
-                            artifactId = ArtifactId("art_a"),
-                            mediaType = "text/plain",
-                            data = data,
+                            ArtifactPutRequest(
+                                sessionId = SessionId("sess_a"),
+                                artifactId = ArtifactId("art_a"),
+                                mediaType = "text/plain",
+                                data = data,
+                            ),
                         )
                     ref.size shouldBe data.size.toLong()
-                    ref.sha256!!.shouldStartWith("b94d27") // sha256("hello world")
+                    ref.sha256!!.shouldStartWith("b94d27")
                     val body = store.fetch(ArtifactId("art_a"))
                     body.bytes.toString(Charsets.UTF_8) shouldBe "hello world"
                     body.mediaType shouldBe "text/plain"
@@ -39,10 +54,12 @@ class ArtifactStoreTest :
                 ArtifactStore.openInMemory().use { store ->
                     val ref =
                         store.putBase64(
-                            sessionId = null,
-                            artifactId = ArtifactId("art_b"),
-                            mediaType = "application/octet-stream",
-                            base64Body = "SGVsbG8=", // "Hello"
+                            ArtifactPutBase64Request(
+                                sessionId = null,
+                                artifactId = ArtifactId("art_b"),
+                                mediaType = "application/octet-stream",
+                                base64Body = "SGVsbG8=",
+                            ),
                         )
                     ref.size shouldBe 5
                     val body = store.fetch(ArtifactId("art_b"))
@@ -55,7 +72,14 @@ class ArtifactStoreTest :
             runTest {
                 ArtifactStore.openInMemory().use { store ->
                     shouldThrow<ARCPException.InvalidArgument> {
-                        store.putBase64(null, ArtifactId("art_x"), "text/plain", "not_base64!!!")
+                        store.putBase64(
+                            ArtifactPutBase64Request(
+                                sessionId = null,
+                                artifactId = ArtifactId("art_x"),
+                                mediaType = "text/plain",
+                                base64Body = "not_base64!!!",
+                            ),
+                        )
                     }
                 }
             }
@@ -64,7 +88,9 @@ class ArtifactStoreTest :
         "fetch on unknown id raises NotFound" {
             runTest {
                 ArtifactStore.openInMemory().use { store ->
-                    shouldThrow<ARCPException.NotFound> { store.fetch(ArtifactId("art_missing")) }
+                    shouldThrow<ARCPException.NotFound> {
+                        store.fetch(ArtifactId("art_missing"))
+                    }
                 }
             }
         }
@@ -72,9 +98,11 @@ class ArtifactStoreTest :
         "release evicts the artifact" {
             runTest {
                 ArtifactStore.openInMemory().use { store ->
-                    store.put(null, ArtifactId("art_c"), "text/plain", "x".toByteArray())
+                    store.put(req("art_c"))
                     store.release(ArtifactId("art_c")) shouldBe true
-                    shouldThrow<ARCPException.NotFound> { store.fetch(ArtifactId("art_c")) }
+                    shouldThrow<ARCPException.NotFound> {
+                        store.fetch(ArtifactId("art_c"))
+                    }
                 }
             }
         }
@@ -83,13 +111,14 @@ class ArtifactStoreTest :
             runTest {
                 ArtifactStore.openInMemory().use { store ->
                     store.put(
-                        null,
-                        ArtifactId("art_d"),
-                        "text/plain",
-                        "x".toByteArray(),
-                        expiresAt = kotlinx.datetime.Instant.parse("2000-01-01T00:00:00Z"),
+                        req(
+                            id = "art_d",
+                            expiresAt = Instant.parse("2000-01-01T00:00:00Z"),
+                        ),
                     )
-                    shouldThrow<ARCPException.NotFound> { store.fetch(ArtifactId("art_d")) }
+                    shouldThrow<ARCPException.NotFound> {
+                        store.fetch(ArtifactId("art_d"))
+                    }
                 }
             }
         }
@@ -98,22 +127,21 @@ class ArtifactStoreTest :
             runTest {
                 ArtifactStore.openInMemory().use { store ->
                     store.put(
-                        null,
-                        ArtifactId("art_dead"),
-                        "text/plain",
-                        "x".toByteArray(),
-                        expiresAt = kotlinx.datetime.Instant.parse("2000-01-01T00:00:00Z"),
+                        req(
+                            id = "art_dead",
+                            expiresAt = Instant.parse("2000-01-01T00:00:00Z"),
+                        ),
                     )
                     store.put(
-                        null,
-                        ArtifactId("art_alive"),
-                        "text/plain",
-                        "y".toByteArray(),
-                        expiresAt = Clock.System.now().plus(1.hours),
+                        req(
+                            id = "art_alive",
+                            bytes = "y".toByteArray(),
+                            expiresAt = Clock.System.now().plus(1.hours),
+                        ),
                     )
                     store.sweepExpired() shouldBe 1
-                    // alive survives
-                    store.fetch(ArtifactId("art_alive")).bytes.toString(Charsets.UTF_8) shouldBe "y"
+                    val alive = store.fetch(ArtifactId("art_alive"))
+                    alive.bytes.toString(Charsets.UTF_8) shouldBe "y"
                 }
             }
         }
@@ -122,10 +150,9 @@ class ArtifactStoreTest :
             runTest {
                 ArtifactStore.openInMemory(maxRetention = 1.minutes).use { store ->
                     val far = Clock.System.now().plus(48.hours)
-                    val ref = store.put(null, ArtifactId("art_e"), "text/plain", "x".toByteArray(), expiresAt = far)
+                    val ref = store.put(req(id = "art_e", expiresAt = far))
                     val expiry = ref.expiresAt!!
                     val now = Clock.System.now()
-                    // expiry should be roughly now + 1 minute
                     val deltaSeconds = (expiry - now).inWholeSeconds
                     (deltaSeconds in 30..120) shouldBe true
                 }

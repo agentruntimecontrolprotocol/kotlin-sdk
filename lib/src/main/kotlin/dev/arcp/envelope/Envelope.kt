@@ -21,6 +21,7 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -103,54 +104,81 @@ internal object EnvelopeSerializer : KSerializer<Envelope> {
         encoder: Encoder,
         value: Envelope,
     ) {
-        require(encoder is JsonEncoder) { "ARCP envelopes only encode through JSON" }
+        require(encoder is JsonEncoder) {
+            "ARCP envelopes only encode through JSON"
+        }
         val payloadObj =
-            encoder.json.encodeToJsonElement(MessageType.serializer(), value.payload).jsonObject
+            encoder.json
+                .encodeToJsonElement(MessageType.serializer(), value.payload)
+                .jsonObject
         val wireType =
             payloadObj["type"]?.jsonPrimitive?.contentOrNull
-                ?: error("payload ${value.payload::class} has no @SerialName discriminator")
-        val payloadWithoutType = JsonObject(payloadObj.filterKeys { it != "type" })
-
-        val out =
-            buildJsonObject {
-                put("arcp", value.arcp)
-                put("id", value.id.value)
-                put("type", wireType)
-                put("timestamp", value.timestamp.toString())
-                value.source?.let { put("source", it) }
-                value.target?.let { put("target", it) }
-                value.sessionId?.let { put("session_id", it.value) }
-                value.jobId?.let { put("job_id", it.value) }
-                value.streamId?.let { put("stream_id", it.value) }
-                value.subscriptionId?.let { put("subscription_id", it.value) }
-                value.traceId?.let { put("trace_id", it.value) }
-                value.spanId?.let { put("span_id", it.value) }
-                value.parentSpanId?.let { put("parent_span_id", it.value) }
-                value.correlationId?.let { put("correlation_id", it.value) }
-                value.causationId?.let { put("causation_id", it.value) }
-                value.idempotencyKey?.let { put("idempotency_key", it) }
-                if (value.priority != Priority.NORMAL) {
-                    put("priority", value.priority.name.lowercase())
-                }
-                if (value.extensions.isNotEmpty()) {
-                    put("extensions", JsonObject(value.extensions))
-                }
-                put("payload", payloadWithoutType)
-            }
-
+                ?: error(
+                    "payload ${value.payload::class} has no @SerialName discriminator",
+                )
+        val payloadWithoutType =
+            JsonObject(payloadObj.filterKeys { it != "type" })
+        val out = buildEnvelopeJson(value, wireType, payloadWithoutType)
         encoder.encodeJsonElement(out)
     }
 
+    private fun buildEnvelopeJson(
+        value: Envelope,
+        wireType: String,
+        payloadWithoutType: JsonObject,
+    ): JsonObject = buildJsonObject {
+        put("arcp", value.arcp)
+        put("id", value.id.value)
+        put("type", wireType)
+        put("timestamp", value.timestamp.toString())
+        putOptionalScalars(value)
+        putOptionalIds(value)
+        putOptionalTrace(value)
+        if (value.priority != Priority.NORMAL) {
+            put("priority", value.priority.name.lowercase())
+        }
+        if (value.extensions.isNotEmpty()) {
+            put("extensions", JsonObject(value.extensions))
+        }
+        put("payload", payloadWithoutType)
+    }
+
+    private fun JsonObjectBuilder.putOptionalScalars(value: Envelope) {
+        value.source?.let { put("source", it) }
+        value.target?.let { put("target", it) }
+        value.idempotencyKey?.let { put("idempotency_key", it) }
+    }
+
+    private fun JsonObjectBuilder.putOptionalIds(value: Envelope) {
+        value.sessionId?.let { put("session_id", it.value) }
+        value.jobId?.let { put("job_id", it.value) }
+        value.streamId?.let { put("stream_id", it.value) }
+        value.subscriptionId?.let { put("subscription_id", it.value) }
+        value.correlationId?.let { put("correlation_id", it.value) }
+        value.causationId?.let { put("causation_id", it.value) }
+    }
+
+    private fun JsonObjectBuilder.putOptionalTrace(value: Envelope) {
+        value.traceId?.let { put("trace_id", it.value) }
+        value.spanId?.let { put("span_id", it.value) }
+        value.parentSpanId?.let { put("parent_span_id", it.value) }
+    }
+
     override fun deserialize(decoder: Decoder): Envelope {
-        require(decoder is JsonDecoder) { "ARCP envelopes only decode from JSON" }
+        require(decoder is JsonDecoder) {
+            "ARCP envelopes only decode from JSON"
+        }
         val obj = decoder.decodeJsonElement().jsonObject
+        val payload = decodePayload(decoder, obj, obj.requireString("type"))
+        return buildEnvelope(obj, payload)
+    }
 
-        val arcp = obj.requireString("arcp")
-        val id = MessageId(obj.requireString("id"))
-        val type = obj.requireString("type")
-        val timestamp = Instant.parse(obj.requireString("timestamp"))
+    private fun decodePayload(
+        decoder: JsonDecoder,
+        obj: JsonObject,
+        type: String,
+    ): MessageType {
         val payloadObj = (obj["payload"] as? JsonObject) ?: JsonObject(emptyMap())
-
         val payloadWithType =
             JsonObject(
                 buildMap {
@@ -158,41 +186,47 @@ internal object EnvelopeSerializer : KSerializer<Envelope> {
                     put("type", JsonPrimitive(type))
                 },
             )
-        val payload =
-            decoder.json.decodeFromJsonElement(MessageType.serializer(), payloadWithType)
-
-        val priority =
-            (obj["priority"] as? JsonPrimitive)?.contentOrNull?.let { p ->
-                Priority.entries.firstOrNull { it.name.lowercase() == p } ?: Priority.NORMAL
-            } ?: Priority.NORMAL
-
-        val extensionsObj = obj["extensions"] as? JsonObject
-
-        return Envelope(
-            arcp = arcp,
-            id = id,
-            timestamp = timestamp,
-            source = obj.optString("source"),
-            target = obj.optString("target"),
-            sessionId = obj.optString("session_id")?.let(::SessionId),
-            jobId = obj.optString("job_id")?.let(::JobId),
-            streamId = obj.optString("stream_id")?.let(::StreamId),
-            subscriptionId = obj.optString("subscription_id")?.let(::SubscriptionId),
-            traceId = obj.optString("trace_id")?.let(::TraceId),
-            spanId = obj.optString("span_id")?.let(::SpanId),
-            parentSpanId = obj.optString("parent_span_id")?.let(::SpanId),
-            correlationId = obj.optString("correlation_id")?.let(::MessageId),
-            causationId = obj.optString("causation_id")?.let(::MessageId),
-            idempotencyKey = obj.optString("idempotency_key"),
-            priority = priority,
-            extensions = extensionsObj?.toMap() ?: emptyMap(),
-            payload = payload,
+        return decoder.json.decodeFromJsonElement(
+            MessageType.serializer(),
+            payloadWithType,
         )
+    }
+
+    private fun buildEnvelope(
+        obj: JsonObject,
+        payload: MessageType,
+    ): Envelope = Envelope(
+        arcp = obj.requireString("arcp"),
+        id = MessageId(obj.requireString("id")),
+        timestamp = Instant.parse(obj.requireString("timestamp")),
+        source = obj.optString("source"),
+        target = obj.optString("target"),
+        sessionId = obj.optString("session_id")?.let(::SessionId),
+        jobId = obj.optString("job_id")?.let(::JobId),
+        streamId = obj.optString("stream_id")?.let(::StreamId),
+        subscriptionId = obj.optString("subscription_id")?.let(::SubscriptionId),
+        traceId = obj.optString("trace_id")?.let(::TraceId),
+        spanId = obj.optString("span_id")?.let(::SpanId),
+        parentSpanId = obj.optString("parent_span_id")?.let(::SpanId),
+        correlationId = obj.optString("correlation_id")?.let(::MessageId),
+        causationId = obj.optString("causation_id")?.let(::MessageId),
+        idempotencyKey = obj.optString("idempotency_key"),
+        priority = readPriority(obj),
+        extensions = (obj["extensions"] as? JsonObject)?.toMap().orEmpty(),
+        payload = payload,
+    )
+
+    private fun readPriority(obj: JsonObject): Priority {
+        val raw = (obj["priority"] as? JsonPrimitive)?.contentOrNull
+            ?: return Priority.NORMAL
+        return Priority.entries.firstOrNull { it.name.lowercase() == raw }
+            ?: Priority.NORMAL
     }
 
     private fun JsonObject.requireString(key: String): String =
         (this[key] as? JsonPrimitive)?.contentOrNull
             ?: throw IllegalArgumentException("envelope missing required field '$key'")
 
-    private fun JsonObject.optString(key: String): String? = (this[key] as? JsonPrimitive)?.contentOrNull
+    private fun JsonObject.optString(key: String): String? =
+        (this[key] as? JsonPrimitive)?.contentOrNull
 }

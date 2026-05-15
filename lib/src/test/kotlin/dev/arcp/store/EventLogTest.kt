@@ -132,10 +132,9 @@ class EventLogTest :
 private fun envelope(
     id: String,
     sessionId: SessionId,
-): Envelope =
-    Envelope(
-        id = MessageId(id),
-        sessionId = sessionId,
-        timestamp = Instant.parse("2026-05-09T13:00:00Z"),
-        payload = Ping(nonce = id),
-    )
+): Envelope = Envelope(
+    id = MessageId(id),
+    sessionId = sessionId,
+    timestamp = Instant.parse("2026-05-09T13:00:00Z"),
+    payload = Ping(nonce = id),
+)

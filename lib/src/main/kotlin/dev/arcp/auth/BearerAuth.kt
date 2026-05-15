@@ -23,17 +23,22 @@ public class StaticBearerAuth(
         val presented = token.toByteArray(StandardCharsets.UTF_8)
         var principal: String? = null
         for ((secret, sub) in tokens) {
-            val candidate = secret.toByteArray(StandardCharsets.UTF_8)
-            if (candidate.size != presented.size) {
-                continue
+            if (!constantTimeEquals(secret, presented)) continue
+            if (principal != null) {
+                throw ARCPException.Unauthenticated("ambiguous bearer token")
             }
-            if (MessageDigest.isEqual(candidate, presented)) {
-                if (principal != null) {
-                    throw ARCPException.Unauthenticated("ambiguous bearer token")
-                }
-                principal = sub
-            }
+            principal = sub
         }
-        return principal ?: throw ARCPException.Unauthenticated("invalid bearer token")
+        return principal
+            ?: throw ARCPException.Unauthenticated("invalid bearer token")
+    }
+
+    private fun constantTimeEquals(
+        secret: String,
+        presented: ByteArray,
+    ): Boolean {
+        val candidate = secret.toByteArray(StandardCharsets.UTF_8)
+        if (candidate.size != presented.size) return false
+        return MessageDigest.isEqual(candidate, presented)
     }
 }

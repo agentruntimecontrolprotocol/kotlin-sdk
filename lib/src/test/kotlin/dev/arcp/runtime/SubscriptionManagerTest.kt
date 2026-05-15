@@ -2,7 +2,6 @@ package dev.arcp.runtime
 
 import dev.arcp.envelope.Envelope
 import dev.arcp.envelope.Priority
-import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
 import dev.arcp.ids.SessionId
 import dev.arcp.ids.SubscriptionId
@@ -37,16 +36,13 @@ class SubscriptionManagerTest :
         fun env(
             id: String,
             sessionId: SessionId? = sessA,
-            traceId: TraceId? = traceA,
-            jobId: JobId? = null,
-            priority: Priority = Priority.NORMAL,
             payload: dev.arcp.messages.MessageType = JobProgress(percent = 1),
+            priority: Priority = Priority.NORMAL,
         ) = Envelope(
             id = MessageId(id),
             timestamp = ts,
             sessionId = sessionId,
-            traceId = traceId,
-            jobId = jobId,
+            traceId = traceA,
             priority = priority,
             payload = payload,
         )
@@ -138,7 +134,8 @@ class SubscriptionManagerTest :
                             "live_1",
                         )
                     received[2].payload.shouldBeInstanceOf<EventEmit>()
-                    (received[2].payload as EventEmit).eventType shouldBe "subscription.backfill_complete"
+                    (received[2].payload as EventEmit).eventType shouldBe
+                        "subscription.backfill_complete"
                 }
             }
         }
