@@ -111,17 +111,25 @@ internal suspend fun handleInvoke(
             Envelope(
                 id = MessageId.random(),
                 jobId = jobId,
-                payload = stub(
-                    "job.failed",
-                    mapOf("code" to e.code.wire, "message" to e.message, "retryable" to e.retryable),
-                ),
+                payload =
+                    stub(
+                        "job.failed",
+                        mapOf(
+                            "code" to e.code.wire,
+                            "message" to e.message,
+                            "retryable" to e.retryable,
+                        ),
+                    ),
             ),
         )
     }
 }
 
 /** Wire one MCP session as the upstream for one ARCP runtime. */
-internal suspend fun runBridge(send: SendEnvelope, inbound: Flow<Envelope>) {
+internal suspend fun runBridge(
+    send: SendEnvelope,
+    inbound: Flow<Envelope>,
+) {
     McpSession.connect(upstreamParams()).use { mcp ->
         mcp.initialize()
         val extensions = advertiseFromMcp(mcp)

@@ -1,4 +1,4 @@
-package com.arcp.samples.permission_challenge
+package com.arcp.samples.permissionchallenge
 
 import com.arcp.samples.dispatch
 import com.arcp.samples.envelope
@@ -34,21 +34,24 @@ private suspend fun requestApply(
     patch: Patch,
 ): LeaseId {
     val fp = fingerprint(patch.diff)
-    val reply = client.request(
-        envelope = client.envelope(
-            type = "permission.request",
-            // Same key per (ticket, diff): identical patch dedupes at runtime.
-            idempotencyKey = "review:$ticketId:$fp",
-            payload = mapOf(
-                "permission" to "repo.write",
-                "resource" to "ticket:$ticketId/$fp",
-                "operation" to "apply_patch",
-                "reason" to "apply patch",
-                "requested_lease_seconds" to 90,
-            ),
-        ),
-        timeoutMs = 300_000,
-    )
+    val reply =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "permission.request",
+                    // Same key per (ticket, diff): identical patch dedupes at runtime.
+                    idempotencyKey = "review:$ticketId:$fp",
+                    payload =
+                        mapOf(
+                            "permission" to "repo.write",
+                            "resource" to "ticket:$ticketId/$fp",
+                            "operation" to "apply_patch",
+                            "reason" to "apply patch",
+                            "requested_lease_seconds" to 90,
+                        ),
+                ),
+            timeoutMs = 300_000,
+        )
     if (reply.type == "permission.deny") {
         throw ARCPException.PermissionDenied(
             permission = PermissionName("repo.write"),
@@ -69,12 +72,13 @@ private suspend fun respond(
             reviewer.envelope(
                 type = "permission.grant",
                 correlationId = request.id,
-                payload = mapOf(
-                    "permission" to request.payloadMap()["permission"],
-                    "resource" to request.payloadMap()["resource"],
-                    "operation" to request.payloadMap()["operation"],
-                    "lease_seconds" to 90,
-                ),
+                payload =
+                    mapOf(
+                        "permission" to request.payloadMap()["permission"],
+                        "resource" to request.payloadMap()["resource"],
+                        "operation" to request.payloadMap()["operation"],
+                        "lease_seconds" to 90,
+                    ),
             ),
         )
     } else {
@@ -82,17 +86,21 @@ private suspend fun respond(
             reviewer.envelope(
                 type = "permission.deny",
                 correlationId = request.id,
-                payload = mapOf(
-                    "permission" to request.payloadMap()["permission"],
-                    "reason" to verdict.reason,
-                    "code" to ErrorCode.FAILED_PRECONDITION.wire,
-                ),
+                payload =
+                    mapOf(
+                        "permission" to request.payloadMap()["permission"],
+                        "reason" to verdict.reason,
+                        "code" to ErrorCode.FAILED_PRECONDITION.wire,
+                    ),
             ),
         )
     }
 }
 
-private fun CoroutineScope.reviewerLoop(reviewer: ARCPClient, ticket: String) = launch {
+private fun CoroutineScope.reviewerLoop(
+    reviewer: ARCPClient,
+    ticket: String,
+) = launch {
     reviewer.events().collect { env ->
         if (env.type == "permission.request") {
             val verdict = review(ticket = ticket, request = env)

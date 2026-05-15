@@ -8,7 +8,6 @@ import dev.arcp.client.ARCPClient
 import dev.arcp.envelope.Envelope
 import dev.arcp.ids.JobId
 import dev.arcp.ids.TraceId
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -38,26 +37,30 @@ private suspend fun delegate(
     task: String,
     traceId: TraceId,
 ): DelegatedJob {
-    val accepted = client.request(
-        envelope = client.envelope(
-            type = "agent.delegate",
-            traceId = traceId.value,
-            payload = mapOf(
-                "target" to target,
-                "task" to task,
-                // trace_id propagates so peers join one distributed trace.
-                "context" to mapOf("trace_id" to traceId.value),
-            ),
-        ),
-        timeoutMs = 10_000,
-    )
+    val accepted =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "agent.delegate",
+                    traceId = traceId.value,
+                    payload =
+                        mapOf(
+                            "target" to target,
+                            "task" to task,
+                            // trace_id propagates so peers join one distributed trace.
+                            "context" to mapOf("trace_id" to traceId.value),
+                        ),
+                ),
+            timeoutMs = 10_000,
+        )
     if (accepted.type != "job.accepted") {
         return DelegatedJob(
             target = target,
-            error = mapOf(
-                "code" to accepted.payloadMap()["code"],
-                "message" to accepted.payloadMap()["message"],
-            ),
+            error =
+                mapOf(
+                    "code" to accepted.payloadMap()["code"],
+                    "message" to accepted.payloadMap()["message"],
+                ),
         )
     }
     return DelegatedJob(target = target, jobId = JobId(accepted.payloadMap()["job_id"].toString()))
@@ -69,21 +72,23 @@ private suspend fun delegate(
  * Without this, parallel `events().collect { ... }` loops starve
  * each other — only one wins per await.
  */
-internal class JobMux(private val client: ARCPClient) {
+internal class JobMux(
+    private val client: ARCPClient,
+) {
     private val queues: MutableMap<JobId, Channel<Envelope>> = mutableMapOf()
-    private val ready = CompletableDeferred<Unit>()
     private var reader: Job? = null
 
     fun start(scope: kotlinx.coroutines.CoroutineScope) {
-        reader = scope.launch {
-            client.events().collect { env ->
-                val jid = env.jobId ?: return@collect
-                queues[jid]?.send(env)
-                if (env.type in TERMINAL) {
-                    queues[jid]?.close()
+        reader =
+            scope.launch {
+                client.events().collect { env ->
+                    val jid = env.jobId ?: return@collect
+                    queues[jid]?.send(env)
+                    if (env.type in TERMINAL) {
+                        queues[jid]?.close()
+                    }
                 }
             }
-        }
     }
 
     fun register(jobId: JobId) {
@@ -100,15 +105,20 @@ internal class JobMux(private val client: ARCPClient) {
     }
 }
 
-private suspend fun collectJob(mux: JobMux, job: DelegatedJob): DelegatedJob {
+private suspend fun collectJob(
+    mux: JobMux,
+    job: DelegatedJob,
+): DelegatedJob {
     if (job.error != null) return job
     mux.stream(job).collect { env ->
         when (env.type) {
             "job.completed" -> job.final = env.payloadMap()
-            "job.failed" -> job.error = mapOf(
-                "code" to env.payloadMap()["code"],
-                "message" to env.payloadMap()["message"],
-            )
+            "job.failed" ->
+                job.error =
+                    mapOf(
+                        "code" to env.payloadMap()["code"],
+                        "message" to env.payloadMap()["message"],
+                    )
             "job.cancelled" -> job.error = mapOf("code" to "CANCELLED", "message" to "cancelled")
         }
     }
@@ -126,11 +136,12 @@ public fun main(): Unit = runBlocking {
         val request = "what changed in our auth stack in the last 30 days?"
         val traceId = TraceId.random()
 
-        val jobs = PEERS.map { peer ->
-            val job = delegate(client, target = peer, task = request, traceId = traceId)
-            job.jobId?.let { mux.register(it) }
-            job
-        }
+        val jobs =
+            PEERS.map { peer ->
+                val job = delegate(client, target = peer, task = request, traceId = traceId)
+                job.jobId?.let { mux.register(it) }
+                job
+            }
 
         val completed = jobs.map { async { collectJob(mux, it) } }.awaitAll()
         println(synthesize(request, completed))

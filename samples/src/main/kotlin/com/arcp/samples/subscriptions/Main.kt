@@ -16,14 +16,15 @@ import kotlinx.coroutines.runBlocking
 
 /** Boot three Observer clients on a single producing session. */
 
-private val STDOUT_TYPES = listOf(
-    "log",
-    "job.started",
-    "job.progress",
-    "job.completed",
-    "job.failed",
-    "tool.error",
-)
+private val STDOUT_TYPES =
+    listOf(
+        "log",
+        "job.started",
+        "job.progress",
+        "job.completed",
+        "job.failed",
+        "tool.error",
+    )
 private val OTLP_TYPES = listOf("metric", "trace.span")
 
 private suspend fun subscribe(
@@ -33,13 +34,17 @@ private suspend fun subscribe(
 ): SubscriptionId {
     val filter: MutableMap<String, Any> = mutableMapOf("session_id" to listOf(sessionId.value))
     if (types != null) filter["types"] = types
-    val accepted = client.request(
-        client.envelope(type = "subscribe", payload = mapOf("filter" to filter)),
-    )
+    val accepted =
+        client.request(
+            client.envelope(type = "subscribe", payload = mapOf("filter" to filter)),
+        )
     return SubscriptionId(accepted.payloadMap()["subscription_id"].toString())
 }
 
-private suspend fun unsubscribe(client: ARCPClient, id: SubscriptionId) {
+private suspend fun unsubscribe(
+    client: ARCPClient,
+    id: SubscriptionId,
+) {
     client.dispatch(client.envelope(type = "unsubscribe", subscriptionId = id))
 }
 

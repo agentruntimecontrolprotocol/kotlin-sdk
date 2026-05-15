@@ -27,20 +27,27 @@ private suspend fun packageContext(
 ): Map<String, Any?> {
     val body = canonicalJson(transcript).toByteArray()
     val artifactId = ArtifactId.random()
-    val sha = MessageDigest.getInstance("SHA-256").digest(body).joinToString("") { "%02x".format(it) }
-    val reply = cheap.request(
-        envelope = cheap.envelope(
-            type = "artifact.put",
-            payload = mapOf(
-                "artifact_id" to artifactId.value,
-                "media_type" to "application/json",
-                "size" to body.size,
-                "sha256" to sha,
-                "data" to Base64.getEncoder().encodeToString(body),
-            ),
-        ),
-        timeoutMs = 15_000,
-    )
+    val sha =
+        MessageDigest
+            .getInstance("SHA-256")
+            .digest(body)
+            .joinToString("") { "%02x".format(it) }
+    val reply =
+        cheap.request(
+            envelope =
+                cheap.envelope(
+                    type = "artifact.put",
+                    payload =
+                        mapOf(
+                            "artifact_id" to artifactId.value,
+                            "media_type" to "application/json",
+                            "size" to body.size,
+                            "sha256" to sha,
+                            "data" to Base64.getEncoder().encodeToString(body),
+                        ),
+                ),
+            timeoutMs = 15_000,
+        )
     if (reply.type != "artifact.ref") {
         throw ARCPException.Internal("got ${reply.type}")
     }
@@ -56,17 +63,19 @@ private suspend fun emitHandoff(
         cheap.envelope(
             type = "agent.handoff",
             traceId = traceId.value,
-            payload = mapOf(
-                "target_runtime" to mapOf(
-                    "url" to DEEP_URL,
-                    "kind" to DEEP_KIND,
-                    "fingerprint" to DEEP_FINGERPRINT,
+            payload =
+                mapOf(
+                    "target_runtime" to
+                        mapOf(
+                            "url" to DEEP_URL,
+                            "kind" to DEEP_KIND,
+                            "fingerprint" to DEEP_FINGERPRINT,
+                        ),
+                    "session_id" to cheap.sessionIdOrNull()?.value,
+                    // RFC §14 gestures at shared_memory_ref; we use it
+                    // explicitly so the deep tier knows where the transcript lives.
+                    "shared_memory_ref" to artifactRef,
                 ),
-                "session_id" to cheap.sessionIdOrNull()?.value,
-                // RFC §14 gestures at shared_memory_ref; we use it
-                // explicitly so the deep tier knows where the transcript lives.
-                "shared_memory_ref" to artifactRef,
-            ),
         ),
     )
 }
@@ -86,17 +95,20 @@ public fun main(): Unit = runBlocking {
     if (confidence >= CONFIDENCE_THRESHOLD) {
         println(answer)
     } else {
-        val artifact = packageContext(
-            cheap,
-            transcript = mapOf(
-                "user_request" to request,
-                "transcript" to listOf(
-                    mapOf("role" to "user", "content" to request),
-                    mapOf("role" to "assistant", "content" to answer),
-                ),
-                "cheap_confidence" to confidence,
-            ),
-        )
+        val artifact =
+            packageContext(
+                cheap,
+                transcript =
+                    mapOf(
+                        "user_request" to request,
+                        "transcript" to
+                            listOf(
+                                mapOf("role" to "user", "content" to request),
+                                mapOf("role" to "assistant", "content" to answer),
+                            ),
+                        "cheap_confidence" to confidence,
+                    ),
+            )
         emitHandoff(cheap, artifact, traceId)
         println("[handed off to $DEEP_KIND trace_id=${traceId.value}]")
     }

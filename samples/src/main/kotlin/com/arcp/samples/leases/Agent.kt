@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.Flow
  * per turn.
  */
 
-internal data class ToolCall(val argv: List<String>, val reason: String)
+internal data class ToolCall(
+    val argv: List<String>,
+    val reason: String,
+)
 
 internal data class LlmStep(
     val thought: String,

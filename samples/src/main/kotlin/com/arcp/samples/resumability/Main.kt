@@ -32,7 +32,11 @@ private val STEPS = listOf("plan", "gather", "synthesize", "critique", "finalize
  * same step with the same input returns the prior outcome instead
  * of re-running the LLM.
  */
-internal fun stepKey(jobId: JobId, step: String, salt: String): String {
+internal fun stepKey(
+    jobId: JobId,
+    step: String,
+    salt: String,
+): String {
     val h = MessageDigest.getInstance("SHA-256")
     listOf(jobId.value, step, salt).forEach {
         h.update(it.toByteArray())
@@ -42,7 +46,11 @@ internal fun stepKey(jobId: JobId, step: String, salt: String): String {
     return "research:${jobId.value}:$step:$hex"
 }
 
-private suspend fun emitProgress(client: ARCPClient, jobId: JobId, step: String) {
+private suspend fun emitProgress(
+    client: ARCPClient,
+    jobId: JobId,
+    step: String,
+) {
     val pct = 100.0 * (STEPS.indexOf(step) + 1) / STEPS.size
     client.dispatch(
         client.envelope(
@@ -53,7 +61,11 @@ private suspend fun emitProgress(client: ARCPClient, jobId: JobId, step: String)
     )
 }
 
-private suspend fun emitCheckpoint(client: ARCPClient, jobId: JobId, step: String): String {
+private suspend fun emitCheckpoint(
+    client: ARCPClient,
+    jobId: JobId,
+    step: String,
+): String {
     val chk = "chk_${step}_${jobId.value.takeLast(6)}"
     client.dispatch(
         client.envelope(
@@ -78,12 +90,13 @@ private suspend fun executeSteps(
         if (i < startIdx) continue
         val key = stepKey(jobId, step, output.toString())
         emitProgress(client, jobId, step)
-        output = runStep(
-            client,
-            jobId = jobId,
-            step = step,
-            inputs = mapOf("prior" to output, "idempotency_key" to key),
-        )
+        output =
+            runStep(
+                client,
+                jobId = jobId,
+                step = step,
+                inputs = mapOf("prior" to output, "idempotency_key" to key),
+            )
         emitCheckpoint(client, jobId, step)
         if (crashAfter == step) {
             // The whole point of durable jobs: process death is fine.
@@ -110,10 +123,11 @@ private suspend fun issueResume(
     afterMessageId: String,
     checkpointId: String?,
 ): String? {
-    val payload: MutableMap<String, Any?> = mutableMapOf(
-        "after_message_id" to afterMessageId,
-        "include_open_streams" to true,
-    )
+    val payload: MutableMap<String, Any?> =
+        mutableMapOf(
+            "after_message_id" to afterMessageId,
+            "include_open_streams" to true,
+        )
     if (checkpointId != null) payload["checkpoint_id"] = checkpointId
     client.dispatch(client.envelope(type = "resume", jobId = jobId, payload = payload))
 
@@ -146,12 +160,13 @@ public fun main(): Unit = runBlocking {
     val rjAfter = System.getenv("RESUME_AFTER_MSG_ID")
     if (rjId != null && rjAfter != null) {
         val jobId = JobId(rjId)
-        val last = issueResume(
-            client,
-            jobId = jobId,
-            afterMessageId = rjAfter,
-            checkpointId = System.getenv("RESUME_CHECKPOINT_ID"),
-        )
+        val last =
+            issueResume(
+                client,
+                jobId = jobId,
+                afterMessageId = rjAfter,
+                checkpointId = System.getenv("RESUME_CHECKPOINT_ID"),
+            )
         if (last == null) {
             println("already terminal during replay")
         } else {
@@ -160,13 +175,14 @@ public fun main(): Unit = runBlocking {
                 println("nothing to resume")
             } else {
                 println("[resuming at ${STEPS[nextIdx]}]")
-                val final = executeSteps(
-                    client,
-                    jobId = jobId,
-                    request = "<replayed>",
-                    startingAt = STEPS[nextIdx],
-                    crashAfter = null,
-                )
+                val final =
+                    executeSteps(
+                        client,
+                        jobId = jobId,
+                        request = "<replayed>",
+                        startingAt = STEPS[nextIdx],
+                        crashAfter = null,
+                    )
                 client.dispatch(
                     client.envelope(
                         type = "job.completed",
@@ -183,19 +199,21 @@ public fun main(): Unit = runBlocking {
             client.envelope(
                 type = "workflow.start",
                 jobId = jobId,
-                payload = mapOf(
-                    "workflow" to "research.v1",
-                    "arguments" to mapOf("request" to request),
-                ),
+                payload =
+                    mapOf(
+                        "workflow" to "research.v1",
+                        "arguments" to mapOf("request" to request),
+                    ),
             ),
         )
-        val final = executeSteps(
-            client,
-            jobId = jobId,
-            request = request,
-            startingAt = STEPS[0],
-            crashAfter = System.getenv("CRASH_AFTER_STEP"),
-        )
+        val final =
+            executeSteps(
+                client,
+                jobId = jobId,
+                request = request,
+                startingAt = STEPS[0],
+                crashAfter = System.getenv("CRASH_AFTER_STEP"),
+            )
         client.dispatch(
             client.envelope(
                 type = "job.completed",
