@@ -19,39 +19,48 @@ public class JwtAuth(
 ) {
     /** Verifies [token] and returns the principal (`sub` claim). */
     public fun verify(token: String): String {
-        val jwt =
-            try {
-                SignedJWT.parse(token)
-            } catch (e: java.text.ParseException) {
-                throw ARCPException.Unauthenticated("malformed JWT: ${e.message}")
-            }
-
-        if (!jwt.verify(verifier)) {
-            throw ARCPException.Unauthenticated("JWT signature verification failed")
-        }
+        val jwt = parseSignedJwt(token)
+        verifySignature(jwt)
         val claims = jwt.jwtClaimsSet
-        val audiences = claims.audience ?: emptyList()
+        verifyAudience(claims.audience ?: emptyList())
+        verifyTimeBounds(claims.expirationTime, claims.notBeforeTime)
+        return claims.subject?.takeIf { it.isNotBlank() }
+            ?: throw ARCPException.Unauthenticated("JWT missing sub claim")
+    }
+
+    private fun parseSignedJwt(token: String): SignedJWT = try {
+        SignedJWT.parse(token)
+    } catch (e: java.text.ParseException) {
+        throw ARCPException.Unauthenticated("malformed JWT: ${e.message}")
+    }
+
+    private fun verifySignature(jwt: SignedJWT) {
+        if (!jwt.verify(verifier)) {
+            throw ARCPException.Unauthenticated(
+                "JWT signature verification failed",
+            )
+        }
+    }
+
+    private fun verifyAudience(audiences: List<String>) {
         if (expectedAudience !in audiences) {
             throw ARCPException.Unauthenticated(
                 "JWT audience does not include expected '$expectedAudience'",
             )
         }
-        val sub = claims.subject
-        if (sub.isNullOrBlank()) {
-            throw ARCPException.Unauthenticated("JWT missing sub claim")
-        }
+    }
+
+    private fun verifyTimeBounds(
+        exp: Date?,
+        nbf: Date?,
+    ) {
         val now = Date()
-        claims.expirationTime?.let { exp ->
-            if (!exp.after(now)) {
-                throw ARCPException.Unauthenticated("JWT expired")
-            }
+        if (exp != null && !exp.after(now)) {
+            throw ARCPException.Unauthenticated("JWT expired")
         }
-        claims.notBeforeTime?.let { nbf ->
-            if (nbf.after(now)) {
-                throw ARCPException.Unauthenticated("JWT not yet valid")
-            }
+        if (nbf != null && nbf.after(now)) {
+            throw ARCPException.Unauthenticated("JWT not yet valid")
         }
-        return sub
     }
 
     public companion object {

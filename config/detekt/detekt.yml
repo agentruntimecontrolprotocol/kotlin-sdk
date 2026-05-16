@@ -2,17 +2,33 @@ build:
   maxIssues: 0
   excludeCorrectable: false
 
+# Complexity limits codify KOTLIN_STYLE.md §11.
 complexity:
   TooManyFunctions:
     active: false
   LongParameterList:
-    active: false
+    active: true
+    functionThreshold: 5
+    constructorThreshold: 7
+    ignoreDefaultParameters: false
+    ignoreDataClasses: true
   LongMethod:
-    active: false
+    active: true
+    threshold: 30
   CyclomaticComplexMethod:
-    active: false
+    active: true
+    threshold: 10
+    ignoreSingleWhenExpression: true
+    ignoreSimpleWhenEntries: true
+  CognitiveComplexMethod:
+    active: true
+    threshold: 15
   LargeClass:
-    active: false
+    active: true
+    threshold: 300
+  NestedBlockDepth:
+    active: true
+    threshold: 3
 
 style:
   MagicNumber:
@@ -21,7 +37,10 @@ style:
     # for. Re-evaluate if/when business logic with literal constants appears.
     active: false
   ReturnCount:
-    active: false
+    active: true
+    max: 3
+    excludedFunctions:
+      - 'equals'
   UnusedPrivateMember:
     active: true
   ForbiddenComment:
@@ -43,9 +62,18 @@ style:
     # is also enabled in .editorconfig; this is detekt's belt-and-suspenders.
     active: true
   MaxLineLength:
-    active: false
+    active: true
+    maxLineLength: 100
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: false
   ThrowsCount:
     active: false
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - reason: 'GlobalScope is forbidden — inject a CoroutineScope (KOTLIN_STYLE §7).'
+        value: 'kotlinx.coroutines.GlobalScope'
 
 naming:
   MatchingDeclarationName:
@@ -55,14 +83,29 @@ naming:
 
 exceptions:
   TooGenericExceptionCaught:
+    # §8 forbids bare `catch (e: Exception)` without rethrowing or narrowing.
+    # The few in lib/runtime rethrow CancellationException and then log+handle
+    # Exception — which is the idiomatic Kotlin coroutine pattern. Keep this
+    # off but enforce via the explicit §15 sweep documented in REFACTOR_PLAN.
     active: false
   SwallowedException:
     active: false
 
 comments:
   UndocumentedPublicClass:
-    active: false
+    active: true
+    searchInProtectedClass: false
+    searchInNestedClass: false
+    searchInInnerClass: false
+    searchInInnerObject: false
+    searchInInnerInterface: false
   UndocumentedPublicFunction:
-    active: false
+    active: true
   UndocumentedPublicProperty:
+    # Off intentionally: the public surface is dominated by @Serializable
+    # message-catalog records where each property carries an @SerialName
+    # equal to the protocol field name and the enclosing class KDoc
+    # explains the message semantics. Per-property KDoc would just restate
+    # the field name. UndocumentedPublicClass / Function remain enforced.
+    # See STYLE_GUIDE_FEEDBACK.md.
     active: false

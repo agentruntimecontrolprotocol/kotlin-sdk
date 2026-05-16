@@ -1,0 +1,88 @@
+# Detekt override for the :samples module.
+#
+# Samples are illustrative protocol walkthroughs, not library code. They
+# trade brevity for clarity (sequential `main` functions that narrate the
+# protocol, helper signatures shaped after RFC §x), and intentionally
+# leave stub bodies where a real consumer would provide application
+# logic. The §11 size/parameter limits are scoped to library/CLI code;
+# the samples bar is style, naming, forbidden patterns, KDoc on the
+# entry point.
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+complexity:
+  TooManyFunctions:
+    active: false
+  LongParameterList:
+    active: false
+  LongMethod:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+  CognitiveComplexMethod:
+    active: false
+  LargeClass:
+    active: false
+  NestedBlockDepth:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  ReturnCount:
+    active: false
+  UnusedPrivateMember:
+    # Stubs hold constructor fields the bodied form will need (`path`,
+    # `endpoint`, etc.). Keep the warning off here; UnusedImport stays on
+    # via ktlint.
+    active: false
+  UnusedPrivateProperty:
+    active: false
+  UnusedParameter:
+    active: false
+  ForbiddenComment:
+    active: true
+    comments:
+      - reason: 'FIXME marker — open an issue or fix it'
+        value: '\bFIXME:'
+  WildcardImport:
+    active: true
+  MaxLineLength:
+    active: true
+    maxLineLength: 100
+    excludePackageStatements: true
+    excludeImportStatements: true
+  ThrowsCount:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+
+naming:
+  PackageNaming:
+    active: true
+  MatchingDeclarationName:
+    active: false
+  FunctionNaming:
+    active: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+  TooGenericExceptionThrown:
+    # Samples sometimes `throw RuntimeException("simulated crash")` to
+    # illustrate resumability flows. Allow that; production code is
+    # checked through the lib config.
+    active: false
+  SwallowedException:
+    active: false
+
+comments:
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false

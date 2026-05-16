@@ -72,27 +72,26 @@ public class ARCPRuntime(
      *
      * Returns the launched [Job] so callers may await or cancel.
      */
-    public fun accept(transport: Transport): Job =
-        scope.launch {
-            val opener =
-                try {
-                    transport.receive().first()
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    log.warn(e) { "transport closed before session.open" }
-                    return@launch
-                }
-
-            val outcome = handleHandshake(opener)
-            transport.send(outcome.reply)
-
-            if (outcome.session is SessionState.Authenticated) {
-                runDispatchLoop(transport)
-            } else {
-                transport.close()
+    public fun accept(transport: Transport): Job = scope.launch {
+        val opener =
+            try {
+                transport.receive().first()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                log.warn(e) { "transport closed before session.open" }
+                return@launch
             }
+
+        val outcome = handleHandshake(opener)
+        transport.send(outcome.reply)
+
+        if (outcome.session is SessionState.Authenticated) {
+            runDispatchLoop(transport)
+        } else {
+            transport.close()
         }
+    }
 
     private suspend fun runDispatchLoop(transport: Transport) {
         try {
@@ -141,58 +140,88 @@ public class ARCPRuntime(
     private fun handleHandshake(opener: Envelope): HandshakeOutcome {
         val open =
             opener.payload as? SessionOpen
-                ?: return HandshakeOutcome(
-                    SessionState.Closed(ErrorCode.FAILED_PRECONDITION, "first message must be session.open"),
-                    Envelope(
-                        id = MessageId.random(),
-                        correlationId = opener.id,
-                        payload =
-                            SessionRejected(
-                                code = ErrorCode.FAILED_PRECONDITION,
-                                message = "first message must be session.open",
-                            ),
-                    ),
-                )
-
+                ?: return rejectFirstMessage(opener)
         val negotiation = negotiate(open.capabilities, supportedCapabilities)
-        if (negotiation.unsupported.isNotEmpty()) {
-            return HandshakeOutcome(
-                SessionState.Closed(ErrorCode.UNIMPLEMENTED, "unsupported capabilities"),
-                Envelope(
-                    id = MessageId.random(),
-                    correlationId = opener.id,
-                    payload =
-                        SessionRejected(
-                            code = ErrorCode.UNIMPLEMENTED,
-                            message = "unsupported capabilities: ${negotiation.unsupported.joinToString()}",
-                        ),
-                ),
-            )
+        return if (negotiation.unsupported.isNotEmpty()) {
+            rejectUnsupported(opener, negotiation.unsupported)
+        } else {
+            authenticateOrReject(opener, open, negotiation)
         }
+    }
 
-        val principal =
-            try {
-                authenticate(open)
-            } catch (e: ARCPException.Unauthenticated) {
-                return HandshakeOutcome(
-                    SessionState.Closed(ErrorCode.UNAUTHENTICATED, e.message ?: "unauthenticated"),
-                    Envelope(
-                        id = MessageId.random(),
-                        correlationId = opener.id,
-                        payload = SessionUnauthenticated(message = e.message ?: "unauthenticated"),
+    private fun authenticateOrReject(
+        opener: Envelope,
+        open: SessionOpen,
+        negotiation: CapabilityNegotiation,
+    ): HandshakeOutcome = try {
+        acceptSession(opener, authenticate(open), negotiation.negotiated)
+    } catch (e: ARCPException.Unauthenticated) {
+        rejectUnauthenticated(opener, e.message)
+    }
+
+    private fun rejectFirstMessage(opener: Envelope): HandshakeOutcome {
+        val msg = "first message must be session.open"
+        return HandshakeOutcome(
+            SessionState.Closed(ErrorCode.FAILED_PRECONDITION, msg),
+            Envelope(
+                id = MessageId.random(),
+                correlationId = opener.id,
+                payload =
+                    SessionRejected(
+                        code = ErrorCode.FAILED_PRECONDITION,
+                        message = msg,
                     ),
-                )
-            }
+            ),
+        )
+    }
 
+    private fun rejectUnsupported(
+        opener: Envelope,
+        unsupported: Collection<String>,
+    ): HandshakeOutcome {
+        val detail = "unsupported capabilities: ${unsupported.joinToString()}"
+        return HandshakeOutcome(
+            SessionState.Closed(ErrorCode.UNIMPLEMENTED, "unsupported capabilities"),
+            Envelope(
+                id = MessageId.random(),
+                correlationId = opener.id,
+                payload =
+                    SessionRejected(
+                        code = ErrorCode.UNIMPLEMENTED,
+                        message = detail,
+                    ),
+            ),
+        )
+    }
+
+    private fun rejectUnauthenticated(
+        opener: Envelope,
+        reason: String?,
+    ): HandshakeOutcome {
+        val msg = reason ?: "unauthenticated"
+        return HandshakeOutcome(
+            SessionState.Closed(ErrorCode.UNAUTHENTICATED, msg),
+            Envelope(
+                id = MessageId.random(),
+                correlationId = opener.id,
+                payload = SessionUnauthenticated(message = msg),
+            ),
+        )
+    }
+
+    private fun acceptSession(
+        opener: Envelope,
+        principal: String,
+        negotiated: Capabilities,
+    ): HandshakeOutcome {
         val sessionId = SessionId.random()
         val accepted =
             SessionState.Authenticated(
                 sessionId = sessionId,
                 principal = principal,
-                capabilities = negotiation.negotiated,
+                capabilities = negotiated,
                 acceptedAt = Clock.System.now(),
             )
-
         val reply =
             Envelope(
                 id = MessageId.random(),
@@ -202,7 +231,7 @@ public class ARCPRuntime(
                     SessionAccepted(
                         sessionId = sessionId,
                         runtime = identity,
-                        capabilities = negotiation.negotiated,
+                        capabilities = negotiated,
                         lease =
                             SessionLease(
                                 expiresAt = Clock.System.now().plus(sessionLeaseDuration),
@@ -212,34 +241,34 @@ public class ARCPRuntime(
         return HandshakeOutcome(accepted, reply)
     }
 
-    private fun authenticate(open: SessionOpen): String =
-        when (open.auth.scheme) {
-            AuthScheme.BEARER -> {
-                val token =
-                    open.auth.token
-                        ?: throw ARCPException.Unauthenticated("bearer scheme requires token")
-                bearerAuth.verify(token)
-            }
-            AuthScheme.SIGNED_JWT -> {
-                val token =
-                    open.auth.token
-                        ?: throw ARCPException.Unauthenticated("signed_jwt scheme requires token")
-                val auth =
-                    jwtAuth
-                        ?: throw ARCPException.Unauthenticated("runtime not configured for signed_jwt")
-                auth.verify(token)
-            }
-            AuthScheme.NONE -> {
-                if (!supportedCapabilities.anonymous) {
-                    throw ARCPException.Unauthenticated("anonymous (none) auth not negotiated")
-                }
-                "anonymous"
-            }
-            AuthScheme.MTLS, AuthScheme.OAUTH2 ->
-                throw ARCPException.Unauthenticated(
-                    "auth scheme ${open.auth.scheme.name.lowercase()} is deferred to v0.2",
-                )
+    private fun authenticate(open: SessionOpen): String = when (open.auth.scheme) {
+        AuthScheme.BEARER -> {
+            val token =
+                open.auth.token
+                    ?: throw ARCPException.Unauthenticated("bearer scheme requires token")
+            bearerAuth.verify(token)
         }
+        AuthScheme.SIGNED_JWT -> {
+            val token =
+                open.auth.token
+                    ?: throw ARCPException.Unauthenticated("signed_jwt scheme requires token")
+            val auth =
+                jwtAuth ?: throw ARCPException.Unauthenticated(
+                    "runtime not configured for signed_jwt",
+                )
+            auth.verify(token)
+        }
+        AuthScheme.NONE -> {
+            if (!supportedCapabilities.anonymous) {
+                throw ARCPException.Unauthenticated("anonymous (none) auth not negotiated")
+            }
+            "anonymous"
+        }
+        AuthScheme.MTLS, AuthScheme.OAUTH2 ->
+            throw ARCPException.Unauthenticated(
+                "auth scheme ${open.auth.scheme.name.lowercase()} is deferred to v0.2",
+            )
+    }
 
     /** Emits a [SessionEvicted] event then closes [transport]. */
     public suspend fun evict(

@@ -26,43 +26,72 @@ public fun negotiate(
     supported: Capabilities,
 ): CapabilityNegotiation {
     val unsupported = mutableListOf<String>()
-
-    fun negotiateBool(
-        name: String,
-        p: Boolean,
-        s: Boolean,
-    ): Boolean {
-        val v = p && s
-        if (p && !s) unsupported += name
-        return v
-    }
-
-    val merged =
-        Capabilities(
-            streaming = negotiateBool("streaming", proposed.streaming, supported.streaming),
-            durableJobs = negotiateBool("durable_jobs", proposed.durableJobs, supported.durableJobs),
-            checkpoints = negotiateBool("checkpoints", proposed.checkpoints, supported.checkpoints),
-            binaryStreams = negotiateBool("binary_streams", proposed.binaryStreams, supported.binaryStreams),
-            agentHandoff = negotiateBool("agent_handoff", proposed.agentHandoff, supported.agentHandoff),
-            humanInput = negotiateBool("human_input", proposed.humanInput, supported.humanInput),
-            artifacts = negotiateBool("artifacts", proposed.artifacts, supported.artifacts),
-            subscriptions = negotiateBool("subscriptions", proposed.subscriptions, supported.subscriptions),
-            scheduledJobs = negotiateBool("scheduled_jobs", proposed.scheduledJobs, supported.scheduledJobs),
-            anonymous = proposed.anonymous && supported.anonymous,
-            interrupt = proposed.interrupt && supported.interrupt,
-            heartbeatIntervalSeconds =
-                minOf(proposed.heartbeatIntervalSeconds, supported.heartbeatIntervalSeconds),
-            heartbeatRecovery = supported.heartbeatRecovery,
-            binaryEncoding =
-                supported.binaryEncoding
-                    .intersect(proposed.binaryEncoding.toSet())
-                    .toList()
-                    .ifEmpty { listOf("base64") },
-            extensions = supported.extensions.intersect(proposed.extensions.toSet()).toList(),
-        )
-
-    val unsupportedExtensions = proposed.extensions - supported.extensions.toSet()
-    unsupported += unsupportedExtensions
-
+    val merged = mergeCapabilities(proposed, supported, unsupported)
+    unsupported += proposed.extensions - supported.extensions.toSet()
     return CapabilityNegotiation(merged, unsupported)
+}
+
+private fun mergeCapabilities(
+    proposed: Capabilities,
+    supported: Capabilities,
+    unsupported: MutableList<String>,
+): Capabilities {
+    val bools = negotiateBooleanFlags(proposed, supported, unsupported)
+    return Capabilities(
+        streaming = bools.getValue("streaming"),
+        durableJobs = bools.getValue("durable_jobs"),
+        checkpoints = bools.getValue("checkpoints"),
+        binaryStreams = bools.getValue("binary_streams"),
+        agentHandoff = bools.getValue("agent_handoff"),
+        humanInput = bools.getValue("human_input"),
+        artifacts = bools.getValue("artifacts"),
+        subscriptions = bools.getValue("subscriptions"),
+        scheduledJobs = bools.getValue("scheduled_jobs"),
+        anonymous = proposed.anonymous && supported.anonymous,
+        interrupt = proposed.interrupt && supported.interrupt,
+        heartbeatIntervalSeconds = minOf(
+            proposed.heartbeatIntervalSeconds,
+            supported.heartbeatIntervalSeconds,
+        ),
+        heartbeatRecovery = supported.heartbeatRecovery,
+        binaryEncoding = negotiateBinaryEncoding(proposed, supported),
+        extensions = negotiateExtensions(proposed, supported),
+    )
+}
+
+private fun negotiateBinaryEncoding(
+    proposed: Capabilities,
+    supported: Capabilities,
+): List<String> {
+    val both = supported.binaryEncoding.intersect(proposed.binaryEncoding.toSet())
+    return both.toList().ifEmpty { listOf("base64") }
+}
+
+private fun negotiateExtensions(
+    proposed: Capabilities,
+    supported: Capabilities,
+): List<String> = supported.extensions.intersect(proposed.extensions.toSet()).toList()
+
+private fun negotiateBooleanFlags(
+    proposed: Capabilities,
+    supported: Capabilities,
+    unsupported: MutableList<String>,
+): Map<String, Boolean> {
+    val pairs =
+        listOf(
+            "streaming" to (proposed.streaming to supported.streaming),
+            "durable_jobs" to (proposed.durableJobs to supported.durableJobs),
+            "checkpoints" to (proposed.checkpoints to supported.checkpoints),
+            "binary_streams" to (proposed.binaryStreams to supported.binaryStreams),
+            "agent_handoff" to (proposed.agentHandoff to supported.agentHandoff),
+            "human_input" to (proposed.humanInput to supported.humanInput),
+            "artifacts" to (proposed.artifacts to supported.artifacts),
+            "subscriptions" to (proposed.subscriptions to supported.subscriptions),
+            "scheduled_jobs" to (proposed.scheduledJobs to supported.scheduledJobs),
+        )
+    return pairs.associate { (name, ps) ->
+        val (p, s) = ps
+        if (p && !s) unsupported += name
+        name to (p && s)
+    }
 }

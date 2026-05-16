@@ -67,5 +67,6 @@ internal object ErrorCodeSerializer : KSerializer<ErrorCode> {
         encoder.encodeString(value.wire)
     }
 
-    override fun deserialize(decoder: Decoder): ErrorCode = ErrorCode.fromWire(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): ErrorCode =
+        ErrorCode.fromWire(decoder.decodeString())
 }

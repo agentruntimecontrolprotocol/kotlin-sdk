@@ -59,7 +59,9 @@ publishing {
             from(components["java"])
             pom {
                 name.set("ARCP Kotlin SDK")
-                description.set("Reference Kotlin implementation of the Agent Runtime Control Protocol (ARCP) v1.0.")
+                description.set(
+                    "Reference Kotlin implementation of the Agent Runtime Control Protocol (ARCP) v1.0.",
+                )
                 url.set("https://github.com/agentruntimecontrolprotocol/kotlin-sdk")
                 licenses {
                     license {
@@ -74,8 +76,12 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/agentruntimecontrolprotocol/kotlin-sdk.git")
-                    developerConnection.set("scm:git:ssh://github.com/agentruntimecontrolprotocol/kotlin-sdk.git")
+                    connection.set(
+                        "scm:git:git://github.com/agentruntimecontrolprotocol/kotlin-sdk.git",
+                    )
+                    developerConnection.set(
+                        "scm:git:ssh://github.com/agentruntimecontrolprotocol/kotlin-sdk.git",
+                    )
                     url.set("https://github.com/agentruntimecontrolprotocol/kotlin-sdk")
                 }
             }

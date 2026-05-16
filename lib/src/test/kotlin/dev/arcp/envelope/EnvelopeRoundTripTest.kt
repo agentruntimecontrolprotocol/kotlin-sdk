@@ -119,7 +119,9 @@ class EnvelopeRoundTripTest :
                 { "id": "x", "type": "ping", "timestamp": "2026-05-09T13:00:00Z", "payload": {} }
                 """.trimIndent()
             val ex =
-                runCatching { arcpJson.decodeFromString(Envelope.serializer(), raw) }.exceptionOrNull()
+                runCatching {
+                    arcpJson.decodeFromString(Envelope.serializer(), raw)
+                }.exceptionOrNull()
             (ex != null) shouldBe true
             ex!!.message!!.shouldContain("arcp")
         }

@@ -22,12 +22,11 @@ public val arcpJson: Json = buildArcpJson { }
  * Builds an ARCP-flavored [Json] configuration. Useful when callers need to
  * extend the default with their own [kotlinx.serialization.modules.SerializersModule].
  */
-public fun buildArcpJson(extra: JsonBuilder.() -> Unit): Json =
-    Json {
-        classDiscriminator = "type"
-        encodeDefaults = false
-        ignoreUnknownKeys = true
-        explicitNulls = false
-        prettyPrint = false
-        extra()
-    }
+public fun buildArcpJson(extra: JsonBuilder.() -> Unit): Json = Json {
+    classDiscriminator = "type"
+    encodeDefaults = false
+    ignoreUnknownKeys = true
+    explicitNulls = false
+    prettyPrint = false
+    extra()
+}

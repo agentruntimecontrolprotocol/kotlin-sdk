@@ -39,44 +39,54 @@ public class EventLog private constructor(
      * number. Re-appending an envelope with the same `(session_id, message_id)`
      * raises [ARCPException.AlreadyExists].
      */
-    public suspend fun append(envelope: Envelope): Long =
-        withIo {
-            val sql =
-                """
-                INSERT INTO arcp_envelope (
-                    session_id, message_id, type, timestamp_iso,
-                    job_id, stream_id, subscription_id, trace_id,
-                    correlation_id, causation_id, priority, body_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
-            try {
-                connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS).use { ps ->
-                    ps.setString(1, envelope.sessionId?.value)
-                    ps.setString(2, envelope.id.value)
-                    ps.setString(3, envelope.type)
-                    ps.setString(4, envelope.timestamp.toString())
-                    ps.setString(5, envelope.jobId?.value)
-                    ps.setString(6, envelope.streamId?.value)
-                    ps.setString(7, envelope.subscriptionId?.value)
-                    ps.setString(8, envelope.traceId?.value)
-                    ps.setString(9, envelope.correlationId?.value)
-                    ps.setString(10, envelope.causationId?.value)
-                    ps.setString(11, envelope.priority.name.lowercase())
-                    ps.setString(12, arcpJson.encodeToString(Envelope.serializer(), envelope))
-                    ps.executeUpdate()
-                    ps.generatedKeys.use { rs ->
-                        check(rs.next()) { "no generated key returned for envelope insert" }
-                        rs.getLong(1)
-                    }
-                }
-            } catch (e: SQLException) {
-                if (e.message?.contains("UNIQUE", ignoreCase = true) == true) {
-                    throw ARCPException.AlreadyExists(
-                        "duplicate message id ${envelope.id.value} for session ${envelope.sessionId?.value}",
-                    )
-                }
-                throw ARCPException.Internal("event-log append failed: ${e.message}", e)
+    public suspend fun append(envelope: Envelope): Long = withIo {
+        try {
+            insertEnvelope(envelope)
+        } catch (e: SQLException) {
+            if (e.message?.contains("UNIQUE", ignoreCase = true) == true) {
+                throw ARCPException.AlreadyExists(
+                    "duplicate message id ${envelope.id.value} " +
+                        "for session ${envelope.sessionId?.value}",
+                )
             }
+            throw ARCPException.Internal(
+                "event-log append failed: ${e.message}",
+                e,
+            )
+        }
+    }
+
+    private fun insertEnvelope(envelope: Envelope): Long {
+        val keysFlag = java.sql.Statement.RETURN_GENERATED_KEYS
+        return connection.prepareStatement(INSERT_ENVELOPE_SQL, keysFlag).use { ps ->
+            bindEnvelope(ps, envelope)
+            ps.executeUpdate()
+            readGeneratedSeq(ps)
+        }
+    }
+
+    private fun bindEnvelope(
+        ps: java.sql.PreparedStatement,
+        envelope: Envelope,
+    ) {
+        ps.setString(1, envelope.sessionId?.value)
+        ps.setString(2, envelope.id.value)
+        ps.setString(3, envelope.type)
+        ps.setString(4, envelope.timestamp.toString())
+        ps.setString(5, envelope.jobId?.value)
+        ps.setString(6, envelope.streamId?.value)
+        ps.setString(7, envelope.subscriptionId?.value)
+        ps.setString(8, envelope.traceId?.value)
+        ps.setString(9, envelope.correlationId?.value)
+        ps.setString(10, envelope.causationId?.value)
+        ps.setString(11, envelope.priority.name.lowercase())
+        ps.setString(12, arcpJson.encodeToString(Envelope.serializer(), envelope))
+    }
+
+    private fun readGeneratedSeq(ps: java.sql.PreparedStatement): Long =
+        ps.generatedKeys.use { rs ->
+            check(rs.next()) { "no generated key returned for envelope insert" }
+            rs.getLong(1)
         }
 
     /**
@@ -86,35 +96,34 @@ public class EventLog private constructor(
     public fun replay(
         sessionId: SessionId,
         afterMessageId: MessageId? = null,
-    ): Flow<Envelope> =
-        flow {
-            val cursorSeq =
-                if (afterMessageId == null) {
-                    -1L
-                } else {
-                    findSeq(sessionId, afterMessageId)
-                        ?: throw ARCPException.DataLoss(
-                            "no message ${afterMessageId.value} for session ${sessionId.value}",
-                        )
-                }
+    ): Flow<Envelope> = flow {
+        val cursorSeq =
+            if (afterMessageId == null) {
+                -1L
+            } else {
+                findSeq(sessionId, afterMessageId)
+                    ?: throw ARCPException.DataLoss(
+                        "no message ${afterMessageId.value} for session ${sessionId.value}",
+                    )
+            }
 
-            val sql =
-                """
-                SELECT body_json FROM arcp_envelope
-                WHERE session_id = ? AND seq > ?
-                ORDER BY seq ASC
-                """.trimIndent()
-            connection.prepareStatement(sql).use { ps ->
-                ps.setString(1, sessionId.value)
-                ps.setLong(2, cursorSeq)
-                ps.executeQuery().use { rs ->
-                    while (rs.next()) {
-                        val body = rs.getString(1)
-                        emit(arcpJson.decodeFromString(Envelope.serializer(), body))
-                    }
+        val sql =
+            """
+            SELECT body_json FROM arcp_envelope
+            WHERE session_id = ? AND seq > ?
+            ORDER BY seq ASC
+            """.trimIndent()
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, sessionId.value)
+            ps.setLong(2, cursorSeq)
+            ps.executeQuery().use { rs ->
+                while (rs.next()) {
+                    val body = rs.getString(1)
+                    emit(arcpJson.decodeFromString(Envelope.serializer(), body))
                 }
             }
-        }.flowOn(Dispatchers.IO)
+        }
+    }.flowOn(Dispatchers.IO)
 
     /**
      * Returns the previously-recorded outcome for [principal]+[idempotencyKey],
@@ -123,29 +132,28 @@ public class EventLog private constructor(
     public suspend fun lookupIdempotent(
         principal: String,
         idempotencyKey: String,
-    ): JsonElement? =
-        withIo {
-            val sql =
-                """
-                SELECT outcome_json, expires_at_iso FROM arcp_idempotency
-                WHERE principal = ? AND idempotency_key = ?
-                """.trimIndent()
-            connection.prepareStatement(sql).use { ps ->
-                ps.setString(1, principal)
-                ps.setString(2, idempotencyKey)
-                ps.executeQuery().use { rs ->
-                    if (!rs.next()) return@use null
-                    val expires = kotlinx.datetime.Instant.parse(rs.getString(2))
-                    if (expires <
-                        kotlinx.datetime.Clock.System
-                            .now()
-                    ) {
-                        return@use null
-                    }
-                    arcpJson.parseToJsonElement(rs.getString(1))
+    ): JsonElement? = withIo {
+        val sql =
+            """
+            SELECT outcome_json, expires_at_iso FROM arcp_idempotency
+            WHERE principal = ? AND idempotency_key = ?
+            """.trimIndent()
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, principal)
+            ps.setString(2, idempotencyKey)
+            ps.executeQuery().use { rs ->
+                if (!rs.next()) return@use null
+                val expires = kotlinx.datetime.Instant.parse(rs.getString(2))
+                if (expires <
+                    kotlinx.datetime.Clock.System
+                        .now()
+                ) {
+                    return@use null
                 }
+                arcpJson.parseToJsonElement(rs.getString(1))
             }
         }
+    }
 
     /**
      * Records [outcome] under [principal]+[idempotencyKey] until [expiresAt]
@@ -182,31 +190,37 @@ public class EventLog private constructor(
     }
 
     /** Returns the highest assigned sequence number in the log. */
-    public suspend fun lastSeq(): Long =
-        withIo {
-            connection.createStatement().use { st ->
-                st.executeQuery("SELECT COALESCE(MAX(seq), 0) FROM arcp_envelope").use { rs ->
-                    rs.next()
-                    rs.getLong(1)
-                }
+    public suspend fun lastSeq(): Long = withIo {
+        connection.createStatement().use { st ->
+            st.executeQuery("SELECT COALESCE(MAX(seq), 0) FROM arcp_envelope").use { rs ->
+                rs.next()
+                rs.getLong(1)
             }
         }
+    }
 
     private fun findSeq(
         sessionId: SessionId,
         messageId: MessageId,
     ): Long? {
-        val sql = "SELECT seq FROM arcp_envelope WHERE session_id = ? AND message_id = ?"
-        connection.prepareStatement(sql).use { ps ->
+        val sql =
+            "SELECT seq FROM arcp_envelope " +
+                "WHERE session_id = ? AND message_id = ?"
+        return connection.prepareStatement(sql).use { ps ->
             ps.setString(1, sessionId.value)
             ps.setString(2, messageId.value)
-            ps.executeQuery().use { rs ->
-                return if (rs.next()) rs.getLong(1) else null
-            }
+            readSingleSeq(ps)
         }
     }
 
-    private suspend inline fun <T> withIo(crossinline block: () -> T): T = kotlinx.coroutines.withContext(Dispatchers.IO) { block() }
+    private fun readSingleSeq(ps: java.sql.PreparedStatement): Long? = ps.executeQuery().use { rs ->
+        if (rs.next()) rs.getLong(1) else null
+    }
+
+    private suspend inline fun <T> withIo(crossinline block: () -> T): T =
+        kotlinx.coroutines.withContext(Dispatchers.IO) {
+            block()
+        }
 
     override fun close() {
         try {
@@ -219,6 +233,15 @@ public class EventLog private constructor(
     public companion object {
         /** Resource path of the embedded schema file. */
         public const val SCHEMA_RESOURCE: String = "/arcp/store/schema.sql"
+
+        private val INSERT_ENVELOPE_SQL =
+            """
+            INSERT INTO arcp_envelope (
+                session_id, message_id, type, timestamp_iso,
+                job_id, stream_id, subscription_id, trace_id,
+                correlation_id, causation_id, priority, body_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent()
 
         /** Opens an event log backed by an in-memory SQLite database. */
         public fun openInMemory(): EventLog = open("jdbc:sqlite::memory:")

@@ -1,6 +1,7 @@
 package dev.arcp.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.parse
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.options.default
@@ -15,13 +16,13 @@ import dev.arcp.Version
  * runtime/transport surfaces ship in v0.2.
  */
 public class ArcpCli : CliktCommand(name = "arcp") {
-    override fun help(context: com.github.ajalt.clikt.core.Context): String = "ARCP Kotlin SDK command-line tool"
+    override fun help(context: Context): String = "ARCP Kotlin SDK command-line tool"
 
     override fun run(): Unit = Unit
 }
 
 private class VersionCommand : CliktCommand(name = "version") {
-    override fun help(context: com.github.ajalt.clikt.core.Context): String = "Print SDK and protocol version"
+    override fun help(context: Context): String = "Print SDK and protocol version"
 
     override fun run() {
         echo("ARCP protocol: ${Version.PROTOCOL_VERSION}")
@@ -33,13 +34,15 @@ private class VersionCommand : CliktCommand(name = "version") {
 private class ServeCommand : CliktCommand(name = "serve") {
     private val transport by option().default("memory")
 
-    override fun help(context: com.github.ajalt.clikt.core.Context): String = "Run an ARCP runtime (transport implementations are v0.2)"
+    override fun help(context: Context): String =
+        "Run an ARCP runtime (transport implementations are v0.2)"
 
     override fun run() {
         echo("transport=$transport — runtime serve mode is v0.2")
     }
 }
 
+/** Entry point for the `arcp` CLI. */
 public fun main(args: Array<String>) {
     ArcpCli().subcommands(VersionCommand(), ServeCommand()).parse(args)
 }

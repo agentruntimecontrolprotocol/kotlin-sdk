@@ -36,68 +36,84 @@ public fun main(): Unit = runBlocking {
         )
     }
 
-    val handle = java.util.UUID.randomUUID().toString().take(8)
+    val handle =
+        java.util.UUID
+            .randomUUID()
+            .toString()
+            .take(8)
 
     client.request(
-        envelope = client.envelope(
-            type = EXT_TUNE,
-            payload = mapOf(
-                "center_freq_hz" to 145_500_000.0,
-                "sample_rate_hz" to 2_048_000.0,
-                "ppm_correction" to 1,
+        envelope =
+            client.envelope(
+                type = EXT_TUNE,
+                payload =
+                    mapOf(
+                        "center_freq_hz" to 145_500_000.0,
+                        "sample_rate_hz" to 2_048_000.0,
+                        "ppm_correction" to 1,
+                    ),
             ),
-        ),
         timeoutMs = 10_000,
     )
     client.request(
-        envelope = client.envelope(
-            type = EXT_GAIN,
-            payload = mapOf(
-                "stages" to listOf(mapOf("name" to "TUNER", "value_db" to 28.0)),
+        envelope =
+            client.envelope(
+                type = EXT_GAIN,
+                payload =
+                    mapOf(
+                        "stages" to listOf(mapOf("name" to "TUNER", "value_db" to 28.0)),
+                    ),
             ),
-        ),
         timeoutMs = 10_000,
     )
 
     // Capture returns an artifact.ref pointing at the IQ buffer.
     // The buffer never travels inline — demodulate references it.
-    val cap = client.request(
-        envelope = client.envelope(
-            type = EXT_CAPTURE,
-            payload = mapOf(
-                "seconds" to 5.0,
-                "capture_handle" to handle,
-                "decimate" to 1,
-            ),
-        ),
-        timeoutMs = 15_000,
-    )
+    val cap =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = EXT_CAPTURE,
+                    payload =
+                        mapOf(
+                            "seconds" to 5.0,
+                            "capture_handle" to handle,
+                            "decimate" to 1,
+                        ),
+                ),
+            timeoutMs = 15_000,
+        )
     val iqArtifact = cap.payloadMap()["artifact_id"].toString()
     println("captured IQ → $iqArtifact")
 
-    val audio = client.request(
-        envelope = client.envelope(
-            type = EXT_DEMODULATE,
-            payload = mapOf(
-                "iq_artifact_id" to iqArtifact,
-                "mode" to "NBFM",
-                "audio_rate_hz" to 48_000,
-            ),
-        ),
-        timeoutMs = 15_000,
-    )
+    val audio =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = EXT_DEMODULATE,
+                    payload =
+                        mapOf(
+                            "iq_artifact_id" to iqArtifact,
+                            "mode" to "NBFM",
+                            "audio_rate_hz" to 48_000,
+                        ),
+                ),
+            timeoutMs = 15_000,
+        )
     println("demod  PCM → ${audio.payloadMap()["artifact_id"]}")
 
     // §21.3 demonstration: unadvertised extension marked optional.
     // Runtime SHOULD ack (silent drop) rather than nack.
-    val optional = client.request(
-        envelope = client.envelope(
-            type = "arcpx.sdr.experimental_doppler.v1",
-            extensions = mapOf("optional" to true),
-            payload = mapOf("velocity_mps" to 7.4),
-        ),
-        timeoutMs = 5_000,
-    )
+    val optional =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "arcpx.sdr.experimental_doppler.v1",
+                    extensions = mapOf("optional" to true),
+                    payload = mapOf("velocity_mps" to 7.4),
+                ),
+            timeoutMs = 5_000,
+        )
     println("optional unknown → ${optional.type}")
 
     client.close()

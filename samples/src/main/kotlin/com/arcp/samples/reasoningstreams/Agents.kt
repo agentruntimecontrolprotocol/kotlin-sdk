@@ -1,9 +1,11 @@
-package com.arcp.samples.reasoning_streams
+package com.arcp.samples.reasoningstreams
 
 /** Primary reasoning step + critic LLM call. Stubbed. */
 
-internal suspend fun primaryStep(request: String, last: Map<String, Any?>?): String =
-    TODO("anthropic-java-sdk: primary step")
+internal suspend fun primaryStep(
+    request: String,
+    last: Map<String, Any?>?,
+): String = TODO("anthropic-java-sdk: primary step")
 
 internal data class Critique(
     val severity: String,
@@ -13,5 +15,4 @@ internal data class Critique(
 )
 
 /** Mirror critic LLM call. Returns (severity, summary, suggestion, tokens). */
-internal suspend fun critiqueThought(text: String): Critique =
-    TODO("anthropic-java-sdk: critique")
+internal suspend fun critiqueThought(text: String): Critique = TODO("anthropic-java-sdk: critique")

@@ -18,7 +18,8 @@ class ErrorCodeTest :
         "RATE_LIMITED decodes as RESOURCE_EXHAUSTED but does not encode that way" {
             val decoded = arcpJson.decodeFromString(ErrorCode.serializer(), "\"RATE_LIMITED\"")
             decoded shouldBe ErrorCode.RESOURCE_EXHAUSTED
-            Json.Default.encodeToString(ErrorCode.serializer(), decoded) shouldBe "\"RESOURCE_EXHAUSTED\""
+            Json.Default.encodeToString(ErrorCode.serializer(), decoded) shouldBe
+                "\"RESOURCE_EXHAUSTED\""
         }
 
         "unknown wire string is rejected" {

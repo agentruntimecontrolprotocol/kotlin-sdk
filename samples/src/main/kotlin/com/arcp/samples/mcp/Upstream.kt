@@ -13,24 +13,35 @@ internal data class StdioServerParameters(
     val env: Map<String, String> = emptyMap(),
 )
 
-internal fun upstreamParams(): StdioServerParameters =
-    TODO("MCP server stdio invocation")
+internal fun upstreamParams(): StdioServerParameters = TODO("MCP server stdio invocation")
 
 // --- MCP client stubs (illustrative) -------------------------------------
 
-internal data class McpToolDescriptor(val name: String)
+internal data class McpToolDescriptor(
+    val name: String,
+)
 
-internal data class McpContent(val text: String?) {
+internal data class McpContent(
+    val text: String?,
+) {
     fun toMap(): Map<String, Any?> = mapOf("type" to "text", "text" to text)
 }
 
-internal data class McpToolResult(val content: List<McpContent>, val isError: Boolean)
+internal data class McpToolResult(
+    val content: List<McpContent>,
+    val isError: Boolean,
+)
 
 internal class McpSession : AutoCloseable {
     suspend fun initialize(): Unit = TODO("mcp initialize")
+
     suspend fun listTools(): List<McpToolDescriptor> = TODO("mcp tools/list")
-    suspend fun callTool(name: String, arguments: Map<String, Any?>): McpToolResult =
-        TODO("mcp call_tool")
+
+    suspend fun callTool(
+        name: String,
+        arguments: Map<String, Any?>,
+    ): McpToolResult = TODO("mcp call_tool")
+
     override fun close(): Unit = TODO("mcp close")
 
     companion object {
@@ -45,9 +56,14 @@ internal class McpSession : AutoCloseable {
 // the runtime hands these envelopes through the typed builders in
 // `dev.arcp.messages.Execution` etc.; the sample elides that with [stub].
 
-internal class StubPayload(val wireType: String, val fields: Map<String, Any?>) {
+internal class StubPayload(
+    val wireType: String,
+    val fields: Map<String, Any?>,
+) {
     companion object
 }
 
-internal fun stub(wireType: String, fields: Map<String, Any?>): MessageType =
-    TODO("v1.0: mint typed MessageType for $wireType from $fields")
+internal fun stub(
+    wireType: String,
+    fields: Map<String, Any?>,
+): MessageType = TODO("v1.0: mint typed MessageType for $wireType from $fields")

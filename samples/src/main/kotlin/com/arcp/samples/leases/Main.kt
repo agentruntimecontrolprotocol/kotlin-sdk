@@ -27,7 +27,10 @@ internal data class Classified(
     val leaseSeconds: Int,
 )
 
-internal fun classify(argv: List<String>, host: String): Classified {
+internal fun classify(
+    argv: List<String>,
+    host: String,
+): Classified {
     val binary = argv[0]
     return when {
         binary in READ_BINARIES ->
@@ -52,19 +55,22 @@ private suspend fun acquireLease(
     seconds: Int,
     reason: String,
 ): LeaseId {
-    val reply = client.request(
-        envelope = client.envelope(
-            type = "permission.request",
-            payload = mapOf(
-                "permission" to permission,
-                "resource" to resource,
-                "operation" to operation,
-                "reason" to reason,
-                "requested_lease_seconds" to seconds,
-            ),
-        ),
-        timeoutMs = 120_000,
-    )
+    val reply =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "permission.request",
+                    payload =
+                        mapOf(
+                            "permission" to permission,
+                            "resource" to resource,
+                            "operation" to operation,
+                            "reason" to reason,
+                            "requested_lease_seconds" to seconds,
+                        ),
+                ),
+            timeoutMs = 120_000,
+        )
     if (reply.type == "permission.deny") {
         val msg = reply.payloadMap()["reason"]?.toString() ?: "denied"
         throw ARCPException.PermissionDenied(
@@ -83,14 +89,15 @@ internal suspend fun runCommand(
     host: String,
 ): String {
     val k = classify(argv, host)
-    val lease = acquireLease(
-        client,
-        permission = k.permission,
-        resource = k.resource,
-        operation = k.operation,
-        seconds = k.leaseSeconds,
-        reason = reason,
-    )
+    val lease =
+        acquireLease(
+            client,
+            permission = k.permission,
+            resource = k.resource,
+            operation = k.operation,
+            seconds = k.leaseSeconds,
+            reason = reason,
+        )
     // The lease is the only guard. Spawn the subprocess elsewhere.
     return "<would run $argv under lease $lease>"
 }
@@ -105,12 +112,13 @@ internal suspend fun emitThought(
         client.envelope(
             type = "stream.chunk",
             streamId = streamId,
-            payload = mapOf(
-                "sequence" to sequence,
-                "kind" to "thought",
-                "role" to "assistant_thought",
-                "content" to text,
-            ),
+            payload =
+                mapOf(
+                    "sequence" to sequence,
+                    "kind" to "thought",
+                    "role" to "assistant_thought",
+                    "content" to text,
+                ),
         ),
     )
 }

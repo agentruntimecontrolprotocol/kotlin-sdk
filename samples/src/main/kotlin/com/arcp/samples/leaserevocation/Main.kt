@@ -1,4 +1,4 @@
-package com.arcp.samples.lease_revocation
+package com.arcp.samples.leaserevocation
 
 import com.arcp.samples.envelope
 import com.arcp.samples.events
@@ -18,15 +18,19 @@ import kotlinx.datetime.Instant
 
 /** Warehouse DB admin agent. Reads pre-granted; writes prompt operator. */
 
-private val PRE_GRANTED = listOf(
-    "public.orders",
-    "public.customers",
-    "warehouse.fct_revenue_daily",
-)
+private val PRE_GRANTED =
+    listOf(
+        "public.orders",
+        "public.customers",
+        "warehouse.fct_revenue_daily",
+    )
 private const val READ_LEASE_SECONDS: Int = 60 * 60
 private const val WRITE_LEASE_SECONDS: Int = 5 * 60
 
-internal data class LeaseEntry(val leaseId: LeaseId, val expiresAt: Instant)
+internal data class LeaseEntry(
+    val leaseId: LeaseId,
+    val expiresAt: Instant,
+)
 
 private suspend fun requestLease(
     client: ARCPClient,
@@ -36,19 +40,22 @@ private suspend fun requestLease(
     seconds: Int,
     reason: String,
 ): LeaseEntry {
-    val reply = client.request(
-        envelope = client.envelope(
-            type = "permission.request",
-            payload = mapOf(
-                "permission" to permission,
-                "resource" to "table:$table",
-                "operation" to operation,
-                "reason" to reason,
-                "requested_lease_seconds" to seconds,
-            ),
-        ),
-        timeoutMs = 180_000,
-    )
+    val reply =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "permission.request",
+                    payload =
+                        mapOf(
+                            "permission" to permission,
+                            "resource" to "table:$table",
+                            "operation" to operation,
+                            "reason" to reason,
+                            "requested_lease_seconds" to seconds,
+                        ),
+                ),
+            timeoutMs = 180_000,
+        )
     if (reply.type == "permission.deny") {
         throw ARCPException.PermissionDenied(
             permission = PermissionName(permission),
@@ -75,20 +82,24 @@ internal suspend fun authorize(
     for (table in klass.tables) {
         val cached = leases[table to op]
         if (cached != null && cached.expiresAt > now) continue
-        leases[table to op] = requestLease(
-            client,
-            permission = "db.$op",
-            table = table,
-            operation = op,
-            seconds = seconds,
-            reason = "${op.uppercase()} on $table: ${sql.take(80)}",
-        )
+        leases[table to op] =
+            requestLease(
+                client,
+                permission = "db.$op",
+                table = table,
+                operation = op,
+                seconds = seconds,
+                reason = "${op.uppercase()} on $table: ${sql.take(80)}",
+            )
     }
     return op
 }
 
 /** Wire `lease.revoked` into the cache so the next call re-prompts. */
-internal fun handleInbound(env: Envelope, leases: MutableMap<Pair<String, String>, LeaseEntry>) {
+internal fun handleInbound(
+    env: Envelope,
+    leases: MutableMap<Pair<String, String>, LeaseEntry>,
+) {
     if (env.type != "lease.revoked") return
     val lid = env.payloadMap()["lease_id"]?.toString() ?: return
     leases.entries.removeAll { it.value.leaseId.value == lid }
@@ -107,14 +118,15 @@ public fun main(): Unit = runBlocking {
 
         // Pre-grant the broad reads at session open.
         for (table in PRE_GRANTED) {
-            leases[table to "read"] = requestLease(
-                client,
-                permission = "db.read",
-                table = table,
-                operation = "read",
-                seconds = READ_LEASE_SECONDS,
-                reason = "bootstrap",
-            )
+            leases[table to "read"] =
+                requestLease(
+                    client,
+                    permission = "db.read",
+                    table = table,
+                    operation = "read",
+                    seconds = READ_LEASE_SECONDS,
+                    reason = "bootstrap",
+                )
         }
 
         // SELECT — covered by the bootstrap lease.

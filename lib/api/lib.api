@@ -30,7 +30,7 @@ public final class dev/arcp/client/ARCPClient : java/lang/AutoCloseable {
 	public fun close ()V
 	public final fun open (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun receive ()Lkotlinx/coroutines/flow/Flow;
-	public final fun send-WmJQgEs (Ljava/lang/String;Ldev/arcp/messages/MessageType;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun send-DN45PQc (Ljava/lang/String;Ldev/arcp/messages/MessageType;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/arcp/client/ARCPClient$Companion {
@@ -44,44 +44,44 @@ public final class dev/arcp/envelope/Envelope {
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
-	public final fun component10-IJnfnbE ()Ljava/lang/String;
-	public final fun component11-lN-EnU8 ()Ljava/lang/String;
-	public final fun component12-lN-EnU8 ()Ljava/lang/String;
-	public final fun component13-HQnGY_w ()Ljava/lang/String;
-	public final fun component14-HQnGY_w ()Ljava/lang/String;
+	public final fun component10-ySErQjM ()Ljava/lang/String;
+	public final fun component11--kgjS5U ()Ljava/lang/String;
+	public final fun component12--kgjS5U ()Ljava/lang/String;
+	public final fun component13-YYajqfk ()Ljava/lang/String;
+	public final fun component14-YYajqfk ()Ljava/lang/String;
 	public final fun component15 ()Ljava/lang/String;
 	public final fun component16 ()Ldev/arcp/envelope/Priority;
 	public final fun component17 ()Ljava/util/Map;
 	public final fun component18 ()Ldev/arcp/messages/MessageType;
-	public final fun component2-YWAC-7U ()Ljava/lang/String;
+	public final fun component2-rSKfuZI ()Ljava/lang/String;
 	public final fun component3 ()Lkotlinx/datetime/Instant;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
-	public final fun component6-oTOBWIc ()Ljava/lang/String;
-	public final fun component7-zhmFrVA ()Ljava/lang/String;
-	public final fun component8-dd9wyhk ()Ljava/lang/String;
-	public final fun component9-mhBxP7k ()Ljava/lang/String;
-	public final fun copy-kSqBZOI (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;)Ldev/arcp/envelope/Envelope;
-	public static synthetic fun copy-kSqBZOI$default (Ldev/arcp/envelope/Envelope;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;ILjava/lang/Object;)Ldev/arcp/envelope/Envelope;
+	public final fun component6-WgE5AEs ()Ljava/lang/String;
+	public final fun component7-VHyvC20 ()Ljava/lang/String;
+	public final fun component8--TD241s ()Ljava/lang/String;
+	public final fun component9-5qtVeQk ()Ljava/lang/String;
+	public final fun copy-HeR-PqM (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;)Ldev/arcp/envelope/Envelope;
+	public static synthetic fun copy-HeR-PqM$default (Ldev/arcp/envelope/Envelope;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/envelope/Priority;Ljava/util/Map;Ldev/arcp/messages/MessageType;ILjava/lang/Object;)Ldev/arcp/envelope/Envelope;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getArcp ()Ljava/lang/String;
-	public final fun getCausationId-HQnGY_w ()Ljava/lang/String;
-	public final fun getCorrelationId-HQnGY_w ()Ljava/lang/String;
+	public final fun getCausationId-YYajqfk ()Ljava/lang/String;
+	public final fun getCorrelationId-YYajqfk ()Ljava/lang/String;
 	public final fun getExtensions ()Ljava/util/Map;
-	public final fun getId-YWAC-7U ()Ljava/lang/String;
+	public final fun getId-rSKfuZI ()Ljava/lang/String;
 	public final fun getIdempotencyKey ()Ljava/lang/String;
-	public final fun getJobId-zhmFrVA ()Ljava/lang/String;
-	public final fun getParentSpanId-lN-EnU8 ()Ljava/lang/String;
+	public final fun getJobId-VHyvC20 ()Ljava/lang/String;
+	public final fun getParentSpanId--kgjS5U ()Ljava/lang/String;
 	public final fun getPayload ()Ldev/arcp/messages/MessageType;
 	public final fun getPriority ()Ldev/arcp/envelope/Priority;
-	public final fun getSessionId-oTOBWIc ()Ljava/lang/String;
+	public final fun getSessionId-WgE5AEs ()Ljava/lang/String;
 	public final fun getSource ()Ljava/lang/String;
-	public final fun getSpanId-lN-EnU8 ()Ljava/lang/String;
-	public final fun getStreamId-dd9wyhk ()Ljava/lang/String;
-	public final fun getSubscriptionId-mhBxP7k ()Ljava/lang/String;
+	public final fun getSpanId--kgjS5U ()Ljava/lang/String;
+	public final fun getStreamId--TD241s ()Ljava/lang/String;
+	public final fun getSubscriptionId-5qtVeQk ()Ljava/lang/String;
 	public final fun getTarget ()Ljava/lang/String;
 	public final fun getTimestamp ()Lkotlinx/datetime/Instant;
-	public final fun getTraceId-IJnfnbE ()Ljava/lang/String;
+	public final fun getTraceId-ySErQjM ()Ljava/lang/String;
 	public final fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -180,13 +180,13 @@ public final class dev/arcp/error/ARCPException$LeaseExpired : dev/arcp/error/AR
 	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
 	public final fun getExpiredAt ()Lkotlinx/datetime/Instant;
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 }
 
 public final class dev/arcp/error/ARCPException$LeaseRevoked : dev/arcp/error/ARCPException {
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 	public final fun getReason ()Ljava/lang/String;
 }
 
@@ -204,7 +204,7 @@ public final class dev/arcp/error/ARCPException$PermissionDenied : dev/arcp/erro
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
-	public final fun getPermission-qvWeUG4 ()Ljava/lang/String;
+	public final fun getPermission-XXRWIXM ()Ljava/lang/String;
 	public final fun getResource ()Ljava/lang/String;
 }
 
@@ -326,15 +326,15 @@ public synthetic class dev/arcp/ids/ArtifactId$$serializer : kotlinx/serializati
 	public static final field INSTANCE Ldev/arcp/ids/ArtifactId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-WCLw2Eg (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-3jT0pr0 (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-Q-no-xg (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-3BE7yZ8 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/ArtifactId$Companion {
-	public final fun random-PZK2a5k ()Ljava/lang/String;
+	public final fun random-LT6NBB0 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -357,10 +357,10 @@ public synthetic class dev/arcp/ids/IdempotencyKey$$serializer : kotlinx/seriali
 	public static final field INSTANCE Ldev/arcp/ids/IdempotencyKey$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-IjFmAQA (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-bIT19Xo (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-sZFbF2E (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-R5Csth4 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
@@ -387,15 +387,15 @@ public synthetic class dev/arcp/ids/JobId$$serializer : kotlinx/serialization/in
 	public static final field INSTANCE Ldev/arcp/ids/JobId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-vV7_87I (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-fblLDFw (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize--FQZcKk (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-ouKBDzw (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/JobId$Companion {
-	public final fun random-Y_yOtIA ()Ljava/lang/String;
+	public final fun random-vE1LxjM ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -418,15 +418,15 @@ public synthetic class dev/arcp/ids/LeaseId$$serializer : kotlinx/serialization/
 	public static final field INSTANCE Ldev/arcp/ids/LeaseId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-WiGP8AM (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-Czlf3c8 (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-WNPOqw0 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-KVgUa6U (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/LeaseId$Companion {
-	public final fun random-g94MLks ()Ljava/lang/String;
+	public final fun random-iDKS_cI ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -449,15 +449,15 @@ public synthetic class dev/arcp/ids/MessageId$$serializer : kotlinx/serializatio
 	public static final field INSTANCE Ldev/arcp/ids/MessageId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-_2aJAOs (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-NCLi4AM (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-tLKhruw (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-rECr6hU (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/MessageId$Companion {
-	public final fun random-YWAC-7U ()Ljava/lang/String;
+	public final fun random-rSKfuZI ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -480,10 +480,10 @@ public synthetic class dev/arcp/ids/PermissionName$$serializer : kotlinx/seriali
 	public static final field INSTANCE Ldev/arcp/ids/PermissionName$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-WPDhB7U (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-udcpqcU (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-E7ECio0 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-pNYFraM (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
@@ -510,15 +510,15 @@ public synthetic class dev/arcp/ids/SessionId$$serializer : kotlinx/serializatio
 	public static final field INSTANCE Ldev/arcp/ids/SessionId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-NNE2Le0 (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-7Iq723E (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-QnZBkew (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-tkidITM (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/SessionId$Companion {
-	public final fun random--sQbWfs ()Ljava/lang/String;
+	public final fun random-jSAFQ30 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -541,15 +541,15 @@ public synthetic class dev/arcp/ids/SpanId$$serializer : kotlinx/serialization/i
 	public static final field INSTANCE Ldev/arcp/ids/SpanId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-sM8c0vU (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-Go_iuIg (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize--pXQLVU (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-xSk50RI (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/SpanId$Companion {
-	public final fun random-Aw141zw ()Ljava/lang/String;
+	public final fun random-NTT_8oI ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -572,15 +572,15 @@ public synthetic class dev/arcp/ids/StreamId$$serializer : kotlinx/serialization
 	public static final field INSTANCE Ldev/arcp/ids/StreamId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-BQ3ef4k (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-7s1sBYc (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-Q5X3vVU (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-wI0Wnwk (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/StreamId$Companion {
-	public final fun random-iUQDd_0 ()Ljava/lang/String;
+	public final fun random-VEiEI0E ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -603,15 +603,15 @@ public synthetic class dev/arcp/ids/SubscriptionId$$serializer : kotlinx/seriali
 	public static final field INSTANCE Ldev/arcp/ids/SubscriptionId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-_eFik0s (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-1rzeTsM (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-0aaxZY8 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-VHyShOY (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/SubscriptionId$Companion {
-	public final fun random-cRU44WY ()Ljava/lang/String;
+	public final fun random-g6fuAW4 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -634,10 +634,10 @@ public synthetic class dev/arcp/ids/ToolName$$serializer : kotlinx/serialization
 	public static final field INSTANCE Ldev/arcp/ids/ToolName$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-X2Rs1kM (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-Xq7E35Y (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-akFGVA4 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-Gq_MC0M (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
@@ -664,15 +664,15 @@ public synthetic class dev/arcp/ids/TraceId$$serializer : kotlinx/serialization/
 	public static final field INSTANCE Ldev/arcp/ids/TraceId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun deserialize-4AyVLHA (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun deserialize-QfXkMyM (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public final fun serialize-eHNv27k (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-l_31m6c (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
 public final class dev/arcp/ids/TraceId$Companion {
-	public final fun random-1OD-JnM ()Ljava/lang/String;
+	public final fun random-KNjjPmg ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -690,11 +690,11 @@ public final class dev/arcp/json/JsonKt {
 public final class dev/arcp/messages/Ack : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Ack$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-YWAC-7U ()Ljava/lang/String;
-	public final fun copy-SKP8GCo (Ljava/lang/String;)Ldev/arcp/messages/Ack;
-	public static synthetic fun copy-SKP8GCo$default (Ldev/arcp/messages/Ack;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Ack;
+	public final fun component1-rSKfuZI ()Ljava/lang/String;
+	public final fun copy-Ha18aRA (Ljava/lang/String;)Ldev/arcp/messages/Ack;
+	public static synthetic fun copy-Ha18aRA$default (Ldev/arcp/messages/Ack;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Ack;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAckFor-YWAC-7U ()Ljava/lang/String;
+	public final fun getAckFor-rSKfuZI ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -754,11 +754,11 @@ public final class dev/arcp/messages/AgentHandoff : dev/arcp/messages/MessageTyp
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ldev/arcp/messages/RuntimeIdentity;
-	public final fun component5-HQnGY_w ()Ljava/lang/String;
-	public final fun copy-dPEN1zc (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ljava/lang/String;)Ldev/arcp/messages/AgentHandoff;
-	public static synthetic fun copy-dPEN1zc$default (Ldev/arcp/messages/AgentHandoff;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/AgentHandoff;
+	public final fun component5-YYajqfk ()Ljava/lang/String;
+	public final fun copy-Uo2NVJQ (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ljava/lang/String;)Ldev/arcp/messages/AgentHandoff;
+	public static synthetic fun copy-Uo2NVJQ$default (Ldev/arcp/messages/AgentHandoff;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/AgentHandoff;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getHandoffFor-HQnGY_w ()Ljava/lang/String;
+	public final fun getHandoffFor-YYajqfk ()Ljava/lang/String;
 	public final fun getJobId ()Ljava/lang/String;
 	public final fun getReceivingRuntime ()Ldev/arcp/messages/RuntimeIdentity;
 	public final fun getSessionId ()Ljava/lang/String;
@@ -785,11 +785,11 @@ public final class dev/arcp/messages/AgentHandoff$Companion {
 public final class dev/arcp/messages/ArtifactFetch : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/ArtifactFetch$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-PZK2a5k ()Ljava/lang/String;
-	public final fun copy-2QEOdJ0 (Ljava/lang/String;)Ldev/arcp/messages/ArtifactFetch;
-	public static synthetic fun copy-2QEOdJ0$default (Ldev/arcp/messages/ArtifactFetch;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactFetch;
+	public final fun component1-LT6NBB0 ()Ljava/lang/String;
+	public final fun copy-5sYu-Is (Ljava/lang/String;)Ldev/arcp/messages/ArtifactFetch;
+	public static synthetic fun copy-5sYu-Is$default (Ldev/arcp/messages/ArtifactFetch;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactFetch;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -813,16 +813,16 @@ public final class dev/arcp/messages/ArtifactPut : dev/arcp/messages/MessageType
 	public static final field Companion Ldev/arcp/messages/ArtifactPut$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-PZK2a5k ()Ljava/lang/String;
+	public final fun component1-LT6NBB0 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()J
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Lkotlinx/datetime/Instant;
 	public final fun component6 ()Ljava/lang/String;
-	public final fun copy-wKdI6os (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;)Ldev/arcp/messages/ArtifactPut;
-	public static synthetic fun copy-wKdI6os$default (Ldev/arcp/messages/ArtifactPut;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactPut;
+	public final fun copy-2XmtJX4 (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;)Ldev/arcp/messages/ArtifactPut;
+	public static synthetic fun copy-2XmtJX4$default (Ldev/arcp/messages/ArtifactPut;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactPut;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
 	public final fun getData ()Ljava/lang/String;
 	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
 	public final fun getMediaType ()Ljava/lang/String;
@@ -881,16 +881,16 @@ public final class dev/arcp/messages/ArtifactRefSpec {
 	public static final field Companion Ldev/arcp/messages/ArtifactRefSpec$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-PZK2a5k ()Ljava/lang/String;
+	public final fun component1-LT6NBB0 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()J
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Lkotlinx/datetime/Instant;
-	public final fun copy-wKdI6os (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/ArtifactRefSpec;
-	public static synthetic fun copy-wKdI6os$default (Ldev/arcp/messages/ArtifactRefSpec;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactRefSpec;
+	public final fun copy-2XmtJX4 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/ArtifactRefSpec;
+	public static synthetic fun copy-2XmtJX4$default (Ldev/arcp/messages/ArtifactRefSpec;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactRefSpec;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
 	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
 	public final fun getMediaType ()Ljava/lang/String;
 	public final fun getSha256 ()Ljava/lang/String;
@@ -918,11 +918,11 @@ public final class dev/arcp/messages/ArtifactRefSpec$Companion {
 public final class dev/arcp/messages/ArtifactRelease : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/ArtifactRelease$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-PZK2a5k ()Ljava/lang/String;
-	public final fun copy-2QEOdJ0 (Ljava/lang/String;)Ldev/arcp/messages/ArtifactRelease;
-	public static synthetic fun copy-2QEOdJ0$default (Ldev/arcp/messages/ArtifactRelease;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactRelease;
+	public final fun component1-LT6NBB0 ()Ljava/lang/String;
+	public final fun copy-5sYu-Is (Ljava/lang/String;)Ldev/arcp/messages/ArtifactRelease;
+	public static synthetic fun copy-5sYu-Is$default (Ldev/arcp/messages/ArtifactRelease;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ArtifactRelease;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -994,17 +994,17 @@ public final class dev/arcp/messages/Backpressure : dev/arcp/messages/MessageTyp
 	public static final field Companion Ldev/arcp/messages/Backpressure$Companion;
 	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-iUQDd_0 ()Ljava/lang/String;
+	public final fun component1-VEiEI0E ()Ljava/lang/String;
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/lang/Long;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy-ehACjTg (Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;)Ldev/arcp/messages/Backpressure;
-	public static synthetic fun copy-ehACjTg$default (Ldev/arcp/messages/Backpressure;Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Backpressure;
+	public final fun copy-i-v_57o (Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;)Ldev/arcp/messages/Backpressure;
+	public static synthetic fun copy-i-v_57o$default (Ldev/arcp/messages/Backpressure;Ljava/lang/String;ILjava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Backpressure;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBufferRemainingBytes ()Ljava/lang/Long;
 	public final fun getDesiredRatePerSecond ()I
 	public final fun getReason ()Ljava/lang/String;
-	public final fun getStreamId-iUQDd_0 ()Ljava/lang/String;
+	public final fun getStreamId-VEiEI0E ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1190,12 +1190,12 @@ public final class dev/arcp/messages/CheckpointCreate : dev/arcp/messages/Messag
 	public static final field Companion Ldev/arcp/messages/CheckpointCreate$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-Y_yOtIA ()Ljava/lang/String;
+	public final fun component1-vE1LxjM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy-_JxJ_iU (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/CheckpointCreate;
-	public static synthetic fun copy-_JxJ_iU$default (Ldev/arcp/messages/CheckpointCreate;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/CheckpointCreate;
+	public final fun copy-tBvcXsc (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/CheckpointCreate;
+	public static synthetic fun copy-tBvcXsc$default (Ldev/arcp/messages/CheckpointCreate;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/CheckpointCreate;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getJobId-Y_yOtIA ()Ljava/lang/String;
+	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
 	public final fun getLabel ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1220,14 +1220,14 @@ public final class dev/arcp/messages/CheckpointRestore : dev/arcp/messages/Messa
 	public static final field Companion Ldev/arcp/messages/CheckpointRestore$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-Y_yOtIA ()Ljava/lang/String;
+	public final fun component1-vE1LxjM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lkotlinx/datetime/Instant;
-	public final fun copy-KmNZSbk (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/CheckpointRestore;
-	public static synthetic fun copy-KmNZSbk$default (Ldev/arcp/messages/CheckpointRestore;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/CheckpointRestore;
+	public final fun copy-28GizzE (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/CheckpointRestore;
+	public static synthetic fun copy-28GizzE$default (Ldev/arcp/messages/CheckpointRestore;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/CheckpointRestore;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCheckpointId ()Ljava/lang/String;
-	public final fun getJobId-Y_yOtIA ()Ljava/lang/String;
+	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
 	public final fun getRestoredAt ()Lkotlinx/datetime/Instant;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1548,11 +1548,11 @@ public final class dev/arcp/messages/Interrupt$Companion {
 public final class dev/arcp/messages/JobAccepted : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/JobAccepted$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-Y_yOtIA ()Ljava/lang/String;
-	public final fun copy--hKjtTs (Ljava/lang/String;)Ldev/arcp/messages/JobAccepted;
-	public static synthetic fun copy--hKjtTs$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
+	public final fun component1-vE1LxjM ()Ljava/lang/String;
+	public final fun copy-2ATt4A4 (Ljava/lang/String;)Ldev/arcp/messages/JobAccepted;
+	public static synthetic fun copy-2ATt4A4$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getJobId-Y_yOtIA ()Ljava/lang/String;
+	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1840,13 +1840,13 @@ public final class dev/arcp/messages/JobStarted$Companion {
 public final class dev/arcp/messages/LeaseExtended : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/LeaseExtended$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-g94MLks ()Ljava/lang/String;
+	public final fun component1-iDKS_cI ()Ljava/lang/String;
 	public final fun component2 ()Lkotlinx/datetime/Instant;
-	public final fun copy-D9r-aZ4 (Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/LeaseExtended;
-	public static synthetic fun copy-D9r-aZ4$default (Ldev/arcp/messages/LeaseExtended;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/LeaseExtended;
+	public final fun copy-kSvTIcw (Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/LeaseExtended;
+	public static synthetic fun copy-kSvTIcw$default (Ldev/arcp/messages/LeaseExtended;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/LeaseExtended;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1870,18 +1870,18 @@ public final class dev/arcp/messages/LeaseGranted : dev/arcp/messages/MessageTyp
 	public static final field Companion Ldev/arcp/messages/LeaseGranted$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-g94MLks ()Ljava/lang/String;
-	public final fun component2-qvWeUG4 ()Ljava/lang/String;
+	public final fun component1-iDKS_cI ()Ljava/lang/String;
+	public final fun component2-XXRWIXM ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Lkotlinx/datetime/Instant;
-	public final fun copy-fQXjfeg (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/LeaseGranted;
-	public static synthetic fun copy-fQXjfeg$default (Ldev/arcp/messages/LeaseGranted;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/LeaseGranted;
+	public final fun copy-QoNnMf4 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/LeaseGranted;
+	public static synthetic fun copy-QoNnMf4$default (Ldev/arcp/messages/LeaseGranted;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/LeaseGranted;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 	public final fun getOperation ()Ljava/lang/String;
-	public final fun getPermission-qvWeUG4 ()Ljava/lang/String;
+	public final fun getPermission-XXRWIXM ()Ljava/lang/String;
 	public final fun getResource ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1906,12 +1906,12 @@ public final class dev/arcp/messages/LeaseRefresh : dev/arcp/messages/MessageTyp
 	public static final field Companion Ldev/arcp/messages/LeaseRefresh$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-g94MLks ()Ljava/lang/String;
+	public final fun component1-iDKS_cI ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Long;
-	public final fun copy-D9r-aZ4 (Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/LeaseRefresh;
-	public static synthetic fun copy-D9r-aZ4$default (Ldev/arcp/messages/LeaseRefresh;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/LeaseRefresh;
+	public final fun copy-kSvTIcw (Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/LeaseRefresh;
+	public static synthetic fun copy-kSvTIcw$default (Ldev/arcp/messages/LeaseRefresh;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/LeaseRefresh;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 	public final fun getRequestedExtensionSeconds ()Ljava/lang/Long;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1935,12 +1935,12 @@ public final class dev/arcp/messages/LeaseRefresh$Companion {
 public final class dev/arcp/messages/LeaseRevoked : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/LeaseRevoked$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-g94MLks ()Ljava/lang/String;
+	public final fun component1-iDKS_cI ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy-D9r-aZ4 (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/LeaseRevoked;
-	public static synthetic fun copy-D9r-aZ4$default (Ldev/arcp/messages/LeaseRevoked;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/LeaseRevoked;
+	public final fun copy-kSvTIcw (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/LeaseRevoked;
+	public static synthetic fun copy-kSvTIcw$default (Ldev/arcp/messages/LeaseRevoked;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/LeaseRevoked;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getLeaseId-g94MLks ()Ljava/lang/String;
+	public final fun getLeaseId-iDKS_cI ()Ljava/lang/String;
 	public final fun getReason ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2056,18 +2056,18 @@ public final class dev/arcp/messages/Nack : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Nack$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-YWAC-7U ()Ljava/lang/String;
+	public final fun component1-rSKfuZI ()Ljava/lang/String;
 	public final fun component2 ()Ldev/arcp/error/ErrorCode;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/Boolean;
 	public final fun component5 ()Lkotlinx/serialization/json/JsonElement;
-	public final fun copy-TaWqmSk (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;)Ldev/arcp/messages/Nack;
-	public static synthetic fun copy-TaWqmSk$default (Ldev/arcp/messages/Nack;Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Ldev/arcp/messages/Nack;
+	public final fun copy--1MQLa4 (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;)Ldev/arcp/messages/Nack;
+	public static synthetic fun copy--1MQLa4$default (Ldev/arcp/messages/Nack;Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Ljava/lang/Boolean;Lkotlinx/serialization/json/JsonElement;ILjava/lang/Object;)Ldev/arcp/messages/Nack;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCode ()Ldev/arcp/error/ErrorCode;
 	public final fun getDetails ()Lkotlinx/serialization/json/JsonElement;
 	public final fun getMessage ()Ljava/lang/String;
-	public final fun getNackFor-YWAC-7U ()Ljava/lang/String;
+	public final fun getNackFor-rSKfuZI ()Ljava/lang/String;
 	public final fun getRetryable ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2092,13 +2092,13 @@ public final class dev/arcp/messages/PermissionDeny : dev/arcp/messages/MessageT
 	public static final field Companion Ldev/arcp/messages/PermissionDeny$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-qvWeUG4 ()Ljava/lang/String;
+	public final fun component1-XXRWIXM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy-tklr9w8 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/PermissionDeny;
-	public static synthetic fun copy-tklr9w8$default (Ldev/arcp/messages/PermissionDeny;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/PermissionDeny;
+	public final fun copy-5haqCbo (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/PermissionDeny;
+	public static synthetic fun copy-5haqCbo$default (Ldev/arcp/messages/PermissionDeny;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/PermissionDeny;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getPermission-qvWeUG4 ()Ljava/lang/String;
+	public final fun getPermission-XXRWIXM ()Ljava/lang/String;
 	public final fun getReason ()Ljava/lang/String;
 	public final fun getResource ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -2124,14 +2124,14 @@ public final class dev/arcp/messages/PermissionGrant : dev/arcp/messages/Message
 	public static final field Companion Ldev/arcp/messages/PermissionGrant$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-qvWeUG4 ()Ljava/lang/String;
+	public final fun component1-XXRWIXM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/Long;
-	public final fun copy-tklr9w8 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/PermissionGrant;
-	public static synthetic fun copy-tklr9w8$default (Ldev/arcp/messages/PermissionGrant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/PermissionGrant;
+	public final fun copy-5haqCbo (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/PermissionGrant;
+	public static synthetic fun copy-5haqCbo$default (Ldev/arcp/messages/PermissionGrant;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/PermissionGrant;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getLeaseSeconds ()Ljava/lang/Long;
-	public final fun getPermission-qvWeUG4 ()Ljava/lang/String;
+	public final fun getPermission-XXRWIXM ()Ljava/lang/String;
 	public final fun getResource ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2156,16 +2156,16 @@ public final class dev/arcp/messages/PermissionRequest : dev/arcp/messages/Messa
 	public static final field Companion Ldev/arcp/messages/PermissionRequest$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-qvWeUG4 ()Ljava/lang/String;
+	public final fun component1-XXRWIXM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/Long;
-	public final fun copy-t_BkKxI (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/PermissionRequest;
-	public static synthetic fun copy-t_BkKxI$default (Ldev/arcp/messages/PermissionRequest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/PermissionRequest;
+	public final fun copy-J47VD8Q (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/PermissionRequest;
+	public static synthetic fun copy-J47VD8Q$default (Ldev/arcp/messages/PermissionRequest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/PermissionRequest;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getOperation ()Ljava/lang/String;
-	public final fun getPermission-qvWeUG4 ()Ljava/lang/String;
+	public final fun getPermission-XXRWIXM ()Ljava/lang/String;
 	public final fun getReason ()Ljava/lang/String;
 	public final fun getRequestedLeaseSeconds ()Ljava/lang/Long;
 	public final fun getResource ()Ljava/lang/String;
@@ -2250,19 +2250,19 @@ public final class dev/arcp/messages/Resume : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Resume$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1--sQbWfs ()Ljava/lang/String;
-	public final fun component2-HQnGY_w ()Ljava/lang/String;
-	public final fun component3-zhmFrVA ()Ljava/lang/String;
+	public final fun component1-jSAFQ30 ()Ljava/lang/String;
+	public final fun component2-YYajqfk ()Ljava/lang/String;
+	public final fun component3-VHyvC20 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Z
-	public final fun copy-fWzTcSE (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ldev/arcp/messages/Resume;
-	public static synthetic fun copy-fWzTcSE$default (Ldev/arcp/messages/Resume;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ldev/arcp/messages/Resume;
+	public final fun copy-dsDmvp0 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ldev/arcp/messages/Resume;
+	public static synthetic fun copy-dsDmvp0$default (Ldev/arcp/messages/Resume;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Ldev/arcp/messages/Resume;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAfterMessageId-HQnGY_w ()Ljava/lang/String;
+	public final fun getAfterMessageId-YYajqfk ()Ljava/lang/String;
 	public final fun getCheckpointId ()Ljava/lang/String;
 	public final fun getIncludeOpenStreams ()Z
-	public final fun getJobId-zhmFrVA ()Ljava/lang/String;
-	public final fun getSessionId--sQbWfs ()Ljava/lang/String;
+	public final fun getJobId-VHyvC20 ()Ljava/lang/String;
+	public final fun getSessionId-jSAFQ30 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2320,17 +2320,17 @@ public final class dev/arcp/messages/SessionAccepted : dev/arcp/messages/Message
 	public static final field Companion Ldev/arcp/messages/SessionAccepted$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1--sQbWfs ()Ljava/lang/String;
+	public final fun component1-jSAFQ30 ()Ljava/lang/String;
 	public final fun component2 ()Ldev/arcp/messages/RuntimeIdentity;
 	public final fun component3 ()Ldev/arcp/messages/Capabilities;
 	public final fun component4 ()Ldev/arcp/messages/SessionLease;
-	public final fun copy-P5Xk3Y0 (Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;)Ldev/arcp/messages/SessionAccepted;
-	public static synthetic fun copy-P5Xk3Y0$default (Ldev/arcp/messages/SessionAccepted;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;ILjava/lang/Object;)Ldev/arcp/messages/SessionAccepted;
+	public final fun copy-LlxhVPY (Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;)Ldev/arcp/messages/SessionAccepted;
+	public static synthetic fun copy-LlxhVPY$default (Ldev/arcp/messages/SessionAccepted;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/SessionLease;ILjava/lang/Object;)Ldev/arcp/messages/SessionAccepted;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCapabilities ()Ldev/arcp/messages/Capabilities;
 	public final fun getLease ()Ldev/arcp/messages/SessionLease;
 	public final fun getRuntime ()Ldev/arcp/messages/RuntimeIdentity;
-	public final fun getSessionId--sQbWfs ()Ljava/lang/String;
+	public final fun getSessionId-jSAFQ30 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2809,11 +2809,11 @@ public final class dev/arcp/messages/Subscribe$Companion {
 public final class dev/arcp/messages/SubscribeAccepted : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/SubscribeAccepted$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-cRU44WY ()Ljava/lang/String;
-	public final fun copy-2rsnVaE (Ljava/lang/String;)Ldev/arcp/messages/SubscribeAccepted;
-	public static synthetic fun copy-2rsnVaE$default (Ldev/arcp/messages/SubscribeAccepted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscribeAccepted;
+	public final fun component1-g6fuAW4 ()Ljava/lang/String;
+	public final fun copy-YqjflLY (Ljava/lang/String;)Ldev/arcp/messages/SubscribeAccepted;
+	public static synthetic fun copy-YqjflLY$default (Ldev/arcp/messages/SubscribeAccepted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscribeAccepted;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSubscriptionId-cRU44WY ()Ljava/lang/String;
+	public final fun getSubscriptionId-g6fuAW4 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2836,15 +2836,15 @@ public final class dev/arcp/messages/SubscribeAccepted$Companion {
 public final class dev/arcp/messages/SubscribeClosed : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/SubscribeClosed$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-cRU44WY ()Ljava/lang/String;
+	public final fun component1-g6fuAW4 ()Ljava/lang/String;
 	public final fun component2 ()Ldev/arcp/error/ErrorCode;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy-A9GO09w (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;)Ldev/arcp/messages/SubscribeClosed;
-	public static synthetic fun copy-A9GO09w$default (Ldev/arcp/messages/SubscribeClosed;Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscribeClosed;
+	public final fun copy-1Tzy4J4 (Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;)Ldev/arcp/messages/SubscribeClosed;
+	public static synthetic fun copy-1Tzy4J4$default (Ldev/arcp/messages/SubscribeClosed;Ljava/lang/String;Ldev/arcp/error/ErrorCode;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscribeClosed;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCode ()Ldev/arcp/error/ErrorCode;
 	public final fun getReason ()Ljava/lang/String;
-	public final fun getSubscriptionId-cRU44WY ()Ljava/lang/String;
+	public final fun getSubscriptionId-g6fuAW4 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2934,11 +2934,11 @@ public final class dev/arcp/messages/SubscriptionSince {
 	public static final field Companion Ldev/arcp/messages/SubscriptionSince$Companion;
 	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-HQnGY_w ()Ljava/lang/String;
-	public final fun copy-tfoVVM8 (Ljava/lang/String;)Ldev/arcp/messages/SubscriptionSince;
-	public static synthetic fun copy-tfoVVM8$default (Ldev/arcp/messages/SubscriptionSince;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscriptionSince;
+	public final fun component1-YYajqfk ()Ljava/lang/String;
+	public final fun copy-Yu2P2IU (Ljava/lang/String;)Ldev/arcp/messages/SubscriptionSince;
+	public static synthetic fun copy-Yu2P2IU$default (Ldev/arcp/messages/SubscriptionSince;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SubscriptionSince;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAfterMessageId-HQnGY_w ()Ljava/lang/String;
+	public final fun getAfterMessageId-YYajqfk ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2998,13 +2998,13 @@ public final class dev/arcp/messages/ToolInvoke : dev/arcp/messages/MessageType 
 	public static final field Companion Ldev/arcp/messages/ToolInvoke$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-ek-Ltqs ()Ljava/lang/String;
+	public final fun component1-nnMpYds ()Ljava/lang/String;
 	public final fun component2 ()Lkotlinx/serialization/json/JsonObject;
-	public final fun copy-3sJHdcQ (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Ldev/arcp/messages/ToolInvoke;
-	public static synthetic fun copy-3sJHdcQ$default (Ldev/arcp/messages/ToolInvoke;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILjava/lang/Object;)Ldev/arcp/messages/ToolInvoke;
+	public final fun copy-tNBjhyI (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Ldev/arcp/messages/ToolInvoke;
+	public static synthetic fun copy-tNBjhyI$default (Ldev/arcp/messages/ToolInvoke;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILjava/lang/Object;)Ldev/arcp/messages/ToolInvoke;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getArguments ()Lkotlinx/serialization/json/JsonObject;
-	public final fun getTool-ek-Ltqs ()Ljava/lang/String;
+	public final fun getTool-nnMpYds ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3111,11 +3111,11 @@ public final class dev/arcp/messages/TrustLevel$Companion {
 public final class dev/arcp/messages/Unsubscribe : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Unsubscribe$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-cRU44WY ()Ljava/lang/String;
-	public final fun copy-2rsnVaE (Ljava/lang/String;)Ldev/arcp/messages/Unsubscribe;
-	public static synthetic fun copy-2rsnVaE$default (Ldev/arcp/messages/Unsubscribe;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Unsubscribe;
+	public final fun component1-g6fuAW4 ()Ljava/lang/String;
+	public final fun copy-YqjflLY (Ljava/lang/String;)Ldev/arcp/messages/Unsubscribe;
+	public static synthetic fun copy-YqjflLY$default (Ldev/arcp/messages/Unsubscribe;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/Unsubscribe;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getSubscriptionId-cRU44WY ()Ljava/lang/String;
+	public final fun getSubscriptionId-g6fuAW4 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3200,7 +3200,7 @@ public final class dev/arcp/runtime/ARCPRuntime : java/lang/AutoCloseable {
 	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun accept (Ldev/arcp/transport/Transport;)Lkotlinx/coroutines/Job;
 	public fun close ()V
-	public final fun evict-SfPeQiU (Ldev/arcp/transport/Transport;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun evict-eGHAo4s (Ldev/arcp/transport/Transport;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/arcp/runtime/ARCPRuntime$Companion {
@@ -3209,16 +3209,16 @@ public final class dev/arcp/runtime/ARCPRuntime$Companion {
 
 public final class dev/arcp/runtime/ArtifactBody {
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[BLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-PZK2a5k ()Ljava/lang/String;
+	public final fun component1-LT6NBB0 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()J
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Lkotlinx/datetime/Instant;
 	public final fun component6 ()[B
-	public final fun copy-wKdI6os (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[B)Ldev/arcp/runtime/ArtifactBody;
-	public static synthetic fun copy-wKdI6os$default (Ldev/arcp/runtime/ArtifactBody;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[BILjava/lang/Object;)Ldev/arcp/runtime/ArtifactBody;
+	public final fun copy-2XmtJX4 (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[B)Ldev/arcp/runtime/ArtifactBody;
+	public static synthetic fun copy-2XmtJX4$default (Ldev/arcp/runtime/ArtifactBody;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lkotlinx/datetime/Instant;[BILjava/lang/Object;)Ldev/arcp/runtime/ArtifactBody;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getArtifactId-PZK2a5k ()Ljava/lang/String;
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
 	public final fun getBytes ()[B
 	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
 	public final fun getMediaType ()Ljava/lang/String;
@@ -3228,19 +3228,57 @@ public final class dev/arcp/runtime/ArtifactBody {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/arcp/runtime/ArtifactPutBase64Request {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-WgE5AEs ()Ljava/lang/String;
+	public final fun component2-LT6NBB0 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lkotlinx/datetime/Instant;
+	public final fun copy-ZXcbKoQ (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/runtime/ArtifactPutBase64Request;
+	public static synthetic fun copy-ZXcbKoQ$default (Ldev/arcp/runtime/ArtifactPutBase64Request;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/runtime/ArtifactPutBase64Request;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
+	public final fun getBase64Body ()Ljava/lang/String;
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public final fun getMediaType ()Ljava/lang/String;
+	public final fun getSessionId-WgE5AEs ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/runtime/ArtifactPutRequest {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-WgE5AEs ()Ljava/lang/String;
+	public final fun component2-LT6NBB0 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()[B
+	public final fun component5 ()Lkotlinx/datetime/Instant;
+	public final fun copy-ZXcbKoQ (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;)Ldev/arcp/runtime/ArtifactPutRequest;
+	public static synthetic fun copy-ZXcbKoQ$default (Ldev/arcp/runtime/ArtifactPutRequest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/runtime/ArtifactPutRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArtifactId-LT6NBB0 ()Ljava/lang/String;
+	public final fun getData ()[B
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public final fun getMediaType ()Ljava/lang/String;
+	public final fun getSessionId-WgE5AEs ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class dev/arcp/runtime/ArtifactStore : java/lang/AutoCloseable {
 	public static final field Companion Ldev/arcp/runtime/ArtifactStore$Companion;
 	public static final field SCHEMA_RESOURCE Ljava/lang/String;
 	public synthetic fun <init> (Ljava/sql/Connection;JJJZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close ()V
-	public final fun fetch-xsmdINA (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun fetch-_AkPyCs (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getDefaultRetention-UwyO8pc ()J
 	public final fun getMaxRetention-UwyO8pc ()J
-	public final fun put-MfojTlk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun put-MfojTlk$default (Ldev/arcp/runtime/ArtifactStore;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public final fun putBase64-MfojTlk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun putBase64-MfojTlk$default (Ldev/arcp/runtime/ArtifactStore;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public final fun release-xsmdINA (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun put (Ldev/arcp/runtime/ArtifactPutRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun putBase64 (Ldev/arcp/runtime/ArtifactPutBase64Request;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun release-_AkPyCs (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sweepExpired (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -3276,17 +3314,17 @@ public abstract class dev/arcp/runtime/SessionState {
 
 public final class dev/arcp/runtime/SessionState$Authenticated : dev/arcp/runtime/SessionState {
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/Capabilities;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1--sQbWfs ()Ljava/lang/String;
+	public final fun component1-jSAFQ30 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ldev/arcp/messages/Capabilities;
 	public final fun component4 ()Lkotlinx/datetime/Instant;
-	public final fun copy-P5Xk3Y0 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/Capabilities;Lkotlinx/datetime/Instant;)Ldev/arcp/runtime/SessionState$Authenticated;
-	public static synthetic fun copy-P5Xk3Y0$default (Ldev/arcp/runtime/SessionState$Authenticated;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/Capabilities;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/runtime/SessionState$Authenticated;
+	public final fun copy-LlxhVPY (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/Capabilities;Lkotlinx/datetime/Instant;)Ldev/arcp/runtime/SessionState$Authenticated;
+	public static synthetic fun copy-LlxhVPY$default (Ldev/arcp/runtime/SessionState$Authenticated;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/Capabilities;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/runtime/SessionState$Authenticated;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAcceptedAt ()Lkotlinx/datetime/Instant;
 	public final fun getCapabilities ()Ldev/arcp/messages/Capabilities;
 	public final fun getPrincipal ()Ljava/lang/String;
-	public final fun getSessionId--sQbWfs ()Ljava/lang/String;
+	public final fun getSessionId-jSAFQ30 ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3333,10 +3371,10 @@ public final class dev/arcp/runtime/SubscriptionManager {
 	public synthetic fun <init> (Ldev/arcp/store/EventLog;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun compile (Ldev/arcp/messages/SubscriptionFilter;)Lkotlin/jvm/functions/Function1;
 	public final fun getLiveEvents ()Lkotlinx/coroutines/flow/Flow;
-	public final fun open-Q0tPE-M (Ljava/lang/String;Ldev/arcp/messages/SubscriptionFilter;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun open-Q0tPE-M$default (Ldev/arcp/runtime/SubscriptionManager;Ljava/lang/String;Ldev/arcp/messages/SubscriptionFilter;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public final fun open-JAePl4Q (Ljava/lang/String;Ldev/arcp/messages/SubscriptionFilter;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun open-JAePl4Q$default (Ldev/arcp/runtime/SubscriptionManager;Ljava/lang/String;Ldev/arcp/messages/SubscriptionFilter;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public final fun publish (Ldev/arcp/envelope/Envelope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun toSubscribeEvent-0aaxZY8 (Ldev/arcp/envelope/Envelope;Ljava/lang/String;)Ldev/arcp/envelope/Envelope;
+	public final fun toSubscribeEvent-VHyShOY (Ldev/arcp/envelope/Envelope;Ljava/lang/String;)Ldev/arcp/envelope/Envelope;
 }
 
 public final class dev/arcp/runtime/SubscriptionManager$Companion {
@@ -3351,8 +3389,8 @@ public final class dev/arcp/store/EventLog : java/lang/AutoCloseable {
 	public final fun lastSeq (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun lookupIdempotent (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun recordIdempotent (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;Lkotlinx/datetime/Instant;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun replay-bCjkh8E (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun replay-bCjkh8E$default (Ldev/arcp/store/EventLog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public final fun replay--7-7hVE (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun replay--7-7hVE$default (Ldev/arcp/store/EventLog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class dev/arcp/store/EventLog$Companion {
@@ -3364,15 +3402,15 @@ public final class dev/arcp/trace/TraceContext : kotlin/coroutines/AbstractCorou
 	public static final field Key Ldev/arcp/trace/TraceContext$Key;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-1OD-JnM ()Ljava/lang/String;
-	public final fun component2-Aw141zw ()Ljava/lang/String;
-	public final fun component3-lN-EnU8 ()Ljava/lang/String;
-	public final fun copy-mRlExQQ (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/trace/TraceContext;
-	public static synthetic fun copy-mRlExQQ$default (Ldev/arcp/trace/TraceContext;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/trace/TraceContext;
+	public final fun component1-KNjjPmg ()Ljava/lang/String;
+	public final fun component2-NTT_8oI ()Ljava/lang/String;
+	public final fun component3--kgjS5U ()Ljava/lang/String;
+	public final fun copy-A4sYfsA (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/trace/TraceContext;
+	public static synthetic fun copy-A4sYfsA$default (Ldev/arcp/trace/TraceContext;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/trace/TraceContext;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getParentSpanId-lN-EnU8 ()Ljava/lang/String;
-	public final fun getSpanId-Aw141zw ()Ljava/lang/String;
-	public final fun getTraceId-1OD-JnM ()Ljava/lang/String;
+	public final fun getParentSpanId--kgjS5U ()Ljava/lang/String;
+	public final fun getSpanId-NTT_8oI ()Ljava/lang/String;
+	public final fun getTraceId-KNjjPmg ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

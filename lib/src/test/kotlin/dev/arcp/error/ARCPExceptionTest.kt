@@ -15,7 +15,8 @@ class ARCPExceptionTest :
             ARCPException.InvalidArgument("bad").code shouldBe ErrorCode.INVALID_ARGUMENT
             ARCPException.NotFound("missing").code shouldBe ErrorCode.NOT_FOUND
             ARCPException.AlreadyExists("dupe").code shouldBe ErrorCode.ALREADY_EXISTS
-            ARCPException.FailedPrecondition("bad state").code shouldBe ErrorCode.FAILED_PRECONDITION
+            ARCPException.FailedPrecondition("bad state").code shouldBe
+                ErrorCode.FAILED_PRECONDITION
             ARCPException.Aborted().code shouldBe ErrorCode.ABORTED
             ARCPException.OutOfRange("oob").code shouldBe ErrorCode.OUT_OF_RANGE
             ARCPException.Unimplemented("§9", "no durable").code shouldBe ErrorCode.UNIMPLEMENTED
@@ -30,14 +31,19 @@ class ARCPExceptionTest :
             ARCPException
                 .LeaseRevoked(LeaseId("lse_y"), "policy")
                 .code shouldBe ErrorCode.LEASE_REVOKED
-            ARCPException.BackpressureOverflow("flooded").code shouldBe ErrorCode.BACKPRESSURE_OVERFLOW
+            ARCPException.BackpressureOverflow("flooded").code shouldBe
+                ErrorCode.BACKPRESSURE_OVERFLOW
             ARCPException
                 .ResourceExhausted("over", retryAfterSeconds = 30)
                 .code shouldBe ErrorCode.RESOURCE_EXHAUSTED
         }
 
         "PermissionDenied carries permission and resource fields" {
-            val ex = ARCPException.PermissionDenied(PermissionName("payment.refund.create"), "ord_4812")
+            val ex =
+                ARCPException.PermissionDenied(
+                    PermissionName("payment.refund.create"),
+                    "ord_4812",
+                )
             ex.permission.value shouldBe "payment.refund.create"
             ex.resource shouldBe "ord_4812"
             ex.message!!.shouldContain("permission denied")

@@ -49,10 +49,10 @@ internal class Roster {
         byRole.getOrPut(w.role) { mutableListOf() }.add(w.workerId)
     }
 
-    fun candidates(role: String): List<Worker> =
-        byRole[role].orEmpty()
-            .mapNotNull { workers[it] }
-            .filter { it.inFlightJob == null }
+    fun candidates(role: String): List<Worker> = byRole[role]
+        .orEmpty()
+        .mapNotNull { workers[it] }
+        .filter { it.inFlightJob == null }
 }
 
 // Supervisor side --------------------------------------------------------
@@ -68,18 +68,21 @@ internal suspend fun dispatch(
     val worker = candidates.minBy { it.lastHeartbeat }
     // Same idempotency_key on every re-dispatch (RFC §6.4): a worker
     // that survived the network blip dedupes; it doesn't re-execute.
-    val accepted = client.request(
-        envelope = client.envelope(
-            type = "agent.delegate",
-            idempotencyKey = task.idempotencyKey,
-            payload = mapOf(
-                "target" to worker.workerId,
-                "task" to task.taskId,
-                "context" to mapOf("task_payload" to task.payload),
-            ),
-        ),
-        timeoutMs = 10_000,
-    )
+    val accepted =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "agent.delegate",
+                    idempotencyKey = task.idempotencyKey,
+                    payload =
+                        mapOf(
+                            "target" to worker.workerId,
+                            "task" to task.taskId,
+                            "context" to mapOf("task_payload" to task.payload),
+                        ),
+                ),
+            timeoutMs = 10_000,
+        )
     val jobId = JobId(accepted.payloadMap()["job_id"].toString())
     worker.inFlightJob = jobId
     jobsToTasks[jobId] = task
@@ -95,7 +98,8 @@ internal fun CoroutineScope.supervise(
             delay(HEARTBEAT_INTERVAL_SECONDS * 1000L)
             val now = Clock.System.now()
             for (w in roster.workers.values.toList()) {
-                val ageS = (now.toEpochMilliseconds() - w.lastHeartbeat.toEpochMilliseconds()) / 1000
+                val ageS =
+                    (now.toEpochMilliseconds() - w.lastHeartbeat.toEpochMilliseconds()) / 1000
                 if (ageS <= DEADLINE_S) continue
                 val jid = w.inFlightJob
                 val task = jid?.let { jobsToTasks.remove(it) }
@@ -138,11 +142,12 @@ internal suspend fun heartbeatLoop(
             client.envelope(
                 type = "job.heartbeat",
                 jobId = jobId,
-                payload = mapOf(
-                    "sequence" to seq,
-                    "deadline_ms" to HEARTBEAT_INTERVAL_SECONDS * 2000,
-                    "state" to "running",
-                ),
+                payload =
+                    mapOf(
+                        "sequence" to seq,
+                        "deadline_ms" to HEARTBEAT_INTERVAL_SECONDS * 2000,
+                        "state" to "running",
+                    ),
             ),
         )
         seq += 1
@@ -150,7 +155,10 @@ internal suspend fun heartbeatLoop(
     }
 }
 
-internal suspend fun execute(client: ARCPClient, env: Envelope) {
+internal suspend fun execute(
+    client: ARCPClient,
+    env: Envelope,
+) {
     val jobId = JobId.random()
     client.dispatch(
         client.envelope(
@@ -184,11 +192,12 @@ internal suspend fun execute(client: ARCPClient, env: Envelope) {
             client.envelope(
                 type = "job.failed",
                 jobId = jobId,
-                payload = mapOf(
-                    "code" to "INTERNAL",
-                    "message" to (e.message ?: ""),
-                    "retryable" to true,
-                ),
+                payload =
+                    mapOf(
+                        "code" to "INTERNAL",
+                        "message" to (e.message ?: ""),
+                        "retryable" to true,
+                    ),
             ),
         )
     } finally {
@@ -239,12 +248,13 @@ public fun main(): Unit = runBlocking {
         for (n in 0 until 6) {
             dispatch(
                 supervisor,
-                task = Task(
-                    taskId = "t%03d".format(n),
-                    role = roles[n % 3],
-                    payload = mapOf("shard" to n),
-                    idempotencyKey = "openclaw:t%03d".format(n),
-                ),
+                task =
+                    Task(
+                        taskId = "t%03d".format(n),
+                        role = roles[n % 3],
+                        payload = mapOf("shard" to n),
+                        idempotencyKey = "openclaw:t%03d".format(n),
+                    ),
                 roster = roster,
                 jobsToTasks = jobsToTasks,
             )

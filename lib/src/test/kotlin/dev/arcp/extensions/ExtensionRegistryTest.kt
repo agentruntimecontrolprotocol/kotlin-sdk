@@ -40,9 +40,16 @@ class ExtensionRegistryTest :
         }
 
         "namespaced unknown extension drops only when optional and not advertised" {
-            classifyUnknown("arcpx.acme.cache.v1.invalidate", optional = true, advertisedExtensions = emptySet())
-                .shouldBeInstanceOf<UnknownAction.Drop>()
-            classifyUnknown("arcpx.acme.cache.v1.invalidate", optional = false, advertisedExtensions = emptySet())
-                .shouldBeInstanceOf<UnknownAction.Nack>()
+            val typeName = "arcpx.acme.cache.v1.invalidate"
+            classifyUnknown(
+                typeName,
+                optional = true,
+                advertisedExtensions = emptySet(),
+            ).shouldBeInstanceOf<UnknownAction.Drop>()
+            classifyUnknown(
+                typeName,
+                optional = false,
+                advertisedExtensions = emptySet(),
+            ).shouldBeInstanceOf<UnknownAction.Nack>()
         }
     })

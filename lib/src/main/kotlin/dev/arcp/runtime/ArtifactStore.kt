@@ -57,128 +57,145 @@ public class ArtifactStore private constructor(
     }
 
     /**
-     * Persists [data] under [artifactId]. Returns an [ArtifactRefSpec] suitable
-     * for embedding in any payload that would otherwise inline the bytes.
+     * Persists [request] under its artifact id. Returns an [ArtifactRefSpec]
+     * suitable for embedding in any payload that would otherwise inline the
+     * bytes.
      *
-     * Computes SHA-256 server-side. Honors [expiresAt] up to [maxRetention];
-     * if absent, applies [defaultRetention].
+     * Computes SHA-256 server-side. Honors `request.expiresAt` up to
+     * [maxRetention]; if absent, applies [defaultRetention].
      */
-    public suspend fun put(
-        sessionId: SessionId?,
-        artifactId: ArtifactId,
-        mediaType: String,
-        data: ByteArray,
-        expiresAt: Instant? = null,
-    ): ArtifactRefSpec =
+    public suspend fun put(request: ArtifactPutRequest): ArtifactRefSpec =
         withContext(Dispatchers.IO) {
-            val now = Clock.System.now()
-            val ceiling = now.plus(maxRetention)
-            val effectiveExpiry =
-                (expiresAt ?: now.plus(defaultRetention)).coerceAtMost(ceiling)
-            val sha256 = sha256Hex(data)
-
-            val sql =
-                """
-                INSERT OR REPLACE INTO arcp_artifact
-                    (artifact_id, session_id, media_type, size_bytes, sha256, expires_at_iso, body_blob)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
-            connection.prepareStatement(sql).use { ps ->
-                ps.setString(1, artifactId.value)
-                ps.setString(2, sessionId?.value)
-                ps.setString(3, mediaType)
-                ps.setLong(4, data.size.toLong())
-                ps.setString(5, sha256)
-                ps.setString(6, effectiveExpiry.toString())
-                ps.setBytes(7, data)
-                ps.executeUpdate()
-            }
-
+            val effectiveExpiry = computeExpiry(request.expiresAt)
+            val sha256 = sha256Hex(request.data)
+            persistArtifact(request, effectiveExpiry, sha256)
             ArtifactRefSpec(
-                artifactId = artifactId,
-                uri = "arcp://session/${sessionId?.value ?: "_"}/artifact/${artifactId.value}",
-                mediaType = mediaType,
-                size = data.size.toLong(),
+                artifactId = request.artifactId,
+                uri = artifactUri(request.sessionId, request.artifactId),
+                mediaType = request.mediaType,
+                size = request.data.size.toLong(),
                 sha256 = sha256,
                 expiresAt = effectiveExpiry,
             )
         }
 
     /**
-     * Convenience: stores [base64Body] (decoded once) and returns the same
-     * shape as [put]. Mirrors the RFC §16.2 inline-base64 wire encoding.
+     * Convenience: stores `request.base64Body` (decoded once) and returns the
+     * same shape as [put]. Mirrors the RFC §16.2 inline-base64 wire encoding.
      */
-    public suspend fun putBase64(
-        sessionId: SessionId?,
-        artifactId: ArtifactId,
-        mediaType: String,
-        base64Body: String,
-        expiresAt: Instant? = null,
-    ): ArtifactRefSpec {
+    public suspend fun putBase64(request: ArtifactPutBase64Request): ArtifactRefSpec {
         val bytes =
             try {
-                Base64.getDecoder().decode(base64Body)
+                Base64.getDecoder().decode(request.base64Body)
             } catch (e: IllegalArgumentException) {
-                throw ARCPException.InvalidArgument("artifact body is not valid base64", "data")
+                throw ARCPException.InvalidArgument(
+                    "artifact body is not valid base64",
+                    "data",
+                )
             }
-        return put(sessionId, artifactId, mediaType, bytes, expiresAt)
+        return put(
+            ArtifactPutRequest(
+                sessionId = request.sessionId,
+                artifactId = request.artifactId,
+                mediaType = request.mediaType,
+                data = bytes,
+                expiresAt = request.expiresAt,
+            ),
+        )
     }
+
+    private fun computeExpiry(requested: Instant?): Instant {
+        val now = Clock.System.now()
+        val ceiling = now.plus(maxRetention)
+        return (requested ?: now.plus(defaultRetention)).coerceAtMost(ceiling)
+    }
+
+    private fun persistArtifact(
+        request: ArtifactPutRequest,
+        effectiveExpiry: Instant,
+        sha256: String,
+    ) {
+        val sql =
+            """
+            INSERT OR REPLACE INTO arcp_artifact
+                (artifact_id, session_id, media_type, size_bytes, sha256,
+                 expires_at_iso, body_blob)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent()
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, request.artifactId.value)
+            ps.setString(2, request.sessionId?.value)
+            ps.setString(3, request.mediaType)
+            ps.setLong(4, request.data.size.toLong())
+            ps.setString(5, sha256)
+            ps.setString(6, effectiveExpiry.toString())
+            ps.setBytes(7, request.data)
+            ps.executeUpdate()
+        }
+    }
+
+    private fun artifactUri(
+        sessionId: SessionId?,
+        artifactId: ArtifactId,
+    ): String = "arcp://session/${sessionId?.value ?: "_"}/artifact/${artifactId.value}"
 
     /**
      * Returns the bytes for [artifactId], or throws [ARCPException.NotFound]
      * if the artifact is unknown or has expired.
      */
-    public suspend fun fetch(artifactId: ArtifactId): ArtifactBody =
-        withContext(Dispatchers.IO) {
-            val sql =
-                """
-                SELECT media_type, size_bytes, sha256, expires_at_iso, body_blob
-                FROM arcp_artifact
-                WHERE artifact_id = ?
-                """.trimIndent()
-            connection.prepareStatement(sql).use { ps ->
-                ps.setString(1, artifactId.value)
-                ps.executeQuery().use { rs ->
-                    if (!rs.next()) {
-                        throw ARCPException.NotFound("artifact ${artifactId.value} not found")
-                    }
-                    val expiresIso = rs.getString(4)
-                    val expires = expiresIso?.let(Instant::parse)
-                    if (expires != null && expires < Clock.System.now()) {
-                        throw ARCPException.NotFound("artifact ${artifactId.value} expired")
-                    }
-                    ArtifactBody(
-                        artifactId = artifactId,
-                        mediaType = rs.getString(1),
-                        size = rs.getLong(2),
-                        sha256 = rs.getString(3),
-                        expiresAt = expires,
-                        bytes = rs.getBytes(5),
-                    )
+    public suspend fun fetch(artifactId: ArtifactId): ArtifactBody = withContext(Dispatchers.IO) {
+        val sql =
+            """
+            SELECT media_type, size_bytes, sha256, expires_at_iso, body_blob
+            FROM arcp_artifact
+            WHERE artifact_id = ?
+            """.trimIndent()
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, artifactId.value)
+            ps.executeQuery().use { rs ->
+                if (!rs.next()) {
+                    throw ARCPException.NotFound("artifact ${artifactId.value} not found")
                 }
+                val expiresIso = rs.getString(4)
+                val expires = expiresIso?.let(Instant::parse)
+                if (expires != null && expires < Clock.System.now()) {
+                    throw ARCPException.NotFound("artifact ${artifactId.value} expired")
+                }
+                ArtifactBody(
+                    artifactId = artifactId,
+                    mediaType = rs.getString(1),
+                    size = rs.getLong(2),
+                    sha256 = rs.getString(3),
+                    expiresAt = expires,
+                    bytes = rs.getBytes(5),
+                )
             }
         }
+    }
 
     /** Deletes [artifactId]. Returns `true` if a row was removed. */
-    public suspend fun release(artifactId: ArtifactId): Boolean =
-        withContext(Dispatchers.IO) {
-            connection.prepareStatement("DELETE FROM arcp_artifact WHERE artifact_id = ?").use { ps ->
-                ps.setString(1, artifactId.value)
-                ps.executeUpdate() > 0
-            }
+    public suspend fun release(artifactId: ArtifactId): Boolean = withContext(Dispatchers.IO) {
+        val sql = "DELETE FROM arcp_artifact WHERE artifact_id = ?"
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, artifactId.value)
+            ps.executeUpdate() > 0
         }
+    }
 
-    /** Removes every artifact whose [expiresAt] is in the past. Returns the count. */
-    public suspend fun sweepExpired(): Int =
-        withContext(Dispatchers.IO) {
-            val now = Clock.System.now().toString()
-            connection
-                .prepareStatement("DELETE FROM arcp_artifact WHERE expires_at_iso IS NOT NULL AND expires_at_iso < ?")
-                .use { ps ->
-                    ps.setString(1, now)
-                    ps.executeUpdate()
-                }
+    /**
+     * Removes every artifact whose `expiresAt` is in the past. Returns the
+     * deleted row count.
+     */
+    public suspend fun sweepExpired(): Int = withContext(Dispatchers.IO) {
+        val now = Clock.System.now().toString()
+        val sql =
+            "DELETE FROM arcp_artifact " +
+                "WHERE expires_at_iso IS NOT NULL AND expires_at_iso < ?"
+        connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, now)
+            ps.executeUpdate()
         }
+    }
 
     override fun close() {
         scope.cancel()
@@ -200,12 +217,20 @@ public class ArtifactStore private constructor(
         /** Schema resource shared with [dev.arcp.store.EventLog]. */
         public const val SCHEMA_RESOURCE: String = "/arcp/store/schema.sql"
 
-        /** Opens an in-memory artifact store; intended for tests and ephemeral runtimes. */
+        /**
+         * Opens an in-memory artifact store; intended for tests and
+         * ephemeral runtimes.
+         */
         public fun openInMemory(
             sweepInterval: Duration = DEFAULT_SWEEP_INTERVAL,
             defaultRetention: Duration = DEFAULT_RETENTION,
             maxRetention: Duration = MAX_RETENTION,
-        ): ArtifactStore = openOwning("jdbc:sqlite::memory:", sweepInterval, defaultRetention, maxRetention)
+        ): ArtifactStore = openOwning(
+            "jdbc:sqlite::memory:",
+            sweepInterval,
+            defaultRetention,
+            maxRetention,
+        )
 
         /**
          * Adapts an existing JDBC [Connection] (typically the same one driving
@@ -217,14 +242,13 @@ public class ArtifactStore private constructor(
             sweepInterval: Duration = DEFAULT_SWEEP_INTERVAL,
             defaultRetention: Duration = DEFAULT_RETENTION,
             maxRetention: Duration = MAX_RETENTION,
-        ): ArtifactStore =
-            ArtifactStore(
-                connection = connection,
-                defaultRetention = defaultRetention,
-                maxRetention = maxRetention,
-                sweepInterval = sweepInterval,
-                ownsConnection = false,
-            )
+        ): ArtifactStore = ArtifactStore(
+            connection = connection,
+            defaultRetention = defaultRetention,
+            maxRetention = maxRetention,
+            sweepInterval = sweepInterval,
+            ownsConnection = false,
+        )
 
         private fun openOwning(
             jdbcUrl: String,

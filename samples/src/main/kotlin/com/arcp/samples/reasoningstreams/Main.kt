@@ -1,4 +1,4 @@
-package com.arcp.samples.reasoning_streams
+package com.arcp.samples.reasoningstreams
 
 import com.arcp.samples.dispatch
 import com.arcp.samples.envelope
@@ -47,12 +47,13 @@ internal suspend fun runPrimary(
             client.envelope(
                 type = "stream.chunk",
                 streamId = streamId,
-                payload = mapOf(
-                    "sequence" to step,
-                    "kind" to "thought",
-                    "role" to "assistant_thought",
-                    "content" to answer,
-                ),
+                payload =
+                    mapOf(
+                        "sequence" to step,
+                        "kind" to "thought",
+                        "role" to "assistant_thought",
+                        "content" to answer,
+                    ),
             ),
         )
         last = withTimeoutOrNull(5_000) { inboundCritiques.receive() }
@@ -64,27 +65,36 @@ internal suspend fun runPrimary(
 // Mirror side (a peer runtime, NOT a pure observer — it both reads
 // the thought stream AND delegates critique events back) ---------------
 
-private suspend fun subscribeThoughts(mirror: ARCPClient, target: SessionId): SubscriptionId {
-    val accepted = mirror.request(
-        envelope = mirror.envelope(
-            type = "subscribe",
-            payload = mapOf(
-                "filter" to mapOf(
-                    "session_id" to listOf(target.value),
-                    "types" to listOf("stream.chunk"),
+private suspend fun subscribeThoughts(
+    mirror: ARCPClient,
+    target: SessionId,
+): SubscriptionId {
+    val accepted =
+        mirror.request(
+            envelope =
+                mirror.envelope(
+                    type = "subscribe",
+                    payload =
+                        mapOf(
+                            "filter" to
+                                mapOf(
+                                    "session_id" to listOf(target.value),
+                                    "types" to listOf("stream.chunk"),
+                                ),
+                        ),
                 ),
-            ),
-        ),
-        timeoutMs = 10_000,
-    )
+            timeoutMs = 10_000,
+        )
     return SubscriptionId(accepted.payloadMap()["subscription_id"].toString())
 }
 
-internal fun isThought(env: Envelope): Boolean =
-    env.type == "stream.chunk" &&
-        (env.payloadMap()["kind"] == "thought" || env.payloadMap()["role"] == "assistant_thought")
+internal fun isThought(env: Envelope): Boolean = env.type == "stream.chunk" &&
+    (env.payloadMap()["kind"] == "thought" || env.payloadMap()["role"] == "assistant_thought")
 
-internal suspend fun runMirror(mirror: ARCPClient, target: SessionId) {
+internal suspend fun runMirror(
+    mirror: ARCPClient,
+    target: SessionId,
+) {
     val subId = subscribeThoughts(mirror, target)
     var spent = 0
     try {
@@ -108,19 +118,23 @@ internal suspend fun runMirror(mirror: ARCPClient, target: SessionId) {
                 mirror.envelope(
                     type = "agent.delegate",
                     target = target.value,
-                    payload = mapOf(
-                        "target" to "primary",
-                        "task" to "consume_critique",
-                        "context" to mapOf(
-                            "critique" to mapOf(
-                                "target_thought_sequence" to (inner.payloadMap()["sequence"] ?: 0),
-                                "severity" to severity,
-                                "summary" to summary,
-                                "suggestion" to suggestion,
-                                "consumed_tokens" to consumed,
-                            ),
+                    payload =
+                        mapOf(
+                            "target" to "primary",
+                            "task" to "consume_critique",
+                            "context" to
+                                mapOf(
+                                    "critique" to
+                                        mapOf(
+                                            "target_thought_sequence" to
+                                                (inner.payloadMap()["sequence"] ?: 0),
+                                            "severity" to severity,
+                                            "summary" to summary,
+                                            "suggestion" to suggestion,
+                                            "consumed_tokens" to consumed,
+                                        ),
+                                ),
                         ),
-                    ),
                 ),
             )
         }
@@ -142,7 +156,9 @@ public fun main(): Unit = runBlocking {
             primary.events().collect { env ->
                 if (env.type != "agent.delegate") return@collect
                 @Suppress("UNCHECKED_CAST")
-                val context = env.payloadMap()["context"] as? Map<String, Any?> ?: return@collect
+                val context =
+                    env.payloadMap()["context"] as? Map<String, Any?> ?: return@collect
+
                 @Suppress("UNCHECKED_CAST")
                 val critique = context["critique"] as? Map<String, Any?> ?: return@collect
                 inbound.send(critique)
@@ -152,11 +168,12 @@ public fun main(): Unit = runBlocking {
             runMirror(mirror, primary.sessionIdOrNull() ?: SessionId.random())
         }
 
-        val answer = runPrimary(
-            primary,
-            request = "Argue both sides: serializable vs snapshot iso?",
-            inboundCritiques = inbound,
-        )
+        val answer =
+            runPrimary(
+                primary,
+                request = "Argue both sides: serializable vs snapshot iso?",
+                inboundCritiques = inbound,
+            )
         println(answer)
     }
 

@@ -31,7 +31,16 @@ subprojects {
 
     extensions.configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
         toolVersion = "1.23.7"
-        config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+        // :samples is illustrative protocol code, not library code; relax
+        // size/complexity rules there while keeping naming + forbidden
+        // patterns enforced. See config/detekt/detekt-samples.yml.
+        val configFile =
+            if (project.name == "samples") {
+                "config/detekt/detekt-samples.yml"
+            } else {
+                "config/detekt/detekt.yml"
+            }
+        config.setFrom(rootProject.files(configFile))
         buildUponDefaultConfig = true
         allRules = false
         autoCorrect = false

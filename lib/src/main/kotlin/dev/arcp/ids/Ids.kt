@@ -70,6 +70,7 @@ public value class MessageId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped MessageId. */
         public fun random(): MessageId = MessageId(Ulid.next("msg"))
     }
 }
@@ -87,6 +88,7 @@ public value class SessionId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped SessionId. */
         public fun random(): SessionId = SessionId(Ulid.next("sess"))
     }
 }
@@ -104,6 +106,7 @@ public value class JobId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped JobId. */
         public fun random(): JobId = JobId(Ulid.next("job"))
     }
 }
@@ -121,6 +124,7 @@ public value class StreamId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped StreamId. */
         public fun random(): StreamId = StreamId(Ulid.next("str"))
     }
 }
@@ -138,6 +142,7 @@ public value class SubscriptionId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped SubscriptionId. */
         public fun random(): SubscriptionId = SubscriptionId(Ulid.next("sub"))
     }
 }
@@ -155,6 +160,7 @@ public value class LeaseId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped LeaseId. */
         public fun random(): LeaseId = LeaseId(Ulid.next("lse"))
     }
 }
@@ -172,6 +178,7 @@ public value class ArtifactId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped ArtifactId. */
         public fun random(): ArtifactId = ArtifactId(Ulid.next("art"))
     }
 }
@@ -189,6 +196,7 @@ public value class TraceId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped TraceId. */
         public fun random(): TraceId = TraceId(Ulid.next("trace"))
     }
 }
@@ -206,6 +214,7 @@ public value class SpanId(
     override fun toString(): String = value
 
     public companion object {
+        /** Returns a freshly minted, ULID-shaped SpanId. */
         public fun random(): SpanId = SpanId(Ulid.next("span"))
     }
 }

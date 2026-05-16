@@ -1,4 +1,4 @@
-package com.arcp.samples.human_input
+package com.arcp.samples.humaninput
 
 import com.arcp.samples.dispatch
 import com.arcp.samples.envelope
@@ -7,12 +7,12 @@ import com.arcp.samples.payloadMap
 import dev.arcp.client.ARCPClient
 import dev.arcp.envelope.Envelope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.Clock
@@ -23,13 +23,21 @@ import kotlinx.datetime.Instant
 private val DESTINATIONS = listOf("ntfy:phone", "email:oncall", "slack:ops")
 
 @OptIn(ExperimentalCoroutinesApi::class)
-private suspend fun fanOut(client: ARCPClient, request: Envelope) {
+private suspend fun fanOut(
+    client: ARCPClient,
+    request: Envelope,
+) {
     val payload = request.payloadMap()
+
     @Suppress("UNCHECKED_CAST")
     val schema = (payload["response_schema"] as? Map<String, Any?>) ?: emptyMap()
     val prompt = payload["prompt"]?.toString() ?: ""
     val expiresAt = Instant.parse(payload["expires_at"].toString())
-    val timeoutMs = maxOf(0L, expiresAt.toEpochMilliseconds() - Clock.System.now().toEpochMilliseconds())
+    val timeoutMs =
+        maxOf(
+            0L,
+            expiresAt.toEpochMilliseconds() - Clock.System.now().toEpochMilliseconds(),
+        )
 
     coroutineScope {
         val tasks: Map<Deferred<Pair<String, Map<String, Any?>>>, String> =
@@ -52,10 +60,11 @@ private suspend fun fanOut(client: ARCPClient, request: Envelope) {
                     client.envelope(
                         type = "human.input.cancelled",
                         correlationId = request.id,
-                        payload = mapOf(
-                            "code" to "DEADLINE_EXCEEDED",
-                            "message" to "no channel responded before expires_at",
-                        ),
+                        payload =
+                            mapOf(
+                                "code" to "DEADLINE_EXCEEDED",
+                                "message" to "no channel responded before expires_at",
+                            ),
                     ),
                 )
                 return@coroutineScope
@@ -66,11 +75,12 @@ private suspend fun fanOut(client: ARCPClient, request: Envelope) {
                 client.envelope(
                     type = "human.input.response",
                     correlationId = request.id,
-                    payload = mapOf(
-                        "value" to value,
-                        "responded_by" to respondedBy,
-                        "responded_at" to Clock.System.now().toString(),
-                    ),
+                    payload =
+                        mapOf(
+                            "value" to value,
+                            "responded_by" to respondedBy,
+                            "responded_at" to Clock.System.now().toString(),
+                        ),
                 ),
             )
             // Tell the losing destinations the question is settled.
@@ -80,11 +90,12 @@ private suspend fun fanOut(client: ARCPClient, request: Envelope) {
                     client.envelope(
                         type = "human.input.cancelled",
                         correlationId = request.id,
-                        payload = mapOf(
-                            "code" to "OK",
-                            "message" to "answered elsewhere",
-                            "channels" to losers,
-                        ),
+                        payload =
+                            mapOf(
+                                "code" to "OK",
+                                "message" to "answered elsewhere",
+                                "channels" to losers,
+                            ),
                     ),
                 )
             }

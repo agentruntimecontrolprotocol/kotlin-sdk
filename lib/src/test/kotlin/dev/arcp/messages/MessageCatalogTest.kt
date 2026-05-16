@@ -24,7 +24,8 @@ class MessageCatalogTest :
     StringSpec({
         val ts = Instant.parse("2026-05-09T13:00:00Z")
 
-        fun envelope(payload: MessageType) = Envelope(id = MessageId.random(), timestamp = ts, payload = payload)
+        fun envelope(payload: MessageType) =
+            Envelope(id = MessageId.random(), timestamp = ts, payload = payload)
 
         val cases: List<MessageType> =
             listOf(
@@ -50,7 +51,11 @@ class MessageCatalogTest :
                 Ping(nonce = "p"),
                 Pong(nonce = "p"),
                 Ack(ackFor = MessageId("msg_x")),
-                Nack(nackFor = MessageId("msg_x"), code = ErrorCode.INVALID_ARGUMENT, message = "bad"),
+                Nack(
+                    nackFor = MessageId("msg_x"),
+                    code = ErrorCode.INVALID_ARGUMENT,
+                    message = "bad",
+                ),
                 Cancel(target = CancelTarget.JOB, targetId = "job_x"),
                 CancelAccepted(targetId = "job_x"),
                 CancelRefused(targetId = "job_x", reason = "terminal"),
@@ -60,7 +65,10 @@ class MessageCatalogTest :
                 CheckpointCreate(jobId = JobId("job_x")),
                 CheckpointRestore(jobId = JobId("job_x"), checkpointId = "ck_1"),
                 // Execution
-                ToolInvoke(tool = ToolName("filesystem.search"), arguments = buildJsonObject { put("q", JsonPrimitive("x")) }),
+                ToolInvoke(
+                    tool = ToolName("filesystem.search"),
+                    arguments = buildJsonObject { put("q", JsonPrimitive("x")) },
+                ),
                 ToolResult(value = JsonPrimitive(42)),
                 ToolError(code = ErrorCode.RESOURCE_EXHAUSTED, message = "quota"),
                 JobAccepted(jobId = JobId("job_x")),

@@ -19,16 +19,19 @@ import kotlinx.coroutines.runBlocking
 private const val CANCEL_DEADLINE_MS: Long = 5_000
 
 private suspend fun startLongJob(client: ARCPClient): JobId {
-    val accepted = client.request(
-        envelope = client.envelope(
-            type = "tool.invoke",
-            payload = mapOf(
-                "tool" to "demo.long_running",
-                "arguments" to mapOf("work_seconds" to 600),
-            ),
-        ),
-        timeoutMs = 10_000,
-    )
+    val accepted =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "tool.invoke",
+                    payload =
+                        mapOf(
+                            "tool" to "demo.long_running",
+                            "arguments" to mapOf("work_seconds" to 600),
+                        ),
+                ),
+            timeoutMs = 10_000,
+        )
     return JobId(accepted.payloadMap()["job_id"].toString())
 }
 
@@ -43,18 +46,21 @@ private suspend fun cancelJob(
     reason: String,
     deadlineMs: Long,
 ): Envelope {
-    val reply = client.request(
-        envelope = client.envelope(
-            type = "cancel",
-            payload = mapOf(
-                "target" to "job",
-                "target_id" to jobId.value,
-                "reason" to reason,
-                "deadline_ms" to deadlineMs,
-            ),
-        ),
-        timeoutMs = deadlineMs + 5_000,
-    )
+    val reply =
+        client.request(
+            envelope =
+                client.envelope(
+                    type = "cancel",
+                    payload =
+                        mapOf(
+                            "target" to "job",
+                            "target_id" to jobId.value,
+                            "reason" to reason,
+                            "deadline_ms" to deadlineMs,
+                        ),
+                ),
+            timeoutMs = deadlineMs + 5_000,
+        )
     if (reply.type == "cancel.refused") {
         throw ARCPException.FailedPrecondition(
             reply.payloadMap()["reason"]?.toString() ?: "cancel refused",
@@ -67,23 +73,30 @@ private suspend fun cancelJob(
  * Distinct from cancel: pauses the job (`blocked`), runtime emits
  * `human.input.request`. Job is NOT terminated (RFC §10.5).
  */
-private suspend fun interruptJob(client: ARCPClient, jobId: JobId, prompt: String) {
+private suspend fun interruptJob(
+    client: ARCPClient,
+    jobId: JobId,
+    prompt: String,
+) {
     client.dispatch(
         client.envelope(
             type = "interrupt",
-            payload = mapOf(
-                "target" to "job",
-                "target_id" to jobId.value,
-                "prompt" to prompt,
-            ),
+            payload =
+                mapOf(
+                    "target" to "job",
+                    "target_id" to jobId.value,
+                    "prompt" to prompt,
+                ),
         ),
     )
 }
 
-private suspend fun awaitTerminal(client: ARCPClient, jobId: JobId): Envelope =
-    client.events().firstOrNull { env ->
-        env.jobId == jobId && env.type in setOf("job.completed", "job.failed", "job.cancelled")
-    } ?: throw RuntimeException("event stream closed before terminal")
+private suspend fun awaitTerminal(
+    client: ARCPClient,
+    jobId: JobId,
+): Envelope = client.events().firstOrNull { env ->
+    env.jobId == jobId && env.type in setOf("job.completed", "job.failed", "job.cancelled")
+} ?: throw RuntimeException("event stream closed before terminal")
 
 private suspend fun scenarioCancel() {
     val client: ARCPClient = TODO("transport, identity, auth elided")
