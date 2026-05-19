@@ -38,21 +38,10 @@ cd kotlin-sdk
 
 ## Architecture
 
-```text
-+----------------------+      +----------------------+
-|    ARCPClient        |      |    ARCPRuntime       |
-| - handshake          |<---->| - handshake          |
-| - send/receive       |      | - capability negot.  |
-+----------+-----------+      +----+-----------------+
-           |                       |
-           +----- Transport -------+
-              (Memory / WS / stdio)
-                       |
-              +--------+--------+
-              |    EventLog     |
-              | (SQLite)         |
-              +-----------------+
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="ARCP Kotlin SDK architecture — ARCPClient and ARCPRuntime exchange envelopes over Memory/WebSocket/stdio transports; runtime is backed by a SQLite EventLog" src="docs/diagrams/architecture-light.svg">
+</picture>
 
 - The **envelope** (`dev.arcp.envelope.Envelope`) is the canonical
   message container; its custom serializer hoists the `type` discriminator to
