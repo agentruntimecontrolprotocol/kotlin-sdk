@@ -9,7 +9,7 @@ package dev.arcp
  */
 public object Version {
     /** ARCP wire protocol version implemented by this SDK (RFC §6.1.1). */
-    public const val PROTOCOL_VERSION: String = "1.0"
+    public const val PROTOCOL_VERSION: String = "1.1"
 
     /** Semantic version of the SDK artifact itself. */
     public const val SDK_VERSION: String = "0.1.0"

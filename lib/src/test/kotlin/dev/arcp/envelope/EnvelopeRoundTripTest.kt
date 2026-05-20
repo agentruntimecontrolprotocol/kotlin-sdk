@@ -86,7 +86,7 @@ class EnvelopeRoundTripTest :
             val rawJson =
                 """
                 {
-                  "arcp": "1.0",
+                  "arcp": "1.1",
                   "id": "msg_005",
                   "type": "ping",
                   "timestamp": "2026-05-09T13:00:00Z",
@@ -101,7 +101,7 @@ class EnvelopeRoundTripTest :
             val rawJson =
                 """
                 {
-                  "arcp": "1.0",
+                  "arcp": "1.1",
                   "id": "msg_006",
                   "type": "ping",
                   "timestamp": "2026-05-09T13:00:00Z",
