@@ -1,7 +1,7 @@
 # ARCP Kotlin SDK
 
 Reference Kotlin implementation of the [Agent Runtime Control Protocol
-(ARCP) v1.0](RFC-0001-v2.md).
+(ARCP) v1.0](https://github.com/agentruntimecontrolprotocol/spec/blob/main/docs/draft-arcp-1.1.md).
 
 This repository ships:
 

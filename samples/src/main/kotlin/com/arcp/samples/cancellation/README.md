@@ -45,7 +45,7 @@ interruptJob(client, jobId, prompt = "Pause and ask before touching prod.")
 
 ## Variations
 
-- Pair `interrupt` with [human_input](../human_input) for a working
+- Pair `interrupt` with [human_input](../humaninput) for a working
   pause-and-ask loop.
 - Send `cancel` against a `stream_id` instead of a `job_id` to
   terminate just one stream — terminal is a `stream.error` with

@@ -19,16 +19,16 @@ primitive it demonstrates.
 |---|---|---|
 | [`subscriptions/`](./src/main/kotlin/com/arcp/samples/subscriptions) | Three Observer clients on one session, three filters, three sinks. | §5, §13 |
 | [`leases/`](./src/main/kotlin/com/arcp/samples/leases) | Lease-gated shell agent. Read leases coarse, write leases scoped. | §15.4–§15.5 |
-| [`lease_revocation/`](./src/main/kotlin/com/arcp/samples/lease_revocation) | Per-table leases with `lease.revoked` / `lease.extended` mid-flight. | §15.5 |
-| [`permission_challenge/`](./src/main/kotlin/com/arcp/samples/permission_challenge) | Two-party permission challenge — generator asks, reviewer holds veto. | §15.4, §6.4 |
+| [`lease_revocation/`](./src/main/kotlin/com/arcp/samples/leaserevocation) | Per-table leases with `lease.revoked` / `lease.extended` mid-flight. | §15.5 |
+| [`permission_challenge/`](./src/main/kotlin/com/arcp/samples/permissionchallenge) | Two-party permission challenge — generator asks, reviewer holds veto. | §15.4, §6.4 |
 | [`delegation/`](./src/main/kotlin/com/arcp/samples/delegation) | `agent.delegate` fan-out + `JobMux` to demux events by `job_id`. | §14, §6.4 |
 | [`handoff/`](./src/main/kotlin/com/arcp/samples/handoff) | `agent.handoff` with transcript packed as an artifact, runtime fingerprint pinned. | §14, §16, §8.3 |
 | [`heartbeats/`](./src/main/kotlin/com/arcp/samples/heartbeats) | Worker federation; heartbeat-loss reroute via `idempotency_key`. | §10.3, §6.4 |
-| [`capability_negotiation/`](./src/main/kotlin/com/arcp/samples/capability_negotiation) | Capability-driven peer routing; standard `cost.usd` rollups. | §7, §17.3.1, §18.3 |
+| [`capability_negotiation/`](./src/main/kotlin/com/arcp/samples/capabilitynegotiation) | Capability-driven peer routing; standard `cost.usd` rollups. | §7, §17.3.1, §18.3 |
 | [`resumability/`](./src/main/kotlin/com/arcp/samples/resumability) | Crash and resume via `exitProcess(137)` + `resume` envelope. | §10, §19, §6.4 |
-| [`reasoning_streams/`](./src/main/kotlin/com/arcp/samples/reasoning_streams) | `kind: thought` stream + a peer runtime that subscribes and delegates critiques back. | §11.4, §13, §14 |
+| [`reasoning_streams/`](./src/main/kotlin/com/arcp/samples/reasoningstreams) | `kind: thought` stream + a peer runtime that subscribes and delegates critiques back. | §11.4, §13, §14 |
 | [`extensions/`](./src/main/kotlin/com/arcp/samples/extensions) | Custom `arcpx.sdr.*.v1` extension namespace with correct unknown-message handling. | §21 |
-| [`human_input/`](./src/main/kotlin/com/arcp/samples/human_input) | `human.input.request` fanned across phone/email/Slack; first-wins resolution. | §12 |
+| [`human_input/`](./src/main/kotlin/com/arcp/samples/humaninput) | `human.input.request` fanned across phone/email/Slack; first-wins resolution. | §12 |
 | [`cancellation/`](./src/main/kotlin/com/arcp/samples/cancellation) | Cooperative `cancel` (terminate) vs `interrupt` (pause and ask). | §10.4–§10.5 |
 | [`mcp/`](./src/main/kotlin/com/arcp/samples/mcp) | ARCP runtime fronting an MCP server: `tool.invoke` → MCP `call_tool`. | §20 |
 
