@@ -148,6 +148,30 @@ public sealed class ARCPException(
         override val code: ErrorCode = ErrorCode.LEASE_REVOKED
     }
 
+    public class LeaseSubsetViolation(
+        public val capability: String,
+        message: String = "lease subset violation in $capability",
+    ) : ARCPException(message) {
+        override val code: ErrorCode = ErrorCode.LEASE_SUBSET_VIOLATION
+    }
+
+    public class BudgetExhausted(
+        public val currency: String,
+        public val jobId: dev.arcp.ids.JobId? = null,
+        message: String = "budget exhausted for $currency",
+    ) : ARCPException(message) {
+        override val code: ErrorCode = ErrorCode.BUDGET_EXHAUSTED
+        override val retryable: Boolean get() = false
+    }
+
+    public class AgentVersionNotAvailable(
+        public val agent: String,
+        public val version: String,
+        message: String = "agent version $agent@$version is not available",
+    ) : ARCPException(message) {
+        override val code: ErrorCode = ErrorCode.AGENT_VERSION_NOT_AVAILABLE
+    }
+
     public class BackpressureOverflow(
         message: String,
     ) : ARCPException(message) {

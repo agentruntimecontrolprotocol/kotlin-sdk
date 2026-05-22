@@ -10,7 +10,11 @@ import dev.arcp.messages.Auth
 import dev.arcp.messages.AuthScheme
 import dev.arcp.messages.Capabilities
 import dev.arcp.messages.ClientInfo
+import dev.arcp.messages.JobListFilter
+import dev.arcp.messages.Nack
 import dev.arcp.messages.SessionAccepted
+import dev.arcp.messages.SessionJobs
+import dev.arcp.messages.SessionListJobs
 import dev.arcp.messages.SessionOpen
 import dev.arcp.messages.SessionRejected
 import dev.arcp.messages.SessionUnauthenticated
@@ -92,6 +96,28 @@ public class ARCPClient(
 
     /** Returns the underlying transport's incoming-envelope flow. */
     public fun receive(): Flow<Envelope> = transport.receive()
+
+    /** Sends `session.list_jobs` and waits for the correlated `session.jobs` reply. */
+    public suspend fun listJobs(
+        sessionId: SessionId,
+        filter: JobListFilter = JobListFilter(),
+        limit: Int = SessionListJobs.DEFAULT_LIMIT,
+        cursor: String? = null,
+    ): SessionJobs {
+        val requestId =
+            send(
+                sessionId,
+                SessionListJobs(filter = filter, limit = limit, cursor = cursor),
+            )
+        val reply = transport.receive().first { it.correlationId == requestId }
+        return when (val payload = reply.payload) {
+            is SessionJobs -> payload
+            is Nack -> throw ARCPException.FailedPrecondition(payload.message)
+            else -> throw ARCPException.FailedPrecondition(
+                "unexpected list_jobs reply: ${reply.type}",
+            )
+        }
+    }
 
     override fun close() {
         transport.close()

@@ -1,7 +1,11 @@
 package dev.arcp.messages
 
+import dev.arcp.credentials.Credential
 import dev.arcp.error.ErrorCode
+import dev.arcp.ids.JobId
+import dev.arcp.ids.MessageId
 import dev.arcp.ids.SessionId
+import dev.arcp.ids.TraceId
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -40,6 +44,10 @@ public data class Capabilities(
     val subscriptions: Boolean = false,
     @SerialName("scheduled_jobs")
     val scheduledJobs: Boolean = false,
+    @SerialName("provisioned_credentials")
+    val provisionedCredentials: Boolean = false,
+    @SerialName("model.use")
+    val modelUse: Boolean = false,
     val anonymous: Boolean = false,
     val interrupt: Boolean = true,
     @SerialName("heartbeat_interval_seconds")
@@ -49,6 +57,7 @@ public data class Capabilities(
     @SerialName("binary_encoding")
     val binaryEncoding: List<String> = listOf("base64"),
     val extensions: List<String> = emptyList(),
+    val agents: List<AgentDescriptor> = emptyList(),
 ) {
     public companion object {
         /** Default heartbeat interval per RFC §10.3 (30 seconds). */
@@ -206,4 +215,66 @@ public data class SessionEvicted(
 @SerialName("session.close")
 public data class SessionClose(
     val reason: String? = null,
+) : MessageType
+
+/** Read-only filters for `session.list_jobs` (RFC v1.1 §6.6). */
+@Serializable
+public data class JobListFilter(
+    val status: List<String> = emptyList(),
+    val agent: String? = null,
+    @SerialName("created_after")
+    val createdAfter: Instant? = null,
+    @SerialName("created_before")
+    val createdBefore: Instant? = null,
+)
+
+/** `session.list_jobs` — request a paginated job inventory slice. */
+@Serializable
+@SerialName("session.list_jobs")
+public data class SessionListJobs(
+    val filter: JobListFilter = JobListFilter(),
+    val limit: Int = DEFAULT_LIMIT,
+    val cursor: String? = null,
+) : MessageType {
+    public companion object {
+        public const val DEFAULT_LIMIT: Int = 100
+    }
+}
+
+/** Lease summary returned from `session.jobs`. */
+@Serializable
+public data class JobListLease(
+    @SerialName("expires_at")
+    val expiresAt: Instant? = null,
+    val capabilities: Map<String, List<String>> = emptyMap(),
+)
+
+/** Job entry returned from `session.jobs`. */
+@Serializable
+public data class JobListEntry(
+    @SerialName("job_id")
+    val jobId: JobId,
+    val agent: String,
+    val status: String,
+    val lease: JobListLease? = null,
+    @SerialName("parent_job_id")
+    val parentJobId: JobId? = null,
+    @SerialName("created_at")
+    val createdAt: Instant,
+    @SerialName("trace_id")
+    val traceId: TraceId? = null,
+    @SerialName("last_event_seq")
+    val lastEventSeq: Long? = null,
+    val credentials: List<Credential>? = null,
+)
+
+/** `session.jobs` — response to [SessionListJobs]. */
+@Serializable
+@SerialName("session.jobs")
+public data class SessionJobs(
+    @SerialName("request_id")
+    val requestId: MessageId,
+    val jobs: List<JobListEntry>,
+    @SerialName("next_cursor")
+    val nextCursor: String? = null,
 ) : MessageType

@@ -43,7 +43,7 @@ public data class StreamOpen(
  * For `kind: binary` we use base64 in-envelope (`data` is the base64 payload)
  * per RFC §11.3 — sidecar binary frames are deferred to v0.2. For
  * `kind: thought` chunks SHOULD include `role`, `content`, and `redacted`
- * (RFC §11.4).
+ * (RFC §11.4). For job result streaming use [JobResultChunk] (RFC v1.1 §8.4).
  */
 @Serializable
 @SerialName("stream.chunk")

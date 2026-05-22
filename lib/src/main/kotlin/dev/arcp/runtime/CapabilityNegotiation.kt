@@ -47,6 +47,8 @@ private fun mergeCapabilities(
         artifacts = bools.getValue("artifacts"),
         subscriptions = bools.getValue("subscriptions"),
         scheduledJobs = bools.getValue("scheduled_jobs"),
+        provisionedCredentials = bools.getValue("provisioned_credentials"),
+        modelUse = bools.getValue("model.use"),
         anonymous = proposed.anonymous && supported.anonymous,
         interrupt = proposed.interrupt && supported.interrupt,
         heartbeatIntervalSeconds = minOf(
@@ -56,6 +58,7 @@ private fun mergeCapabilities(
         heartbeatRecovery = supported.heartbeatRecovery,
         binaryEncoding = negotiateBinaryEncoding(proposed, supported),
         extensions = negotiateExtensions(proposed, supported),
+        agents = supported.agents,
     )
 }
 
@@ -88,6 +91,9 @@ private fun negotiateBooleanFlags(
             "artifacts" to (proposed.artifacts to supported.artifacts),
             "subscriptions" to (proposed.subscriptions to supported.subscriptions),
             "scheduled_jobs" to (proposed.scheduledJobs to supported.scheduledJobs),
+            "provisioned_credentials" to
+                (proposed.provisionedCredentials to supported.provisionedCredentials),
+            "model.use" to (proposed.modelUse to supported.modelUse),
         )
     return pairs.associate { (name, ps) ->
         val (p, s) = ps

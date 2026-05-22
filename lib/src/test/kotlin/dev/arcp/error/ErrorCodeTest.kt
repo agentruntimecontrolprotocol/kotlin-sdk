@@ -43,5 +43,20 @@ class ErrorCodeTest :
             ErrorCode.UNIMPLEMENTED.retryableByDefault shouldBe false
             ErrorCode.UNAUTHENTICATED.retryableByDefault shouldBe false
             ErrorCode.DATA_LOSS.retryableByDefault shouldBe false
+            ErrorCode.BUDGET_EXHAUSTED.retryableByDefault shouldBe false
+            ErrorCode.AGENT_VERSION_NOT_AVAILABLE.retryableByDefault shouldBe false
+            ErrorCode.LEASE_SUBSET_VIOLATION.retryableByDefault shouldBe false
+        }
+
+        "v1.1 error codes round-trip explicitly" {
+            arcpJson.decodeFromString(ErrorCode.serializer(), "\"BUDGET_EXHAUSTED\"") shouldBe
+                ErrorCode.BUDGET_EXHAUSTED
+            arcpJson.decodeFromString(
+                ErrorCode.serializer(),
+                "\"AGENT_VERSION_NOT_AVAILABLE\"",
+            ) shouldBe
+                ErrorCode.AGENT_VERSION_NOT_AVAILABLE
+            arcpJson.decodeFromString(ErrorCode.serializer(), "\"LEASE_SUBSET_VIOLATION\"") shouldBe
+                ErrorCode.LEASE_SUBSET_VIOLATION
         }
     })

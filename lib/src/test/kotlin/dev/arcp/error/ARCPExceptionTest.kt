@@ -36,6 +36,11 @@ class ARCPExceptionTest :
             ARCPException
                 .ResourceExhausted("over", retryAfterSeconds = 30)
                 .code shouldBe ErrorCode.RESOURCE_EXHAUSTED
+            ARCPException.BudgetExhausted("USD").code shouldBe ErrorCode.BUDGET_EXHAUSTED
+            ARCPException.AgentVersionNotAvailable("agent", "1.0.0").code shouldBe
+                ErrorCode.AGENT_VERSION_NOT_AVAILABLE
+            ARCPException.LeaseSubsetViolation("model.use").code shouldBe
+                ErrorCode.LEASE_SUBSET_VIOLATION
         }
 
         "PermissionDenied carries permission and resource fields" {
@@ -70,5 +75,6 @@ class ARCPExceptionTest :
         "retryable defaults to ErrorCode.retryableByDefault" {
             ARCPException.Unavailable("x").retryable shouldBe true
             ARCPException.PermissionDenied(PermissionName("p"), "r").retryable shouldBe false
+            ARCPException.BudgetExhausted("USD").retryable shouldBe false
         }
     })

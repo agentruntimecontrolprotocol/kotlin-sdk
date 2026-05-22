@@ -1,5 +1,9 @@
 package dev.arcp.messages
 
+import dev.arcp.credentials.Credential
+import dev.arcp.credentials.CredentialConstraints
+import dev.arcp.credentials.CredentialId
+import dev.arcp.credentials.CredentialScheme
 import dev.arcp.envelope.Envelope
 import dev.arcp.envelope.Priority
 import dev.arcp.error.ErrorCode
@@ -40,13 +44,31 @@ class MessageCatalogTest :
                 SessionAccepted(
                     sessionId = SessionId("sess_x"),
                     runtime = RuntimeIdentity(kind = "rt", version = "1"),
-                    capabilities = Capabilities(),
+                    capabilities =
+                        Capabilities(
+                            agents = listOf(
+                                AgentDescriptor("code-refactor", listOf("2.0.0"), "2.0.0"),
+                            ),
+                        ),
                 ),
                 SessionUnauthenticated(message = "bad"),
                 SessionRejected(code = ErrorCode.UNIMPLEMENTED, message = "no"),
                 SessionRefresh(scheme = AuthScheme.BEARER, nonce = "x", expiresAt = ts),
                 SessionEvicted(code = ErrorCode.CANCELLED, reason = "policy"),
                 SessionClose(reason = "done"),
+                SessionListJobs(filter = JobListFilter(status = listOf("accepted")), limit = 10),
+                SessionJobs(
+                    requestId = MessageId("msg_x"),
+                    jobs =
+                        listOf(
+                            JobListEntry(
+                                jobId = JobId("job_x"),
+                                agent = "code-refactor@2.0.0",
+                                status = "accepted",
+                                createdAt = ts,
+                            ),
+                        ),
+                ),
                 // Control
                 Ping(nonce = "p"),
                 Pong(nonce = "p"),
@@ -71,7 +93,38 @@ class MessageCatalogTest :
                 ),
                 ToolResult(value = JsonPrimitive(42)),
                 ToolError(code = ErrorCode.RESOURCE_EXHAUSTED, message = "quota"),
-                JobAccepted(jobId = JobId("job_x")),
+                JobSubmit(agent = "code-refactor@2.0.0"),
+                JobAccepted(
+                    jobId = JobId("job_x"),
+                    agent = "code-refactor@2.0.0",
+                    acceptedAt = ts,
+                    credentials =
+                        listOf(
+                            Credential(
+                                id = CredentialId("cred_x"),
+                                scheme = CredentialScheme.BEARER,
+                                value = "secret",
+                                endpoint = "https://example.invalid",
+                                constraints =
+                                    CredentialConstraints(
+                                        costBudget = listOf("USD:1.00"),
+                                        modelUse = listOf("tier-fast/*"),
+                                    ),
+                            ),
+                        ),
+                ),
+                JobStatusEvent(
+                    phase = "credential_rotated",
+                    body = buildJsonObject { put("id", JsonPrimitive("cred_y")) },
+                ),
+                JobResultChunk(
+                    resultId = "res_x",
+                    chunkSeq = 0,
+                    data = "hello",
+                    encoding = ResultChunkEncoding.UTF8,
+                    more = false,
+                ),
+                JobResult(finalStatus = "success", resultId = "res_x", resultSize = 5),
                 JobStarted(startedAt = ts),
                 JobProgress(percent = 42, message = "embedding"),
                 JobHeartbeat(sequence = 1, deadlineMs = 60000, state = JobLifecycleState.RUNNING),
