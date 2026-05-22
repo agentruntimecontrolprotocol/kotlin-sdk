@@ -1,12 +1,12 @@
 # Publish workflow for kotlin-sdk.
 #
 # Triggers on any semver tag (e.g. v1.1.0).  The job:
-#   1. Builds, signs, and stages artifacts to OSSRH.
-#   2. Closes and releases the staging repository to Maven Central.
+#   1. Builds, signs, and uploads a deployment bundle to Sonatype Central Portal.
+#   2. Releases the bundle automatically (publishingType = AUTOMATIC).
 #
 # Required repository secrets (Settings → Secrets → Actions):
-#   OSSRH_USERNAME    — Sonatype account username (s01.oss.sonatype.org)
-#   OSSRH_PASSWORD    — Sonatype account password / token
+#   OSSRH_USERNAME    — Central Portal user token username (central.sonatype.com)
+#   OSSRH_PASSWORD    — Central Portal user token password
 #   SIGNING_KEY_ID    — Last 8 hex digits of the GPG fingerprint
 #   SIGNING_KEY       — ASCII-armored GPG private key (full block)
 #   SIGNING_PASSWORD  — Passphrase for the GPG key
@@ -54,14 +54,11 @@ jobs:
       - name: Build and test
         run: ./gradlew --no-daemon assemble test
 
-      - name: Publish to OSSRH and release to Central
+      - name: Publish to Sonatype Central Portal
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: >
-          ./gradlew --no-daemon
-          publishToSonatype
-          closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew --no-daemon publishAllPublicationsToCentralPortal
