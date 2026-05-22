@@ -38,8 +38,6 @@ public data class Capabilities(
     val binaryStreams: Boolean = false,
     @SerialName("agent_handoff")
     val agentHandoff: Boolean = false,
-    @SerialName("human_input")
-    val humanInput: Boolean = false,
     val artifacts: Boolean = false,
     val subscriptions: Boolean = false,
     @SerialName("scheduled_jobs")

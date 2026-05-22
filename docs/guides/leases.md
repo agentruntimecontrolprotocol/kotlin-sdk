@@ -1,44 +1,154 @@
-# Leases
+# Leases & Budgets
 
-ARCP v1.1 adds runtime-enforced lease capabilities that can be used directly by the Kotlin SDK or delegated to an upstream provider through provisioned credentials.
+Leases are runtime-enforced capability grants. They limit what a job may
+do — which models it may call, how much it may spend, which tools it may
+invoke — and can be delegated to sub-jobs as equal or narrower subsets
+(RFC §9).
 
-## `cost.budget`
+## Permission request / grant flow
 
-`cost.budget` values use the wire form `currency:decimal`, for example `USD:5.00` or `credits:100`. The SDK parses these into `BudgetAmount` values and tracks them per job with `BudgetCounter`.
+```
+runtime ─── PermissionRequest ──> client
+        <── PermissionGrant ───── (or PermissionDeny)
+        ─── LeaseGranted ──────> client
+```
 
-When a cost metric such as `cost.inference` arrives on a job envelope, the runtime decrements the matching currency counter. Once the remaining value reaches zero, the runtime reports `BUDGET_EXHAUSTED` with `retryable = false`.
+```kotlin
+is PermissionRequest -> {
+    println("Runtime requests ${msg.permission} on ${msg.resource}")
+    // Approve:
+    client.send(sessionId, PermissionGrant(
+        permission   = msg.permission,
+        resource     = msg.resource,
+        leaseSeconds = 300,
+    ))
+    // Or deny:
+    // client.send(sessionId, PermissionDeny(msg.permission, msg.resource, "not allowed"))
+}
 
-Child jobs may only request budgets that are less than or equal to the parent's remaining budget, and they may not introduce a new currency.
+is LeaseGranted -> {
+    println("Lease ${msg.leaseId} granted, expires ${msg.expiresAt}")
+}
+```
 
-## `model.use`
+## Lease refresh
 
-`model.use` constrains which model identifiers a job may use. Patterns are segment-aware globs:
+A job can extend its lease before it expires:
 
-- `tier-fast/*` matches `tier-fast/haiku` but not `tier-slow/haiku`.
-- `provider/**` matches all models below `provider/`.
+```kotlin
+client.send(sessionId, LeaseRefresh(
+    leaseId                  = leaseId,
+    requestedExtensionSeconds = 120,
+))
 
-Delegated jobs must request a subset of the parent lease. A literal model such as `tier-fast/haiku` is a subset of `tier-fast/*`; broadening from a literal to `tier-fast/*` is rejected.
+is LeaseExtended -> println("Lease extended to ${msg.expiresAt}")
+```
 
-## Provisioned Credentials
+If the grantor revokes the lease before expiry:
 
-When a `CredentialProvisioner` is configured, the runtime issues credentials after job lease finalization and attaches them to `job.accepted.credentials`. Credentials use this vendor-neutral shape:
+```kotlin
+is LeaseRevoked -> throw ARCPException.LeaseRevoked("Lease ${msg.leaseId}: ${msg.reason}")
+```
+
+## cost.budget
+
+`cost.budget` values use the wire form `currency:decimal` (e.g. `USD:5.00`,
+`credits:100`).
+
+```kotlin
+val budget = CostBudget(
+    budgets = listOf(BudgetAmount.parse("USD:10.00")),
+)
+```
+
+Include the budget in the job's `leaseRequest`:
+
+```kotlin
+client.send(sessionId, JobSubmit(
+    agent        = AgentRef.parse("summarise@1.0.0"),
+    input        = input,
+    leaseRequest = buildJsonObject {
+        put("cost.budget", buildJsonArray { add("USD:5.00") })
+    },
+))
+```
+
+The runtime tracks spending per job with `BudgetRegistry`. When the counter
+reaches zero it emits `ARCPException.BudgetExhausted`:
+
+```kotlin
+} catch (e: ARCPException.BudgetExhausted) {
+    logger.warn { "Job ${e.jobId} exceeded ${e.currency} budget" }
+}
+```
+
+### Delegation subset rule
+
+A child job may only request a budget ≤ the parent's *remaining* balance:
+
+```
+parent budget: USD:5.00 (spent: USD:3.00, remaining: USD:2.00)
+child request: USD:1.50  ✅
+child request: USD:2.50  ❌ LEASE_SUBSET_VIOLATION
+```
+
+The runtime enforces this automatically; `ARCPException.LeaseSubsetViolation`
+is thrown if the child's request exceeds the parent's remaining budget.
+
+## model.use
+
+`model.use` limits which model IDs a job may call. Patterns are
+segment-aware globs:
+
+| Pattern | Matches | Does not match |
+|---------|---------|----------------|
+| `tier-fast/*` | `tier-fast/haiku` | `tier-slow/haiku` |
+| `provider/**` | `provider/v1/chat` | `other/v1/chat` |
+| `**` | anything | — |
+
+```kotlin
+val lease = ModelUseLease(patterns = listOf("anthropic/*"))
+lease.allows("anthropic/claude-3")   // true
+lease.allows("openai/gpt-4o")        // false
+```
+
+Subset check:
+
+```kotlin
+ModelUseLease.subset(
+    parent = ModelUseLease(listOf("tier-fast/**")),
+    child  = ModelUseLease(listOf("tier-fast/haiku")),
+)  // true — literal is subset of glob
+```
+
+## Provisioned credentials
+
+When a `CredentialProvisioner` is configured, the runtime issues per-job
+credentials after lease finalization. They arrive in `JobAccepted.credentials`
+and are redacted in logs:
+
+```kotlin
+is JobAccepted -> {
+    val cred = accepted.credentials
+    // cred.value is the actual secret — Credential.toString() redacts it
+}
+```
+
+Credential shape:
 
 ```json
 {
   "id": "cred_...",
   "scheme": "bearer",
-  "value": "secret",
+  "value": "...",
   "endpoint": "https://provider.example/v1",
   "constraints": {
     "cost.budget": ["USD:1.00"],
-    "model.use": ["tier-fast/*"],
-    "expires_at": "2026-05-09T13:00:00Z"
+    "model.use":   ["tier-fast/*"],
+    "expires_at":  "2026-05-09T13:00:00Z"
   }
 }
 ```
 
-The `value` field is treated as a secret. `Credential.toString()` redacts it, and job introspection should only expose credentials to the submitting principal.
-
-On terminal job states (`completed`, `failed`, `cancelled`, or timeout), the runtime revokes outstanding credentials with retry. `CredentialStore.pendingRevocations()` is the durability hook used to retry revocation after restart.
-
-Credential rotation is exposed through `ARCPRuntime.rotateCredential(...)`. It issues a replacement, revokes the prior credential, and can emit a `status` event with `phase = "credential_rotated"`.
+Credentials are automatically revoked on job termination. Use
+`ARCPRuntime.rotateCredential(jobId)` to rotate mid-job.
