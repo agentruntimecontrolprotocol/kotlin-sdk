@@ -31,7 +31,7 @@ subprojects {
     }
 
     extensions.configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-        toolVersion = "1.23.7"
+        toolVersion = "1.23.8"
         // :samples is illustrative protocol code, not library code; relax
         // size/complexity rules there while keeping naming + forbidden
         // patterns enforced. See config/detekt/detekt-samples.yml.
