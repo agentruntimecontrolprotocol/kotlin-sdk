@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.binary.compatibility.validator)
     `java-library`
     `maven-publish`
+    signing
 }
 
 kotlin {
@@ -56,11 +57,12 @@ java {
 publishing {
     publications {
         create<MavenPublication>("maven") {
+            artifactId = "arcp"
             from(components["java"])
             pom {
                 name.set("ARCP Kotlin SDK")
                 description.set(
-                    "Reference Kotlin implementation of the Agent Runtime Control Protocol (ARCP) v1.0.",
+                    "Reference Kotlin implementation of the Agent Runtime Control Protocol (ARCP) v1.1.",
                 )
                 url.set("https://github.com/agentruntimecontrolprotocol/kotlin-sdk")
                 licenses {
@@ -86,5 +88,20 @@ publishing {
                 }
             }
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// GPG signing — required by Maven Central.
+// Keys are injected via environment variables in CI; local builds skip signing
+// when SIGNING_KEY is absent.
+// ---------------------------------------------------------------------------
+signing {
+    val signingKey = providers.environmentVariable("SIGNING_KEY")
+    val signingKeyId = providers.environmentVariable("SIGNING_KEY_ID")
+    val signingPassword = providers.environmentVariable("SIGNING_PASSWORD")
+    if (signingKey.isPresent) {
+        useInMemoryPgpKeys(signingKeyId.orNull, signingKey.orNull, signingPassword.orNull)
+        sign(publishing.publications["maven"])
     }
 }
