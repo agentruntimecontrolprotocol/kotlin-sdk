@@ -38,6 +38,12 @@ val sampleClasses =
         "runHumanInput" to "com.arcp.samples.humaninput.MainKt",
         "runCancellation" to "com.arcp.samples.cancellation.MainKt",
         "runMcp" to "com.arcp.samples.mcp.MainKt",
+        "runListJobs" to "com.arcp.samples.listjobs.MainKt",
+        "runAgentVersions" to "com.arcp.samples.agentversions.MainKt",
+        "runResultChunk" to "com.arcp.samples.resultchunk.MainKt",
+        "runCostBudget" to "com.arcp.samples.costbudget.MainKt",
+        "runProvisionedCredentials" to "com.arcp.samples.provisionedcredentials.MainKt",
+        "runLitellmRecipe" to "com.arcp.samples.recipes.litellm.MainKt",
     )
 
 sampleClasses.forEach { (name, mainClassFqn) ->

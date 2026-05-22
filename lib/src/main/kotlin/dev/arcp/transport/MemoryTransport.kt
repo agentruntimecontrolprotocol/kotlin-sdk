@@ -4,7 +4,7 @@ import dev.arcp.envelope.Envelope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * In-process transport pair used for testing (RFC §22 — non-mandatory but
@@ -22,7 +22,7 @@ public class MemoryTransport private constructor(
         outbound.send(envelope)
     }
 
-    override fun receive(): Flow<Envelope> = inbound.consumeAsFlow()
+    override fun receive(): Flow<Envelope> = inbound.receiveAsFlow()
 
     override fun close() {
         outbound.close()

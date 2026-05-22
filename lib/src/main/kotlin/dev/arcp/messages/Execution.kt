@@ -1,5 +1,6 @@
 package dev.arcp.messages
 
+import dev.arcp.credentials.Credential
 import dev.arcp.error.ErrorCode
 import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
@@ -44,6 +45,70 @@ public data class ToolError(
 public data class JobAccepted(
     @SerialName("job_id")
     val jobId: JobId,
+    val agent: String? = null,
+    @SerialName("accepted_at")
+    val acceptedAt: Instant? = null,
+    val credentials: List<Credential>? = null,
+) : MessageType
+
+/** `job.submit` — submit work to a named agent (RFC v1.1 §7.1). */
+@Serializable
+@SerialName("job.submit")
+public data class JobSubmit(
+    val agent: String,
+    val input: JsonObject = JsonObject(emptyMap()),
+    @SerialName("lease_request")
+    val leaseRequest: JsonObject = JsonObject(emptyMap()),
+    @SerialName("lease_constraints")
+    val leaseConstraints: JsonObject? = null,
+    @SerialName("idempotency_key")
+    val idempotencyKey: String? = null,
+    @SerialName("max_runtime_sec")
+    val maxRuntimeSec: Long? = null,
+) : MessageType
+
+/** `status` — structured job status event. */
+@Serializable
+@SerialName("status")
+public data class JobStatusEvent(
+    val phase: String,
+    val body: JsonObject = JsonObject(emptyMap()),
+) : MessageType
+
+/** Encoding for `result_chunk.data` (RFC v1.1 §8.4). */
+@Serializable
+public enum class ResultChunkEncoding {
+    @SerialName("utf8")
+    UTF8,
+
+    @SerialName("base64")
+    BASE64,
+}
+
+/** `result_chunk` — streamed result output (RFC v1.1 §8.4). */
+@Serializable
+@SerialName("result_chunk")
+public data class JobResultChunk(
+    @SerialName("result_id")
+    val resultId: String,
+    @SerialName("chunk_seq")
+    val chunkSeq: Long,
+    val data: String,
+    val encoding: ResultChunkEncoding,
+    val more: Boolean,
+) : MessageType
+
+/** `job.result` — terminating result metadata for chunked output. */
+@Serializable
+@SerialName("job.result")
+public data class JobResult(
+    @SerialName("final_status")
+    val finalStatus: String,
+    @SerialName("result_id")
+    val resultId: String? = null,
+    @SerialName("result_size")
+    val resultSize: Long? = null,
+    val summary: String? = null,
 ) : MessageType
 
 /** `job.started` — execution began (RFC §10.2). */

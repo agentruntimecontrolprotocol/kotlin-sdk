@@ -83,6 +83,9 @@ public object StandardMetrics {
     /** `cost.usd` — decimal USD with up to 6 fractional digits. */
     public const val COST_USD: String = "cost.usd"
 
+    /** `cost.budget.remaining` — remaining budget for a cost currency. */
+    public const val COST_BUDGET_REMAINING: String = "cost.budget.remaining"
+
     /** `gpu.seconds` — wall-clock GPU time, summed across devices. */
     public const val GPU_SECONDS: String = "gpu.seconds"
 

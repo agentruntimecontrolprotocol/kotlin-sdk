@@ -58,4 +58,4 @@ RESUME_JOB_ID=... RESUME_AFTER_MSG_ID=... RESUME_CHECKPOINT_ID=... \
 - Branch on critique severity: low → finalize; high → loop back to
   synthesize with the critique appended.
 - Emit `kind: thought` between steps for
-  [reasoning_streams](../reasoning_streams) to consume.
+  [reasoning_streams](../reasoningstreams) to consume.

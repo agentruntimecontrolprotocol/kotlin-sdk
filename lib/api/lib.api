@@ -28,6 +28,8 @@ public final class dev/arcp/client/ARCPClient : java/lang/AutoCloseable {
 	public static final field Companion Ldev/arcp/client/ARCPClient$Companion;
 	public fun <init> (Ldev/arcp/transport/Transport;Ldev/arcp/messages/Auth;Ldev/arcp/messages/ClientInfo;Ldev/arcp/messages/Capabilities;)V
 	public fun close ()V
+	public final fun listJobs-kvcCKlY (Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun listJobs-kvcCKlY$default (Ldev/arcp/client/ARCPClient;Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun open (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun receive ()Lkotlinx/coroutines/flow/Flow;
 	public final fun send-DN45PQc (Ljava/lang/String;Ldev/arcp/messages/MessageType;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -37,6 +39,196 @@ public final class dev/arcp/client/ARCPClient$Companion {
 	public final fun bearer (Ljava/lang/String;)Ldev/arcp/messages/Auth;
 	public final fun defaultClientInfo (Ljava/lang/String;)Ldev/arcp/messages/ClientInfo;
 	public static synthetic fun defaultClientInfo$default (Ldev/arcp/client/ARCPClient$Companion;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/ClientInfo;
+}
+
+public final class dev/arcp/client/ResultChunkAssembler {
+	public static final field Companion Ldev/arcp/client/ResultChunkAssembler$Companion;
+	public static final field DEFAULT_MAX_ASSEMBLED_SIZE J
+	public fun <init> ()V
+	public fun <init> (J)V
+	public synthetic fun <init> (JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun accept (Ldev/arcp/messages/JobResultChunk;)Ldev/arcp/client/ResultChunkAssembler$AssembledResult;
+}
+
+public final class dev/arcp/client/ResultChunkAssembler$AssembledResult {
+	public fun <init> (Ljava/lang/String;[BZ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()[B
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;[BZ)Ldev/arcp/client/ResultChunkAssembler$AssembledResult;
+	public static synthetic fun copy$default (Ldev/arcp/client/ResultChunkAssembler$AssembledResult;Ljava/lang/String;[BZILjava/lang/Object;)Ldev/arcp/client/ResultChunkAssembler$AssembledResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytes ()[B
+	public final fun getResultId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isText ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/client/ResultChunkAssembler$Companion {
+}
+
+public final class dev/arcp/credentials/Credential {
+	public static final field Companion Ldev/arcp/credentials/Credential$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/credentials/CredentialScheme;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/credentials/CredentialConstraints;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ldev/arcp/credentials/CredentialScheme;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/credentials/CredentialConstraints;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-65AuhAs ()Ljava/lang/String;
+	public final fun component2 ()Ldev/arcp/credentials/CredentialScheme;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ldev/arcp/credentials/CredentialConstraints;
+	public final fun copy-rG3y2SQ (Ljava/lang/String;Ldev/arcp/credentials/CredentialScheme;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/credentials/CredentialConstraints;)Ldev/arcp/credentials/Credential;
+	public static synthetic fun copy-rG3y2SQ$default (Ldev/arcp/credentials/Credential;Ljava/lang/String;Ldev/arcp/credentials/CredentialScheme;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/credentials/CredentialConstraints;ILjava/lang/Object;)Ldev/arcp/credentials/Credential;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConstraints ()Ldev/arcp/credentials/CredentialConstraints;
+	public final fun getEndpoint ()Ljava/lang/String;
+	public final fun getId-65AuhAs ()Ljava/lang/String;
+	public final fun getProfile ()Ljava/lang/String;
+	public final fun getScheme ()Ldev/arcp/credentials/CredentialScheme;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/credentials/Credential$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/credentials/Credential$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/credentials/Credential;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/credentials/Credential;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/credentials/Credential$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/credentials/CredentialConstraints {
+	public static final field Companion Ldev/arcp/credentials/CredentialConstraints$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Lkotlinx/datetime/Instant;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Lkotlinx/datetime/Instant;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Lkotlinx/datetime/Instant;)Ldev/arcp/credentials/CredentialConstraints;
+	public static synthetic fun copy$default (Ldev/arcp/credentials/CredentialConstraints;Ljava/util/List;Ljava/util/List;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/credentials/CredentialConstraints;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCostBudget ()Ljava/util/List;
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public final fun getModelUse ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/credentials/CredentialConstraints$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/credentials/CredentialConstraints$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/credentials/CredentialConstraints;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/credentials/CredentialConstraints;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/credentials/CredentialConstraints$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/credentials/CredentialId {
+	public static final field Companion Ldev/arcp/credentials/CredentialId$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Ldev/arcp/credentials/CredentialId;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/credentials/CredentialId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/credentials/CredentialId$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-YcjA2Eg (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-XqAnflc (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/credentials/CredentialId$Companion {
+	public final fun random-65AuhAs ()Ljava/lang/String;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class dev/arcp/credentials/CredentialProvisioner {
+	public abstract fun issue (Ldev/arcp/credentials/CredentialProvisioner$IssuanceContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun revoke-7O-yCVI (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/arcp/credentials/CredentialProvisioner$IssuanceContext {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/ModelUseLease;Lkotlinx/datetime/Instant;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-vE1LxjM ()Ljava/lang/String;
+	public final fun component2-VHyvC20 ()Ljava/lang/String;
+	public final fun component3 ()Ldev/arcp/lease/CostBudget;
+	public final fun component4 ()Ldev/arcp/lease/ModelUseLease;
+	public final fun component5 ()Lkotlinx/datetime/Instant;
+	public final fun copy-NrtT0n0 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/ModelUseLease;Lkotlinx/datetime/Instant;)Ldev/arcp/credentials/CredentialProvisioner$IssuanceContext;
+	public static synthetic fun copy-NrtT0n0$default (Ldev/arcp/credentials/CredentialProvisioner$IssuanceContext;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/ModelUseLease;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/credentials/CredentialProvisioner$IssuanceContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
+	public final fun getLease ()Ldev/arcp/lease/CostBudget;
+	public final fun getModelUse ()Ldev/arcp/lease/ModelUseLease;
+	public final fun getParentJobId-VHyvC20 ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/credentials/CredentialScheme : java/lang/Enum {
+	public static final field BEARER Ldev/arcp/credentials/CredentialScheme;
+	public static final field Companion Ldev/arcp/credentials/CredentialScheme$Companion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/arcp/credentials/CredentialScheme;
+	public static fun values ()[Ldev/arcp/credentials/CredentialScheme;
+}
+
+public final class dev/arcp/credentials/CredentialScheme$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class dev/arcp/credentials/CredentialStore {
+	public abstract fun outstanding-tBvcXsc (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun pendingRevocations (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun record-28GizzE (Ljava/lang/String;Ldev/arcp/credentials/Credential;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun remove-7O-yCVI (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/arcp/credentials/InMemoryCredentialProvisioner : dev/arcp/credentials/CredentialProvisioner {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getIssued ()Ljava/util/List;
+	public final fun getRevoked ()Ljava/util/Set;
+	public fun issue (Ldev/arcp/credentials/CredentialProvisioner$IssuanceContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun revoke-7O-yCVI (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/arcp/credentials/InMemoryCredentialStore : dev/arcp/credentials/CredentialStore {
+	public fun <init> ()V
+	public fun outstanding-tBvcXsc (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun pendingRevocations (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun record-28GizzE (Ljava/lang/String;Ldev/arcp/credentials/Credential;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun remove-7O-yCVI (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/arcp/envelope/Envelope {
@@ -121,6 +313,14 @@ public final class dev/arcp/error/ARCPException$Aborted : dev/arcp/error/ARCPExc
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
 }
 
+public final class dev/arcp/error/ARCPException$AgentVersionNotAvailable : dev/arcp/error/ARCPException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAgent ()Ljava/lang/String;
+	public fun getCode ()Ldev/arcp/error/ErrorCode;
+	public final fun getVersion ()Ljava/lang/String;
+}
+
 public final class dev/arcp/error/ARCPException$AlreadyExists : dev/arcp/error/ARCPException {
 	public fun <init> (Ljava/lang/String;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
@@ -129,6 +329,15 @@ public final class dev/arcp/error/ARCPException$AlreadyExists : dev/arcp/error/A
 public final class dev/arcp/error/ARCPException$BackpressureOverflow : dev/arcp/error/ARCPException {
 	public fun <init> (Ljava/lang/String;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
+}
+
+public final class dev/arcp/error/ARCPException$BudgetExhausted : dev/arcp/error/ARCPException {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getCode ()Ldev/arcp/error/ErrorCode;
+	public final fun getCurrency ()Ljava/lang/String;
+	public final fun getJobId-VHyvC20 ()Ljava/lang/String;
+	public fun getRetryable ()Z
 }
 
 public final class dev/arcp/error/ARCPException$Cancelled : dev/arcp/error/ARCPException {
@@ -190,6 +399,13 @@ public final class dev/arcp/error/ARCPException$LeaseRevoked : dev/arcp/error/AR
 	public final fun getReason ()Ljava/lang/String;
 }
 
+public final class dev/arcp/error/ARCPException$LeaseSubsetViolation : dev/arcp/error/ARCPException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCapability ()Ljava/lang/String;
+	public fun getCode ()Ldev/arcp/error/ErrorCode;
+}
+
 public final class dev/arcp/error/ARCPException$NotFound : dev/arcp/error/ARCPException {
 	public fun <init> (Ljava/lang/String;)V
 	public fun getCode ()Ldev/arcp/error/ErrorCode;
@@ -241,8 +457,10 @@ public final class dev/arcp/error/ARCPException$Unknown : dev/arcp/error/ARCPExc
 
 public final class dev/arcp/error/ErrorCode : java/lang/Enum {
 	public static final field ABORTED Ldev/arcp/error/ErrorCode;
+	public static final field AGENT_VERSION_NOT_AVAILABLE Ldev/arcp/error/ErrorCode;
 	public static final field ALREADY_EXISTS Ldev/arcp/error/ErrorCode;
 	public static final field BACKPRESSURE_OVERFLOW Ldev/arcp/error/ErrorCode;
+	public static final field BUDGET_EXHAUSTED Ldev/arcp/error/ErrorCode;
 	public static final field CANCELLED Ldev/arcp/error/ErrorCode;
 	public static final field Companion Ldev/arcp/error/ErrorCode$Companion;
 	public static final field DATA_LOSS Ldev/arcp/error/ErrorCode;
@@ -253,6 +471,7 @@ public final class dev/arcp/error/ErrorCode : java/lang/Enum {
 	public static final field INVALID_ARGUMENT Ldev/arcp/error/ErrorCode;
 	public static final field LEASE_EXPIRED Ldev/arcp/error/ErrorCode;
 	public static final field LEASE_REVOKED Ldev/arcp/error/ErrorCode;
+	public static final field LEASE_SUBSET_VIOLATION Ldev/arcp/error/ErrorCode;
 	public static final field NOT_FOUND Ldev/arcp/error/ErrorCode;
 	public static final field OK Ldev/arcp/error/ErrorCode;
 	public static final field OUT_OF_RANGE Ldev/arcp/error/ErrorCode;
@@ -687,6 +906,127 @@ public final class dev/arcp/json/JsonKt {
 	public static final fun getArcpJson ()Lkotlinx/serialization/json/Json;
 }
 
+public final class dev/arcp/lease/BudgetAmount {
+	public static final field Companion Ldev/arcp/lease/BudgetAmount$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/math/BigDecimal;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-S_UYvFw ()Ljava/lang/String;
+	public final fun component2 ()Ljava/math/BigDecimal;
+	public final fun copy-MnpFKR8 (Ljava/lang/String;Ljava/math/BigDecimal;)Ldev/arcp/lease/BudgetAmount;
+	public static synthetic fun copy-MnpFKR8$default (Ldev/arcp/lease/BudgetAmount;Ljava/lang/String;Ljava/math/BigDecimal;ILjava/lang/Object;)Ldev/arcp/lease/BudgetAmount;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrency-S_UYvFw ()Ljava/lang/String;
+	public final fun getValue ()Ljava/math/BigDecimal;
+	public fun hashCode ()I
+	public final fun render ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/BudgetAmount$Companion {
+	public final fun parse (Ljava/lang/String;)Ldev/arcp/lease/BudgetAmount;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/lease/BudgetCounter {
+	public fun <init> (Ldev/arcp/lease/CostBudget;)V
+	public final fun consume (Ldev/arcp/lease/BudgetAmount;)Ldev/arcp/lease/BudgetCounter$Outcome;
+	public final fun isExhausted ()Z
+	public final fun remaining-y7CK5Xs (Ljava/lang/String;)Ljava/math/BigDecimal;
+}
+
+public abstract interface class dev/arcp/lease/BudgetCounter$Outcome {
+}
+
+public final class dev/arcp/lease/BudgetCounter$Outcome$Exhausted : dev/arcp/lease/BudgetCounter$Outcome {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-S_UYvFw ()Ljava/lang/String;
+	public final fun copy-y7CK5Xs (Ljava/lang/String;)Ldev/arcp/lease/BudgetCounter$Outcome$Exhausted;
+	public static synthetic fun copy-y7CK5Xs$default (Ldev/arcp/lease/BudgetCounter$Outcome$Exhausted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/lease/BudgetCounter$Outcome$Exhausted;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrency-S_UYvFw ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/BudgetCounter$Outcome$Ok : dev/arcp/lease/BudgetCounter$Outcome {
+	public static final field INSTANCE Ldev/arcp/lease/BudgetCounter$Outcome$Ok;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/BudgetRegistry {
+	public fun <init> ()V
+	public final fun consume-tBvcXsc (Ljava/lang/String;Ldev/arcp/lease/BudgetAmount;)Ldev/arcp/lease/BudgetCounter$Outcome;
+	public final fun register-tBvcXsc (Ljava/lang/String;Ldev/arcp/lease/CostBudget;)V
+	public final fun remaining-2ATt4A4 (Ljava/lang/String;)Ldev/arcp/lease/CostBudget;
+	public final fun terminate-2ATt4A4 (Ljava/lang/String;)V
+}
+
+public final class dev/arcp/lease/CostBudget {
+	public fun <init> (Ljava/util/List;)V
+	public final fun byCurrency-y7CK5Xs (Ljava/lang/String;)Ldev/arcp/lease/BudgetAmount;
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ldev/arcp/lease/CostBudget;
+	public static synthetic fun copy$default (Ldev/arcp/lease/CostBudget;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/lease/CostBudget;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBudgets ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/Currency {
+	public static final field Companion Ldev/arcp/lease/Currency$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Ldev/arcp/lease/Currency;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getCode ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/lease/Currency$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/lease/Currency$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-_F2Tf9Q (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-oVgH0t4 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/lease/Currency$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/lease/LeaseSubset {
+	public static final field INSTANCE Ldev/arcp/lease/LeaseSubset;
+	public final fun subsumes (Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/CostBudget;)Z
+	public final fun subsumes (Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/CostBudget;Ldev/arcp/lease/ModelUseLease;Ldev/arcp/lease/ModelUseLease;)Z
+}
+
+public final class dev/arcp/lease/ModelUseLease {
+	public static final field Companion Ldev/arcp/lease/ModelUseLease$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun allows (Ljava/lang/String;)Z
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Ldev/arcp/lease/ModelUseLease;
+	public static synthetic fun copy$default (Ldev/arcp/lease/ModelUseLease;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/lease/ModelUseLease;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPatterns ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/ModelUseLease$Companion {
+	public final fun subset (Ldev/arcp/lease/ModelUseLease;Ldev/arcp/lease/ModelUseLease;)Z
+}
+
 public final class dev/arcp/messages/Ack : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Ack$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -746,6 +1086,38 @@ public final class dev/arcp/messages/AgentDelegate$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class dev/arcp/messages/AgentDescriptor {
+	public static final field Companion Ldev/arcp/messages/AgentDescriptor$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Ldev/arcp/messages/AgentDescriptor;
+	public static synthetic fun copy$default (Ldev/arcp/messages/AgentDescriptor;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/AgentDescriptor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefault ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getVersions ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/AgentDescriptor$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/AgentDescriptor$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/AgentDescriptor;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/AgentDescriptor;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/AgentDescriptor$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class dev/arcp/messages/AgentHandoff : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/AgentHandoff$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/RuntimeIdentity;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -779,6 +1151,27 @@ public synthetic class dev/arcp/messages/AgentHandoff$$serializer : kotlinx/seri
 }
 
 public final class dev/arcp/messages/AgentHandoff$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/AgentRef {
+	public static final field Companion Ldev/arcp/messages/AgentRef$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/AgentRef;
+	public static synthetic fun copy$default (Ldev/arcp/messages/AgentRef;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/AgentRef;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun render ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/messages/AgentRef$Companion {
+	public final fun parse (Ljava/lang/String;)Ldev/arcp/messages/AgentRef;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -1132,15 +1525,18 @@ public final class dev/arcp/messages/Capabilities {
 	public static final field Companion Ldev/arcp/messages/Capabilities$Companion;
 	public static final field DEFAULT_HEARTBEAT_INTERVAL_SECONDS I
 	public fun <init> ()V
-	public fun <init> (ZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;)V
-	public synthetic fun <init> (ZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component10 ()Z
 	public final fun component11 ()Z
-	public final fun component12 ()I
-	public final fun component13 ()Ldev/arcp/messages/HeartbeatRecovery;
-	public final fun component14 ()Ljava/util/List;
-	public final fun component15 ()Ljava/util/List;
+	public final fun component12 ()Z
+	public final fun component13 ()Z
+	public final fun component14 ()I
+	public final fun component15 ()Ldev/arcp/messages/HeartbeatRecovery;
+	public final fun component16 ()Ljava/util/List;
+	public final fun component17 ()Ljava/util/List;
+	public final fun component18 ()Ljava/util/List;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -1149,10 +1545,11 @@ public final class dev/arcp/messages/Capabilities {
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Z
-	public final fun copy (ZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;)Ldev/arcp/messages/Capabilities;
-	public static synthetic fun copy$default (Ldev/arcp/messages/Capabilities;ZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/Capabilities;
+	public final fun copy (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Ldev/arcp/messages/Capabilities;
+	public static synthetic fun copy$default (Ldev/arcp/messages/Capabilities;ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/Capabilities;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAgentHandoff ()Z
+	public final fun getAgents ()Ljava/util/List;
 	public final fun getAnonymous ()Z
 	public final fun getArtifacts ()Z
 	public final fun getBinaryEncoding ()Ljava/util/List;
@@ -1164,6 +1561,8 @@ public final class dev/arcp/messages/Capabilities {
 	public final fun getHeartbeatRecovery ()Ldev/arcp/messages/HeartbeatRecovery;
 	public final fun getHumanInput ()Z
 	public final fun getInterrupt ()Z
+	public final fun getModelUse ()Z
+	public final fun getProvisionedCredentials ()Z
 	public final fun getScheduledJobs ()Z
 	public final fun getStreaming ()Z
 	public final fun getSubscriptions ()Z
@@ -1547,11 +1946,18 @@ public final class dev/arcp/messages/Interrupt$Companion {
 
 public final class dev/arcp/messages/JobAccepted : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/JobAccepted$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-vE1LxjM ()Ljava/lang/String;
-	public final fun copy-2ATt4A4 (Ljava/lang/String;)Ldev/arcp/messages/JobAccepted;
-	public static synthetic fun copy-2ATt4A4$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/datetime/Instant;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy-cTIbTjQ (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;)Ldev/arcp/messages/JobAccepted;
+	public static synthetic fun copy-cTIbTjQ$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAcceptedAt ()Lkotlinx/datetime/Instant;
+	public final fun getAgent ()Ljava/lang/String;
+	public final fun getCredentials ()Ljava/util/List;
 	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1750,6 +2156,116 @@ public final class dev/arcp/messages/JobLifecycleState$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class dev/arcp/messages/JobListEntry {
+	public static final field Companion Ldev/arcp/messages/JobListEntry$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/Long;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/Long;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-vE1LxjM ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ldev/arcp/messages/JobListLease;
+	public final fun component5-VHyvC20 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlinx/datetime/Instant;
+	public final fun component7-ySErQjM ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/Long;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy-8wUmz9I (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/Long;Ljava/util/List;)Ldev/arcp/messages/JobListEntry;
+	public static synthetic fun copy-8wUmz9I$default (Ldev/arcp/messages/JobListEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/lang/String;Ljava/lang/Long;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/JobListEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgent ()Ljava/lang/String;
+	public final fun getCreatedAt ()Lkotlinx/datetime/Instant;
+	public final fun getCredentials ()Ljava/util/List;
+	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
+	public final fun getLastEventSeq ()Ljava/lang/Long;
+	public final fun getLease ()Ldev/arcp/messages/JobListLease;
+	public final fun getParentJobId-VHyvC20 ()Ljava/lang/String;
+	public final fun getStatus ()Ljava/lang/String;
+	public final fun getTraceId-ySErQjM ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobListEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobListEntry$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListEntry;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobListEntry;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobListEntry$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobListFilter {
+	public static final field Companion Ldev/arcp/messages/JobListFilter$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlinx/datetime/Instant;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlinx/datetime/Instant;
+	public final fun component4 ()Lkotlinx/datetime/Instant;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/JobListFilter;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobListFilter;Ljava/util/List;Ljava/lang/String;Lkotlinx/datetime/Instant;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/JobListFilter;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgent ()Ljava/lang/String;
+	public final fun getCreatedAfter ()Lkotlinx/datetime/Instant;
+	public final fun getCreatedBefore ()Lkotlinx/datetime/Instant;
+	public final fun getStatus ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobListFilter$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobListFilter$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListFilter;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobListFilter;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobListFilter$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobListLease {
+	public static final field Companion Ldev/arcp/messages/JobListLease$Companion;
+	public fun <init> ()V
+	public fun <init> (Lkotlinx/datetime/Instant;Ljava/util/Map;)V
+	public synthetic fun <init> (Lkotlinx/datetime/Instant;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lkotlinx/datetime/Instant;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (Lkotlinx/datetime/Instant;Ljava/util/Map;)Ldev/arcp/messages/JobListLease;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobListLease;Lkotlinx/datetime/Instant;Ljava/util/Map;ILjava/lang/Object;)Ldev/arcp/messages/JobListLease;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCapabilities ()Ljava/util/Map;
+	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobListLease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobListLease$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListLease;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobListLease;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobListLease$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class dev/arcp/messages/JobProgress : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/JobProgress$Companion;
 	public fun <init> ()V
@@ -1778,6 +2294,75 @@ public synthetic class dev/arcp/messages/JobProgress$$serializer : kotlinx/seria
 }
 
 public final class dev/arcp/messages/JobProgress$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobResult : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/JobResult$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;)Ldev/arcp/messages/JobResult;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/JobResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFinalStatus ()Ljava/lang/String;
+	public final fun getResultId ()Ljava/lang/String;
+	public final fun getResultSize ()Ljava/lang/Long;
+	public final fun getSummary ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobResult$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobResult$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobResult;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobResult;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobResult$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobResultChunk : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/JobResultChunk$Companion;
+	public fun <init> (Ljava/lang/String;JLjava/lang/String;Ldev/arcp/messages/ResultChunkEncoding;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ldev/arcp/messages/ResultChunkEncoding;
+	public final fun component5 ()Z
+	public final fun copy (Ljava/lang/String;JLjava/lang/String;Ldev/arcp/messages/ResultChunkEncoding;Z)Ldev/arcp/messages/JobResultChunk;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobResultChunk;Ljava/lang/String;JLjava/lang/String;Ldev/arcp/messages/ResultChunkEncoding;ZILjava/lang/Object;)Ldev/arcp/messages/JobResultChunk;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChunkSeq ()J
+	public final fun getData ()Ljava/lang/String;
+	public final fun getEncoding ()Ldev/arcp/messages/ResultChunkEncoding;
+	public final fun getMore ()Z
+	public final fun getResultId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobResultChunk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobResultChunk$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobResultChunk;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobResultChunk;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobResultChunk$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -1834,6 +2419,74 @@ public synthetic class dev/arcp/messages/JobStarted$$serializer : kotlinx/serial
 }
 
 public final class dev/arcp/messages/JobStarted$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobStatusEvent : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/JobStatusEvent$Companion;
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun copy (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Ldev/arcp/messages/JobStatusEvent;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobStatusEvent;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILjava/lang/Object;)Ldev/arcp/messages/JobStatusEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBody ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getPhase ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobStatusEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobStatusEvent$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobStatusEvent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobStatusEvent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobStatusEvent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobSubmit : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/JobSubmit$Companion;
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/Long;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component3 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component4 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/Long;
+	public final fun copy (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/Long;)Ldev/arcp/messages/JobSubmit;
+	public static synthetic fun copy$default (Ldev/arcp/messages/JobSubmit;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Ldev/arcp/messages/JobSubmit;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgent ()Ljava/lang/String;
+	public final fun getIdempotencyKey ()Ljava/lang/String;
+	public final fun getInput ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getLeaseConstraints ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getLeaseRequest ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getMaxRuntimeSec ()Ljava/lang/Long;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/JobSubmit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/JobSubmit$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobSubmit;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/JobSubmit;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/JobSubmit$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -2246,6 +2899,19 @@ public final class dev/arcp/messages/Pong$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class dev/arcp/messages/ResultChunkEncoding : java/lang/Enum {
+	public static final field BASE64 Ldev/arcp/messages/ResultChunkEncoding;
+	public static final field Companion Ldev/arcp/messages/ResultChunkEncoding$Companion;
+	public static final field UTF8 Ldev/arcp/messages/ResultChunkEncoding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/arcp/messages/ResultChunkEncoding;
+	public static fun values ()[Ldev/arcp/messages/ResultChunkEncoding;
+}
+
+public final class dev/arcp/messages/ResultChunkEncoding$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class dev/arcp/messages/Resume : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/Resume$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -2470,6 +3136,38 @@ public final class dev/arcp/messages/SessionEvicted$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class dev/arcp/messages/SessionJobs : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/SessionJobs$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-rSKfuZI ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy-g_XVefY (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Ldev/arcp/messages/SessionJobs;
+	public static synthetic fun copy-g_XVefY$default (Ldev/arcp/messages/SessionJobs;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SessionJobs;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getJobs ()Ljava/util/List;
+	public final fun getNextCursor ()Ljava/lang/String;
+	public final fun getRequestId-rSKfuZI ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/SessionJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/SessionJobs$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionJobs;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/SessionJobs;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/SessionJobs$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class dev/arcp/messages/SessionLease {
 	public static final field Companion Ldev/arcp/messages/SessionLease$Companion;
 	public fun <init> (Lkotlinx/datetime/Instant;)V
@@ -2494,6 +3192,40 @@ public synthetic class dev/arcp/messages/SessionLease$$serializer : kotlinx/seri
 }
 
 public final class dev/arcp/messages/SessionLease$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/SessionListJobs : dev/arcp/messages/MessageType {
+	public static final field Companion Ldev/arcp/messages/SessionListJobs$Companion;
+	public static final field DEFAULT_LIMIT I
+	public fun <init> ()V
+	public fun <init> (Ldev/arcp/messages/JobListFilter;ILjava/lang/String;)V
+	public synthetic fun <init> (Ldev/arcp/messages/JobListFilter;ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ldev/arcp/messages/JobListFilter;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ldev/arcp/messages/JobListFilter;ILjava/lang/String;)Ldev/arcp/messages/SessionListJobs;
+	public static synthetic fun copy$default (Ldev/arcp/messages/SessionListJobs;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/SessionListJobs;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCursor ()Ljava/lang/String;
+	public final fun getFilter ()Ldev/arcp/messages/JobListFilter;
+	public final fun getLimit ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public synthetic class dev/arcp/messages/SessionListJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Ldev/arcp/messages/SessionListJobs$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionListJobs;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/SessionListJobs;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class dev/arcp/messages/SessionListJobs$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -2618,6 +3350,7 @@ public final class dev/arcp/messages/SessionUnauthenticated$Companion {
 public final class dev/arcp/messages/StandardMetrics {
 	public static final field BYTES_IN Ljava/lang/String;
 	public static final field BYTES_OUT Ljava/lang/String;
+	public static final field COST_BUDGET_REMAINING Ljava/lang/String;
 	public static final field COST_USD Ljava/lang/String;
 	public static final field ERRORS_TOTAL Ljava/lang/String;
 	public static final field GPU_SECONDS Ljava/lang/String;
@@ -3196,15 +3929,25 @@ public final class dev/arcp/messages/WorkflowStart$Companion {
 
 public final class dev/arcp/runtime/ARCPRuntime : java/lang/AutoCloseable {
 	public static final field Companion Ldev/arcp/runtime/ARCPRuntime$Companion;
-	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun accept (Ldev/arcp/transport/Transport;)Lkotlinx/coroutines/Job;
 	public fun close ()V
 	public final fun evict-eGHAo4s (Ldev/arcp/transport/Transport;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun rotateCredential-7gaN81Y (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/transport/Transport;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun rotateCredential-7gaN81Y$default (Ldev/arcp/runtime/ARCPRuntime;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/transport/Transport;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class dev/arcp/runtime/ARCPRuntime$Companion {
 	public final fun getDEFAULT_SESSION_LEASE-UwyO8pc ()J
+}
+
+public final class dev/arcp/runtime/AgentRegistry {
+	public fun <init> ()V
+	public final fun descriptors ()Ljava/util/List;
+	public final fun register (Ljava/lang/String;Ljava/lang/String;Z)V
+	public static synthetic fun register$default (Ldev/arcp/runtime/AgentRegistry;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)V
+	public final fun resolve (Ldev/arcp/messages/AgentRef;)Ldev/arcp/messages/AgentRef;
 }
 
 public final class dev/arcp/runtime/ArtifactBody {
@@ -3309,6 +4052,29 @@ public final class dev/arcp/runtime/CapabilityNegotiationKt {
 	public static final fun negotiate (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/Capabilities;)Ldev/arcp/runtime/CapabilityNegotiation;
 }
 
+public final class dev/arcp/runtime/DefaultUpstreamErrorTranslator : dev/arcp/runtime/UpstreamErrorTranslator {
+	public static final field INSTANCE Ldev/arcp/runtime/DefaultUpstreamErrorTranslator;
+	public fun translate (Ljava/lang/Throwable;)Ldev/arcp/error/ARCPException;
+}
+
+public final class dev/arcp/runtime/InMemoryJobInventory : dev/arcp/runtime/JobInventory {
+	public fun <init> ()V
+	public fun list-wZblZb4 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun record (Ldev/arcp/messages/JobListEntry;Ljava/lang/String;)V
+	public fun updateStatus-tBvcXsc (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public abstract interface class dev/arcp/runtime/JobInventory {
+	public abstract fun list-wZblZb4 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun record (Ldev/arcp/messages/JobListEntry;Ljava/lang/String;)V
+	public abstract fun updateStatus-tBvcXsc (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class dev/arcp/runtime/ReservedEventKinds {
+	public static final field INSTANCE Ldev/arcp/runtime/ReservedEventKinds;
+	public final fun getALL ()Ljava/util/Set;
+}
+
 public abstract class dev/arcp/runtime/SessionState {
 }
 
@@ -3378,6 +4144,10 @@ public final class dev/arcp/runtime/SubscriptionManager {
 }
 
 public final class dev/arcp/runtime/SubscriptionManager$Companion {
+}
+
+public abstract interface class dev/arcp/runtime/UpstreamErrorTranslator {
+	public abstract fun translate (Ljava/lang/Throwable;)Ldev/arcp/error/ARCPException;
 }
 
 public final class dev/arcp/store/EventLog : java/lang/AutoCloseable {
