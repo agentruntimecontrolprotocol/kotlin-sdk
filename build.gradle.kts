@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.dokka) apply false
-    alias(libs.plugins.nexus.publish)
+    alias(libs.plugins.nmcp)
 }
 
 allprojects {
@@ -62,17 +62,14 @@ subprojects {
 }
 
 // ---------------------------------------------------------------------------
-// OSSRH / Maven Central
+// Sonatype Central Portal — publishes all maven-publish publications from
+// subprojects to central.sonatype.com using the OSSRH_USERNAME / OSSRH_PASSWORD
+// secrets (Central Portal user-token credentials).
 // ---------------------------------------------------------------------------
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(
-                uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"),
-            )
-            username.set(providers.environmentVariable("OSSRH_USERNAME"))
-            password.set(providers.environmentVariable("OSSRH_PASSWORD"))
-        }
+nmcp {
+    publishAllPublicationsToCentralPortal {
+        username = providers.environmentVariable("OSSRH_USERNAME")
+        password = providers.environmentVariable("OSSRH_PASSWORD")
+        publishingType = "AUTOMATIC"
     }
 }
