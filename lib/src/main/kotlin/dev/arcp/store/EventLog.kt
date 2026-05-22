@@ -14,9 +14,8 @@ import kotlinx.serialization.json.JsonElement
 import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.AtomicBoolean
 
 private val log = KotlinLogging.logger {}
 
@@ -249,7 +248,7 @@ public class EventLog private constructor(
         /** Opens an event log backed by a file. */
         public fun openFile(path: Path): EventLog = open("jdbc:sqlite:${path.toAbsolutePath()}")
 
-        private val driverLoaded = AtomicReference(false)
+        private val driverLoaded = AtomicBoolean(false)
 
         private fun open(jdbcUrl: String): EventLog {
             ensureDriver()
@@ -276,8 +275,5 @@ public class EventLog private constructor(
                     .forEach { stmt -> st.execute(stmt) }
             }
         }
-
-        @Suppress("UnusedPrivateMember", "unused")
-        private fun ResultSet.first(): Boolean = next()
     }
 }
