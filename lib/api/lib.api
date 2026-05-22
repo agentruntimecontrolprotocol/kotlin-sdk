@@ -1525,18 +1525,17 @@ public final class dev/arcp/messages/Capabilities {
 	public static final field Companion Ldev/arcp/messages/Capabilities$Companion;
 	public static final field DEFAULT_HEARTBEAT_INTERVAL_SECONDS I
 	public fun <init> ()V
-	public fun <init> (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
-	public synthetic fun <init> (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (ZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component10 ()Z
 	public final fun component11 ()Z
 	public final fun component12 ()Z
-	public final fun component13 ()Z
-	public final fun component14 ()I
-	public final fun component15 ()Ldev/arcp/messages/HeartbeatRecovery;
+	public final fun component13 ()I
+	public final fun component14 ()Ldev/arcp/messages/HeartbeatRecovery;
+	public final fun component15 ()Ljava/util/List;
 	public final fun component16 ()Ljava/util/List;
 	public final fun component17 ()Ljava/util/List;
-	public final fun component18 ()Ljava/util/List;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -1545,8 +1544,8 @@ public final class dev/arcp/messages/Capabilities {
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Z
-	public final fun copy (ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Ldev/arcp/messages/Capabilities;
-	public static synthetic fun copy$default (Ldev/arcp/messages/Capabilities;ZZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/Capabilities;
+	public final fun copy (ZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Ldev/arcp/messages/Capabilities;
+	public static synthetic fun copy$default (Ldev/arcp/messages/Capabilities;ZZZZZZZZZZZZILdev/arcp/messages/HeartbeatRecovery;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/Capabilities;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAgentHandoff ()Z
 	public final fun getAgents ()Ljava/util/List;
@@ -1559,7 +1558,6 @@ public final class dev/arcp/messages/Capabilities {
 	public final fun getExtensions ()Ljava/util/List;
 	public final fun getHeartbeatIntervalSeconds ()I
 	public final fun getHeartbeatRecovery ()Ldev/arcp/messages/HeartbeatRecovery;
-	public final fun getHumanInput ()Z
 	public final fun getInterrupt ()Z
 	public final fun getModelUse ()Z
 	public final fun getProvisionedCredentials ()Z
@@ -1721,195 +1719,6 @@ public final class dev/arcp/messages/HeartbeatRecovery : java/lang/Enum {
 }
 
 public final class dev/arcp/messages/HeartbeatRecovery$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceOption {
-	public static final field Companion Ldev/arcp/messages/HumanChoiceOption$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Ldev/arcp/messages/HumanChoiceOption;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanChoiceOption;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/HumanChoiceOption;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getId ()Ljava/lang/String;
-	public final fun getLabel ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanChoiceOption$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanChoiceOption$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanChoiceOption;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanChoiceOption;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceOption$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceRequest : dev/arcp/messages/MessageType {
-	public static final field Companion Ldev/arcp/messages/HumanChoiceRequest$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/util/List;Lkotlinx/datetime/Instant;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/util/List;
-	public final fun component3 ()Lkotlinx/datetime/Instant;
-	public final fun copy (Ljava/lang/String;Ljava/util/List;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/HumanChoiceRequest;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanChoiceRequest;Ljava/lang/String;Ljava/util/List;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/HumanChoiceRequest;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
-	public final fun getOptions ()Ljava/util/List;
-	public final fun getPrompt ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanChoiceRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanChoiceRequest$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanChoiceRequest;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanChoiceRequest;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceRequest$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceResponse : dev/arcp/messages/MessageType {
-	public static final field Companion Ldev/arcp/messages/HumanChoiceResponse$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lkotlinx/datetime/Instant;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/HumanChoiceResponse;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanChoiceResponse;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/HumanChoiceResponse;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getChoiceId ()Ljava/lang/String;
-	public final fun getRespondedAt ()Lkotlinx/datetime/Instant;
-	public final fun getRespondedBy ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanChoiceResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanChoiceResponse$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanChoiceResponse;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanChoiceResponse;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanChoiceResponse$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputCancelled : dev/arcp/messages/MessageType {
-	public static final field Companion Ldev/arcp/messages/HumanInputCancelled$Companion;
-	public fun <init> ()V
-	public fun <init> (Ldev/arcp/error/ErrorCode;Ljava/lang/String;)V
-	public synthetic fun <init> (Ldev/arcp/error/ErrorCode;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ldev/arcp/error/ErrorCode;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ldev/arcp/error/ErrorCode;Ljava/lang/String;)Ldev/arcp/messages/HumanInputCancelled;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanInputCancelled;Ldev/arcp/error/ErrorCode;Ljava/lang/String;ILjava/lang/Object;)Ldev/arcp/messages/HumanInputCancelled;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCode ()Ldev/arcp/error/ErrorCode;
-	public final fun getReason ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanInputCancelled$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanInputCancelled$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanInputCancelled;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanInputCancelled;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputCancelled$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputRequest : dev/arcp/messages/MessageType {
-	public static final field Companion Ldev/arcp/messages/HumanInputRequest$Companion;
-	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonElement;Lkotlinx/datetime/Instant;)V
-	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonElement;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Lkotlinx/serialization/json/JsonObject;
-	public final fun component3 ()Lkotlinx/serialization/json/JsonElement;
-	public final fun component4 ()Lkotlinx/datetime/Instant;
-	public final fun copy (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonElement;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/HumanInputRequest;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanInputRequest;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlinx/serialization/json/JsonElement;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/HumanInputRequest;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDefault ()Lkotlinx/serialization/json/JsonElement;
-	public final fun getExpiresAt ()Lkotlinx/datetime/Instant;
-	public final fun getPrompt ()Ljava/lang/String;
-	public final fun getResponseSchema ()Lkotlinx/serialization/json/JsonObject;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanInputRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanInputRequest$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanInputRequest;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanInputRequest;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputRequest$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputResponse : dev/arcp/messages/MessageType {
-	public static final field Companion Ldev/arcp/messages/HumanInputResponse$Companion;
-	public fun <init> (Lkotlinx/serialization/json/JsonElement;Ljava/lang/String;Lkotlinx/datetime/Instant;)V
-	public synthetic fun <init> (Lkotlinx/serialization/json/JsonElement;Ljava/lang/String;Lkotlinx/datetime/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lkotlinx/serialization/json/JsonElement;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lkotlinx/datetime/Instant;
-	public final fun copy (Lkotlinx/serialization/json/JsonElement;Ljava/lang/String;Lkotlinx/datetime/Instant;)Ldev/arcp/messages/HumanInputResponse;
-	public static synthetic fun copy$default (Ldev/arcp/messages/HumanInputResponse;Lkotlinx/serialization/json/JsonElement;Ljava/lang/String;Lkotlinx/datetime/Instant;ILjava/lang/Object;)Ldev/arcp/messages/HumanInputResponse;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getRespondedAt ()Lkotlinx/datetime/Instant;
-	public final fun getRespondedBy ()Ljava/lang/String;
-	public final fun getValue ()Lkotlinx/serialization/json/JsonElement;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class dev/arcp/messages/HumanInputResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Ldev/arcp/messages/HumanInputResponse$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/HumanInputResponse;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Ldev/arcp/messages/HumanInputResponse;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
-}
-
-public final class dev/arcp/messages/HumanInputResponse$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

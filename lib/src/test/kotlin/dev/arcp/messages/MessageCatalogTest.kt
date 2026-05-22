@@ -137,16 +137,6 @@ class MessageCatalogTest :
                 StreamChunk(sequence = 1, content = "hello"),
                 StreamClose(totalChunks = 1),
                 StreamError(code = ErrorCode.CANCELLED, message = "x"),
-                // Human
-                HumanInputRequest(prompt = "?", expiresAt = ts),
-                HumanInputResponse(value = JsonPrimitive("yes")),
-                HumanChoiceRequest(
-                    prompt = "?",
-                    options = listOf(HumanChoiceOption("a", "A")),
-                    expiresAt = ts,
-                ),
-                HumanChoiceResponse(choiceId = "a"),
-                HumanInputCancelled(reason = "expired"),
                 // Permissions
                 PermissionRequest(
                     permission = PermissionName("filesystem.read"),
