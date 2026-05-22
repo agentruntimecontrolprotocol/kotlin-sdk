@@ -95,13 +95,16 @@ publishing {
 // ---------------------------------------------------------------------------
 // GPG signing — required by Maven Central.
 // Keys are injected via environment variables in CI; local builds skip signing
-// when SIGNING_KEY is absent.
+// when SIGNING_KEY is absent or empty.
+// NOTE: providers.environmentVariable("X").isPresent returns true even for
+// empty strings (GitHub Actions injects "" for unconfigured secrets), so we
+// use isNullOrBlank() instead.
 // ---------------------------------------------------------------------------
 signing {
     val signingKey = providers.environmentVariable("SIGNING_KEY")
     val signingKeyId = providers.environmentVariable("SIGNING_KEY_ID")
     val signingPassword = providers.environmentVariable("SIGNING_PASSWORD")
-    if (signingKey.isPresent) {
+    if (!signingKey.orNull.isNullOrBlank()) {
         useInMemoryPgpKeys(signingKeyId.orNull, signingKey.orNull, signingPassword.orNull)
         sign(publishing.publications["maven"])
     }
