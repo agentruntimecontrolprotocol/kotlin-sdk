@@ -17,7 +17,7 @@ detekt = "1.23.8"
 kover = "0.9.8"
 dokka = "2.2.0"
 binary-compatibility-validator = "0.18.1"
-nmcp = "0.1.0"
+nmcp = "0.0.9"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
