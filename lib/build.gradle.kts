@@ -16,7 +16,7 @@ kotlin {
         allWarningsAsErrors = true
         freeCompilerArgs.addAll(
             "-Xjsr305=strict",
-            "-jvm-default=all",
+            "-jvm-default=enable",
         )
     }
 }
