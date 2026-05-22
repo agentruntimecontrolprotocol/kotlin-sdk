@@ -5,7 +5,8 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.dokka) apply false
-    alias(libs.plugins.nmcp)
+    alias(libs.plugins.nmcp) apply false
+    alias(libs.plugins.nmcp.aggregation)
 }
 
 allprojects {
@@ -62,14 +63,18 @@ subprojects {
 }
 
 // ---------------------------------------------------------------------------
-// Sonatype Central Portal — publishes all maven-publish publications from
-// subprojects to central.sonatype.com using the OSSRH_USERNAME / OSSRH_PASSWORD
-// secrets (Central Portal user-token credentials).
+// Sonatype Central Portal — aggregates all maven-publish publications from
+// subprojects and publishes to central.sonatype.com using the OSSRH_USERNAME /
+// OSSRH_PASSWORD secrets (Central Portal user-token credentials).
 // ---------------------------------------------------------------------------
-nmcp {
-    publishAllPublicationsToCentralPortal {
+nmcpAggregation {
+    centralPortal {
         username = providers.environmentVariable("OSSRH_USERNAME")
         password = providers.environmentVariable("OSSRH_PASSWORD")
         publishingType = "AUTOMATIC"
     }
+}
+
+dependencies {
+    nmcpAggregation(project(":lib"))
 }
