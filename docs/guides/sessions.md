@@ -12,7 +12,7 @@ client ────────────────────────�
   │<─ SessionChallenge ─────────────────────────  │  (2) auth challenge (optional)
   │── SessionAuthenticate ───────────────────>   │  (3) bearer / JWT
   │<─ SessionAccepted ──────────────────────────  │  (4) negotiated capabilities
-  │                  … session active …           │
+  │                  ... session active ...           │
   │── SessionClose ──────────────────────────>   │  (5) graceful close
 ```
 
@@ -28,9 +28,9 @@ val (clientTransport, serverTransport) = MemoryTransport.pair()
 val runtime = ARCPRuntime(
     supportedCapabilities = Capabilities(streaming = true, durableJobs = true),
     bearerAuth = StaticBearerAuth(mapOf("my-token" to "alice")),
-    agentRegistry = AgentRegistry().also { it.register("summarise", listOf("1.0.0")) },
+    agentRegistry = AgentRegistry().also { it.register("summarise", "1.0.0", default = true) },
 )
-runtime.accept(serverTransport)    // launches coroutine; non-blocking
+runtime.accept(serverTransport)    // launches coroutine; returns a Job
 
 val client = ARCPClient(
     transport = clientTransport,
@@ -83,22 +83,30 @@ The full set of `Capabilities` fields:
 | `interrupt` | `true` | cooperative interrupt signal |
 | `heartbeatIntervalSeconds` | `30` | expected heartbeat cadence |
 | `heartbeatRecovery` | `FAIL` | `FAIL` or `BLOCK` on missed beats |
-| `binaryEncoding` | `false` | binary-encoded envelopes |
+| `binaryEncoding` | `["base64"]` | supported envelope-binary encodings (`List<String>`) |
 | `extensions` | `[]` | vendor extension names (`arcpx.*`) |
 | `agents` | `[]` | available agent descriptors |
 
+`interrupt` is the only boolean that defaults to `true`; all others default
+to `false` per RFC §7.
+
 ## Listing jobs
 
-Use `session.list_jobs` to enumerate active jobs in the session:
+Use `session.list_jobs` to enumerate the principal's jobs. The
+`JobListFilter` accepts wire-form status strings (`"accepted"`, `"running"`,
+…) and an optional agent name plus created-at bounds:
 
 ```kotlin
 client.send(session.sessionId, SessionListJobs(
-    filter = JobListFilter(state = listOf(JobLifecycleState.RUNNING)),
+    filter = JobListFilter(status = listOf("running")),
+    limit  = 20,
     cursor = null,
-    limit = 20,
 ))
-// The runtime replies with a `session.jobs` envelope
+// The runtime replies with a `session.jobs` envelope.
 ```
+
+`ARCPClient.listJobs(sessionId, filter, limit, cursor)` is a convenience that
+sends the request and awaits the correlated reply.
 
 ## Closing a session
 

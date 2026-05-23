@@ -97,21 +97,22 @@ Non-standard metrics must be namespaced (e.g. `acme.model.cache_hits`).
 
 ## Generic events
 
-`EventEmit` carries arbitrary structured events:
+`EventEmit` carries arbitrary structured events. Vendor-defined event types
+must use the `arcpx.<vendor>.<feature>.v<n>` (or reverse-DNS) form; the bare
+`x-` prefix is rejected by `ExtensionRegistry`:
 
 ```kotlin
 client.send(sessionId, EventEmit(
-    eventType = "x-vendor.acme.email.parsed",
+    eventType = "arcpx.acme.email.v1.parsed",
     data      = buildJsonObject {
-        put("subject",  "Re: Q3 budget")
-        put("from",     "alice@example.com")
+        put("subject",   "Re: Q3 budget")
+        put("from",      "alice@example.com")
         put("thread_id", "t_abc123")
     },
 ))
 ```
 
-Event types must match the `arcpx.*` naming convention if they are
-vendor-defined (see [vendor-extensions.md](vendor-extensions.md)).
+See [vendor-extensions.md](vendor-extensions.md) for the full naming rules.
 
 ## Backpressure
 

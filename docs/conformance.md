@@ -59,3 +59,11 @@ Integration tests live in `:tests` and target the public SDK surface over
 
 For cross-language conformance tracking, refer to the ARCP spec repository
 and shared issue milestones.
+
+## Version reporting
+
+The Gradle artifact ships as `dev.arcp:arcp:1.1.0`, but the in-process
+`dev.arcp.Version.SDK_VERSION` constant (which feeds `RuntimeIdentity.version`
+on handshakes and the CLI `version` output) currently reads `0.1.0`. The
+two are intentionally decoupled while the protocol-driving CLI subcommands
+catch up; both numbers will align in a future release.

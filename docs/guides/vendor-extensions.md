@@ -44,28 +44,36 @@ intersection.
 ## Handling unknown message types
 
 When a message arrives with an unrecognised `type` field, the runtime asks
-`ExtensionRegistry.classifyUnknown()` what to do:
+the top-level `classifyUnknown` helper what to do (the function lives in
+`dev.arcp.extensions`, not on `ExtensionRegistry`):
 
 ```kotlin
-when (extensions.classifyUnknown(wireType, optional, advertisedExtensions)) {
+import dev.arcp.extensions.UnknownAction
+import dev.arcp.extensions.classifyUnknown
+
+when (classifyUnknown(wireType, optional, extensions.advertised)) {
     UnknownAction.Drop -> { /* silently ignore */ }
     UnknownAction.Nack -> { /* send Nack with UNIMPLEMENTED */ }
 }
 ```
 
-An unknown type is `Drop`ped if:
-- its namespace matches a locally-advertised extension (the peer may have
-  added a new message within the extension), or
-- the sender marked the message as optional.
-
-Otherwise the runtime `Nack`s the message with `ErrorCode.UNIMPLEMENTED`.
+A namespaced extension type is `Drop`ped when it is not advertised *and*
+the sender flagged the message as optional. If the type looks like a core
+`a.b` name, or is namespaced and not optional, the runtime responds with
+`Nack` carrying `ErrorCode.UNIMPLEMENTED`.
 
 ## Checking acceptance
 
+`acceptsType` does a *prefix* match against any advertised namespace, so
+both the namespace itself and any message type underneath it return `true`:
+
 ```kotlin
-extensions.acceptsType("arcpx.acme.email.v1")     // true — advertised
-extensions.acceptsType("arcpx.acme.weather.v1")    // false — not advertised
+extensions.acceptsType("arcpx.acme.email.v1")          // true — advertised
+extensions.acceptsType("arcpx.acme.email.v1.parsed")   // true — same namespace
+extensions.acceptsType("arcpx.acme.weather.v1")        // false — not advertised
 ```
+
+`extensions.advertised: Set<String>` returns the live snapshot.
 
 ## Emitting extension events
 

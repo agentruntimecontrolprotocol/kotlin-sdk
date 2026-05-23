@@ -9,6 +9,10 @@
        src="diagrams/architecture-light.svg">
 </picture>
 
+> The diagram includes `WebSocket` and `stdio` next to `Memory` to show the
+> intended transport surface; only `MemoryTransport` ships in v0.1. The
+> WebSocket and stdio transports land in v0.2.
+
 ## Layers
 
 ```
@@ -22,7 +26,7 @@
 │  dev.arcp.messages   dev.arcp.envelope                               │
 ├──────────────────────────────────────────────────────────────────────┤
 │  Transport                                                           │
-│  dev.arcp.transport (Memory / WebSocket / stdio)                     │
+│  dev.arcp.transport (Memory; WebSocket / stdio land in v0.2)         │
 ├──────────────────────────────────────────────────────────────────────┤
 │  Supporting services                                                 │
 │  auth  credentials  lease  store  trace  extensions  ids  error      │
@@ -48,7 +52,7 @@ The publishable artifact. All public API lives here.
 | `dev.arcp.store` | `EventLog` — append-only SQLite store with idempotency, replay, and resume |
 | `dev.arcp.trace` | `TraceContext` — W3C TraceContext propagation |
 | `dev.arcp.extensions` | `ExtensionRegistry` — vendor extension dispatch |
-| `dev.arcp.ids` | Typed ID wrappers (`SessionId`, `JobId`, `MessageId`, …) |
+| `dev.arcp.ids` | Typed ID wrappers (`SessionId`, `JobId`, `MessageId`, ...) |
 | `dev.arcp.error` | `ARCPException` hierarchy, `ErrorCode` enum |
 | `dev.arcp.json` | `arcpJson` — pre-configured `Json` instance (lenient, ignores unknown keys) |
 
@@ -70,26 +74,32 @@ End-to-end tests that pair an `ARCPRuntime` with an `ARCPClient` over
 ## Wire format
 
 ARCP uses JSON over a bidirectional transport (RFC §6.1). Every message is
-wrapped in an `Envelope`:
+wrapped in an `Envelope`. The on-wire shape (top-level fields only; optional
+fields are omitted when unset, and `priority` is omitted when `"normal"`):
 
 ```json
 {
-  "id":             "msg_01234",
-  "type":           "session.open",
-  "timestamp":      "2026-05-09T13:00:00Z",
-  "session_id":     "sess_abcde",
-  "job_id":         null,
-  "correlation_id": null,
-  "causation_id":   null,
-  "trace_id":       null,
-  "priority":       "normal",
-  "payload":        { /* message-specific fields */ }
+  "arcp":       "1.1",
+  "id":         "msg_01234",
+  "type":       "session.open",
+  "timestamp":  "2026-05-09T13:00:00Z",
+  "session_id": "sess_abcde",
+  "payload":    { /* message-specific fields */ }
 }
 ```
 
+Additional optional envelope fields (RFC §6.1.1): `source`, `target`,
+`job_id`, `stream_id`, `subscription_id`, `trace_id`, `span_id`,
+`parent_span_id`, `correlation_id`, `causation_id`, `idempotency_key`,
+`priority` (`low`/`normal`/`high`/`critical`), and `extensions`.
+
 The `type` field drives polymorphic deserialization: `arcpJson` (a
-`kotlinx.serialization` `Json` instance) decodes the payload into the
-correct `MessageType` subclass via `@SerialName` annotations.
+`kotlinx.serialization` `Json` instance, configured with
+`classDiscriminator = "type"`, `ignoreUnknownKeys = true`, and
+`explicitNulls = false`) decodes the payload into the correct `MessageType`
+subclass via `@SerialName` annotations. A custom `EnvelopeSerializer` then
+hoists the `type` discriminator from the payload to the envelope root to
+match the RFC §6.1 wire layout.
 
 ## RFC section map
 

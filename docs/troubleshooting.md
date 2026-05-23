@@ -63,8 +63,11 @@ The client requested `agent@version` that is not registered:
 ```kotlin
 // Runtime must register the agent + version before accepting connections
 val registry = AgentRegistry()
-registry.register("summarise", listOf("1.0.0"))
-val runtime = ARCPRuntime(agentRegistry = registry, ...)
+registry.register("summarise", "1.0.0", default = true)
+val runtime = ARCPRuntime(
+    supportedCapabilities = Capabilities(),
+    agentRegistry         = registry,
+)
 ```
 
 ### `ARCPException.BudgetExhausted`

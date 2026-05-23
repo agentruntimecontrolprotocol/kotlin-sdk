@@ -1,9 +1,12 @@
-# Module: arcp-cli (`dev.arcp:arcp-cli`)
+# Module: arcp-cli
 
 The `:cli` Gradle module provides the `arcp` command-line binary, built on
 top of the `:lib` protocol library.
 
-**Maven coordinates**: `dev.arcp:arcp-cli:1.1.0`
+> The `:cli` module is currently **not published to Maven Central** — only
+> the `:lib` artifact (`dev.arcp:arcp`) is in the root project's
+> `nmcpAggregation` set. Build the CLI from source via `./gradlew
+> :cli:installDist`.
 
 ---
 
@@ -27,46 +30,37 @@ Or run directly via Gradle:
 
 ### `arcp version`
 
-Print SDK and protocol version information:
+Print SDK and protocol version information. `Kotlin SDK` reads from
+`dev.arcp.Version.SDK_VERSION` (currently `0.1.0` — the CLI version trails
+the library while the protocol-driving subcommands are under construction):
 
 ```
 $ arcp version
 ARCP protocol: 1.1
-Kotlin SDK:    1.1.0
-SDK kind:      kotlin
+Kotlin SDK:    0.1.0
+SDK kind:      arcp-kotlin-sdk
 ```
 
-### `arcp serve` *(v0.2)*
+### `arcp serve`
 
-Run an ARCP runtime over a named transport:
-
-```
-$ arcp serve --transport=websocket --port=8080
-```
-
-> Not functional in v0.1. Prints `"runtime serve mode is v0.2"`.
-
-### `arcp send` *(v0.2)*
-
-Submit a job to a running runtime:
+v0.1 stub. Accepts `--transport=<name>` (default `memory`) and prints a
+placeholder message — real runtime hosting lands in v0.2 with the WebSocket
+and stdio transports.
 
 ```
-$ arcp send --url=wss://runtime.example.com/arcp \
-            --agent=summarise@1.0.0 \
-            --token=my-bearer-token
+$ arcp serve --transport=memory
+transport=memory — runtime serve mode is v0.2
 ```
 
-> Not functional in v0.1.
+### `arcp send` *(v0.2 — not yet registered)*
 
-### `arcp replay` *(v0.2)*
+Intended to submit a job to a running runtime. Not present as a subcommand
+in v0.1; only mentioned in the CLI class docstring as a roadmap item.
 
-Replay a session log from a SQLite `EventLog` file:
+### `arcp replay` *(v0.2 — not yet registered)*
 
-```
-$ arcp replay --db=session.db --session=sess_abcde
-```
-
-> Not functional in v0.1.
+Intended to replay a session log from a SQLite `EventLog` file. Not present
+as a subcommand in v0.1.
 
 ---
 
@@ -85,5 +79,7 @@ the `application` plugin and distributed as a zip/tar via
 
 ```kotlin
 // cli/src/main/kotlin/dev/arcp/cli/Main.kt
-fun main(args: Array<String>) = ArcpCli().main(args)
+public fun main(args: Array<String>) {
+    ArcpCli().subcommands(VersionCommand(), ServeCommand()).parse(args)
+}
 ```

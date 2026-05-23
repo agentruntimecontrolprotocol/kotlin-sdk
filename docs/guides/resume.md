@@ -45,12 +45,19 @@ received, or `null` to start from the beginning.
 
 ### Idempotent operations
 
-`EventLog` also supports idempotency keys for non-envelope operations:
+`EventLog` also supports idempotency keys for non-envelope operations
+(RFC §6.4). Keys are scoped to the calling principal, and a recorded outcome
+expires at the `expiresAt` instant the writer supplied:
 
 ```kotlin
-val existing: String? = log.lookupIdempotent(idempotencyKey)
+val existing: JsonElement? = log.lookupIdempotent(principal, idempotencyKey)
 if (existing == null) {
-    log.recordIdempotent(idempotencyKey, resultJson)
+    log.recordIdempotent(
+        principal       = principal,
+        idempotencyKey  = idempotencyKey,
+        outcome         = outcomeJson,
+        expiresAt       = Clock.System.now() + 24.hours,
+    )
 }
 ```
 

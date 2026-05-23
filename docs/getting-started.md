@@ -39,7 +39,7 @@ fun main() = runBlocking {
 
     // 2. Runtime with one registered agent.
     val registry = AgentRegistry()
-    registry.register("summarise", listOf("1.0.0"))
+    registry.register("summarise", "1.0.0", default = true)
     val runtime = ARCPRuntime(
         supportedCapabilities = Capabilities(streaming = true),
         agentRegistry = registry,
@@ -59,11 +59,11 @@ fun main() = runBlocking {
     println("session: ${session.sessionId}")
 
     // 5. Submit a job.
-    val jobId = client.send(
+    val msgId = client.send(
         session.sessionId,
         dev.arcp.messages.JobSubmit(agent = "summarise@1.0.0"),
     )
-    println("submitted job: $jobId")
+    println("submitted job command: $msgId")
 
     // 6. Graceful close.
     client.send(session.sessionId, dev.arcp.messages.SessionClose())
@@ -71,15 +71,20 @@ fun main() = runBlocking {
 }
 ```
 
+`client.send(...)` returns the `MessageId` of the envelope it just sent (this
+is the command id, not the runtime-assigned `JobId`). The `JobId` arrives on
+the correlated `JobAccepted` envelope received from the runtime.
+
 ## Build from source
 
 ```bash
 git clone https://github.com/agentruntimecontrolprotocol/kotlin-sdk
 cd kotlin-sdk
-./gradlew build              # compile, lint, test
-./gradlew :lib:test          # unit tests only
-./gradlew :tests:test        # integration tests over MemoryTransport
-./gradlew :samples:run01     # run the minimal session sample
+./gradlew build                       # compile, lint, test
+./gradlew :lib:test                   # unit tests only
+./gradlew :tests:test                 # integration tests over MemoryTransport
+./gradlew :samples:runSubscriptions   # run the subscriptions sample
+./gradlew :samples:tasks --group samples  # list all sample tasks
 ```
 
 ## Next steps

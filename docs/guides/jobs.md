@@ -19,31 +19,40 @@ See [job-events.md](job-events.md) for details.
 
 ```kotlin
 val msgId: MessageId = client.send(session.sessionId, JobSubmit(
-    agent   = AgentRef.parse("summarise@1.0.0"),
-    input   = buildJsonObject { put("text", "...") },
+    agent = "summarise@1.0.0",
+    input = buildJsonObject { put("text", "...") },
 ))
 ```
 
+`msgId` is the id of the `job.submit` envelope (i.e. the command id). The
+runtime-assigned `JobId` arrives on the correlated `JobAccepted` reply.
+
 `JobSubmit` fields:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `agent` | `AgentRef` | `name` or `name@version` |
-| `input` | `JsonElement` | Agent-specific payload |
-| `leaseRequest` | `JsonObject?` | Requested capabilities (e.g. `cost.budget`) |
-| `leaseConstraints` | `JsonObject?` | Client-imposed constraints on sub-jobs |
-| `idempotencyKey` | `String?` | Deduplicate resubmissions |
-| `maxRuntimeSec` | `Long?` | Hard timeout in seconds |
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `agent` | `String` | required | Wire-form `name` or `name@version` |
+| `input` | `JsonObject` | `{}` | Agent-specific payload |
+| `leaseRequest` | `JsonObject` | `{}` | Requested capabilities (e.g. `cost.budget`) |
+| `leaseConstraints` | `JsonObject?` | `null` | Client-imposed constraints on sub-jobs |
+| `idempotencyKey` | `String?` | `null` | Deduplicate resubmissions |
+| `maxRuntimeSec` | `Long?` | `null` | Hard timeout in seconds |
+
+`AgentRef.parse("summarise@1.0.0")` is available for callers that need a
+typed reference (e.g. to read `.name`/`.version`); the wire field on
+`JobSubmit` is the rendered string.
 
 ## JobAccepted
 
-The runtime immediately replies with `JobAccepted`, carrying the assigned
-`jobId` and the negotiated `leaseId`:
+The runtime replies with `JobAccepted` carrying the assigned `jobId`, the
+resolved `agent@version`, and any provisioned `credentials`:
 
 ```kotlin
 // Receive loop (illustrative — real code uses Flow)
 val accepted: JobAccepted = awaitMessage(msgId)
 val jobId = accepted.jobId
+val agent = accepted.agent              // resolved name@version, may be null
+val creds = accepted.credentials        // null unless a provisioner is configured
 ```
 
 If the agent or version is not registered the runtime replies with `Nack`
@@ -51,11 +60,14 @@ carrying `ErrorCode.AGENT_VERSION_NOT_AVAILABLE`.
 
 ## Registering agents
 
-Agents must be registered before the runtime starts accepting connections:
+Agents must be registered before the runtime starts accepting connections.
+`register` takes one version at a time; mark exactly one version as the
+default if you want bare-name references to resolve:
 
 ```kotlin
 val registry = AgentRegistry()
-registry.register("summarise", listOf("1.0.0", "2.0.0"))
+registry.register("summarise", "1.0.0")
+registry.register("summarise", "2.0.0", default = true)
 
 val runtime = ARCPRuntime(
     supportedCapabilities = Capabilities(),
@@ -65,18 +77,19 @@ val runtime = ARCPRuntime(
 
 `AgentRef.parse("summarise@1.0.0")` parses the `name@version` wire form.
 `AgentRef.parse("summarise")` references the agent without pinning a version;
-the runtime selects the default.
+the runtime resolves to the default (or the first registered version if
+none is marked default).
 
 ## Awaiting completion
 
 ```kotlin
-// Pseudocode — collect from the session's envelope flow
-session.envelopes
+// Pseudocode — collect from the client's envelope flow
+client.receive()
     .filter { it.jobId == jobId }
     .collect { env ->
         when (val msg = env.payload) {
             is JobCompleted -> { println("result: ${msg.result}"); cancel() }
-            is JobFailed    -> { throw RuntimeException(msg.error.message) }
+            is JobFailed    -> { throw RuntimeException("${msg.code}: ${msg.message}") }
             is JobCancelled -> { println("cancelled: ${msg.reason}") }
             else            -> { /* progress / heartbeat / chunk */ }
         }
@@ -89,9 +102,9 @@ Pass an `idempotencyKey` to ensure at-most-once dispatch:
 
 ```kotlin
 client.send(session.sessionId, JobSubmit(
-    agent           = AgentRef.parse("summarise"),
-    input           = input,
-    idempotencyKey  = "req-${requestId}",
+    agent          = "summarise",
+    input          = input,
+    idempotencyKey = "req-${requestId}",
 ))
 ```
 

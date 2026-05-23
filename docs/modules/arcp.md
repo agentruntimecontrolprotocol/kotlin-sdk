@@ -1,9 +1,10 @@
-# Module: arcp (`dev.arcp:arcp`)
+# Module: arcp
 
 The `:lib` Gradle module is the publishable ARCP protocol library. All
 public API lives here.
 
-**Maven coordinates**: `dev.arcp:arcp:1.1.0`
+**Maven coordinates**: `dev.arcp:arcp:1.1.0` (published to Maven Central
+via the root project's `nmcpAggregation` configuration).
 
 ---
 
@@ -13,21 +14,31 @@ public API lives here.
 
 The canonical wire container for every ARCP message (RFC §6.1).
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | `MessageId` | Unique per-message identifier |
-| `type` | `String` | Wire discriminator (e.g. `"session.open"`) |
-| `timestamp` | `Instant` | ISO 8601 send time |
-| `sessionId` | `SessionId?` | Owning session |
-| `jobId` | `JobId?` | Owning job (optional) |
-| `correlationId` | `MessageId?` | Request/response correlation |
-| `causationId` | `MessageId?` | Causal predecessor |
-| `traceId` | `String?` | W3C trace ID |
-| `priority` | `String` | `"normal"` or `"high"` |
-| `payload` | `MessageType` | Polymorphic message body |
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `arcp` | `String` | `Version.PROTOCOL_VERSION` | Wire protocol version |
+| `id` | `MessageId` | required | Unique per-message identifier |
+| `timestamp` | `Instant` | `Clock.System.now()` | ISO 8601 send time |
+| `source` | `String?` | `null` | Logical sender id |
+| `target` | `String?` | `null` | Logical recipient id |
+| `sessionId` | `SessionId?` | `null` | Owning session |
+| `jobId` | `JobId?` | `null` | Owning job |
+| `streamId` | `StreamId?` | `null` | Owning stream |
+| `subscriptionId` | `SubscriptionId?` | `null` | Owning subscription |
+| `traceId` | `TraceId?` | `null` | W3C trace ID |
+| `spanId` | `SpanId?` | `null` | Current span id |
+| `parentSpanId` | `SpanId?` | `null` | Parent span id |
+| `correlationId` | `MessageId?` | `null` | Request/response correlation |
+| `causationId` | `MessageId?` | `null` | Causal predecessor |
+| `idempotencyKey` | `String?` | `null` | Logical command intent (RFC §6.4) |
+| `priority` | `Priority` | `NORMAL` | `LOW`/`NORMAL`/`HIGH`/`CRITICAL` |
+| `extensions` | `Map<String, JsonElement>` | `{}` | Namespaced extension fields (RFC §21) |
+| `payload` | `MessageType` | required | Polymorphic message body |
 
-The custom serializer hoists the `type` discriminator from `payload` to the
-envelope root, matching the RFC §6.1 wire layout.
+`type: String` is exposed as a computed property that returns the wire
+discriminator of `payload`. The custom `EnvelopeSerializer` hoists this
+discriminator to the envelope root on encode, matching the RFC §6.1 wire
+layout, and re-attaches it on decode.
 
 ---
 
@@ -52,8 +63,9 @@ implementing `MessageType`.
 | `SessionListJobs` | `session.list_jobs` | C → R |
 | `SessionJobs` | `session.jobs` | R → C |
 
-Key types on `SessionAccepted`: `sessionId: SessionId`, `capabilities:
-Capabilities`, `runtime: RuntimeIdentity`, `trustLevel: TrustLevel`.
+Fields on `SessionAccepted`: `sessionId: SessionId`, `runtime:
+RuntimeIdentity`, `capabilities: Capabilities`, `lease: SessionLease?`.
+Trust level is on the embedded `runtime.trustLevel`.
 
 `TrustLevel`: `UNTRUSTED`, `CONSTRAINED`, `TRUSTED`, `PRIVILEGED`.
 
@@ -66,13 +78,16 @@ Capabilities`, `runtime: RuntimeIdentity`, `trustLevel: TrustLevel`.
 | `JobStarted` | `job.started` |
 | `JobProgress` | `job.progress` |
 | `JobHeartbeat` | `job.heartbeat` |
-| `JobStatusEvent` | `job.status` |
-| `JobResultChunk` | `job.result_chunk` |
+| `JobStatusEvent` | `status` |
+| `JobResultChunk` | `result_chunk` |
 | `JobResult` | `job.result` |
 | `JobCompleted` | `job.completed` |
 | `JobFailed` | `job.failed` |
 | `JobCancelled` | `job.cancelled` |
 | `JobCheckpoint` | `job.checkpoint` |
+| `JobSchedule` | `job.schedule` *(v0.1 NACKs with `UNIMPLEMENTED`)* |
+| `WorkflowStart` | `workflow.start` *(v0.1 deferred)* |
+| `WorkflowComplete` | `workflow.complete` *(v0.1 deferred)* |
 | `ToolInvoke` | `tool.invoke` |
 | `ToolResult` | `tool.result` |
 | `ToolError` | `tool.error` |
@@ -140,8 +155,14 @@ Standard metric name constants are in `StandardMetrics`.
 
 | Class | Description |
 |-------|-------------|
-| `AgentRef` | `name` or `name@version` reference; `AgentRef.parse(wire)` |
-| `AgentDescriptor` | Versions advertised by a runtime |
+| `AgentRef` | `name` or `name@version` reference; `AgentRef.parse(wire)` / `.render()` |
+| `AgentDescriptor` | Versions advertised by a runtime (`name`, `versions`, `default`) |
+| `AgentDelegate` | `target: String`, `task: String`, `context: JsonObject` |
+| `AgentHandoff` | `target: String`, `sessionId/jobId: String?`, `receivingRuntime: RuntimeIdentity`, `handoffFor: MessageId?` |
+
+> `AgentDelegate` / `AgentHandoff` envelopes round-trip through the wire
+> layer but lease subset enforcement and child-job spawning are deferred to
+> a later milestone (the runtime currently Nacks with `UNIMPLEMENTED`).
 
 ---
 
@@ -152,22 +173,25 @@ Standard metric name constants are in `StandardMetrics`.
 ```kotlin
 ARCPClient(
     transport    : Transport,
-    auth         : BearerAuth,
+    auth         : Auth,                  // dev.arcp.messages.Auth
     client       : ClientInfo,
     capabilities : Capabilities,
-)
+) : AutoCloseable
 ```
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `open()` | `SessionAccepted` | Authenticate and negotiate session |
-| `send(sessionId, payload)` | `MessageId` | Send a message |
+| `open()` | `SessionAccepted` | Authenticate and negotiate the session |
+| `send(sessionId, payload)` | `MessageId` | Send a message; returns the assigned envelope id |
+| `receive()` | `Flow<Envelope>` | Underlying transport's incoming envelope flow |
+| `listJobs(sessionId, filter, limit, cursor)` | `SessionJobs` | Send `session.list_jobs` and await the correlated reply |
+| `close()` | `Unit` | Close the underlying transport |
 
 Companion factories:
 
 ```kotlin
-ARCPClient.bearer(token: String): BearerAuth
-ARCPClient.defaultClientInfo(): ClientInfo
+ARCPClient.bearer(token: String): Auth                           // Auth(scheme = BEARER, token = ...)
+ARCPClient.defaultClientInfo(principal: String? = null): ClientInfo
 ```
 
 ---
@@ -179,27 +203,42 @@ ARCPClient.defaultClientInfo(): ClientInfo
 ```kotlin
 ARCPRuntime(
     supportedCapabilities : Capabilities,
-    bearerAuth            : BearerAuth? = null,
+    identity              : RuntimeIdentity = RuntimeIdentity(
+        kind = Version.SDK_KIND,
+        version = Version.SDK_VERSION,
+        trustLevel = TrustLevel.TRUSTED,
+    ),
+    bearerAuth            : BearerAuth = StaticBearerAuth(emptyMap()),
     jwtAuth               : JwtAuth? = null,
+    sessionLeaseDuration  : Duration = ARCPRuntime.DEFAULT_SESSION_LEASE,
     agentRegistry         : AgentRegistry = AgentRegistry(),
-    budgetRegistry        : BudgetRegistry = BudgetRegistry(),
-    eventLog              : EventLog? = null,
+    jobInventory          : JobInventory = InMemoryJobInventory(),
+    budgets               : BudgetRegistry = BudgetRegistry(),
     credentialProvisioner : CredentialProvisioner? = null,
-    extensionRegistry     : ExtensionRegistry = ExtensionRegistry(),
-)
+    credentialStore       : CredentialStore = InMemoryCredentialStore(),
+) : AutoCloseable
 ```
+
+> The runtime does not own an `EventLog` or an `ExtensionRegistry` directly
+> in this release; they are wired into specific message handlers when
+> needed. The `JobInventory` interface backs `session.list_jobs`.
 
 | Method | Description |
 |--------|-------------|
-| `accept(transport)` | Start the server coroutine (non-blocking) |
-| `rotateCredential(jobId)` | Issue replacement credential mid-job |
+| `accept(transport): Job` | Drive the handshake on `transport` then dispatch incoming envelopes |
+| `rotateCredential(jobId, credentialId, transport?): Credential` | Re-issue an outstanding credential and optionally emit a rotation event |
+| `close()` | Cancel the runtime's coroutine scope |
 
 ### `AgentRegistry`
 
 ```kotlin
 val registry = AgentRegistry()
-registry.register("summarise", listOf("1.0.0", "2.0.0"))
+registry.register("summarise", "1.0.0")
+registry.register("summarise", "2.0.0", default = true)
 ```
+
+Methods: `register(name, version, default = false)`, `resolve(ref)`,
+`descriptors(): List<AgentDescriptor>`.
 
 ---
 
@@ -208,10 +247,10 @@ registry.register("summarise", listOf("1.0.0", "2.0.0"))
 ### `Transport` interface
 
 ```kotlin
-interface Transport {
+interface Transport : AutoCloseable {
     suspend fun send(envelope: Envelope)
     fun receive(): Flow<Envelope>
-    fun close()
+    override fun close()
 }
 ```
 
@@ -259,9 +298,11 @@ JwtAuth.hmac(secret: ByteArray, audience: String): JwtAuth
 
 | Class | Description |
 |-------|-------------|
-| `Credential` | Wire credential (id, scheme, value, endpoint, constraints); `toString()` redacts `value` |
-| `CredentialStore` | In-memory store; `issue(jobId, cred)`, `revoke(credId)`, `pendingRevocations()` |
-| `CredentialProvisioner` | Interface: `provision(jobId, lease): Credential` |
+| `Credential` | Wire credential (`id`, `scheme`, `value`, `endpoint`, `profile?`, `constraints?`); `toString()` redacts `value` |
+| `CredentialConstraints` | `costBudget: List<String>`, `modelUse: List<String>`, `expiresAt: Instant?` |
+| `CredentialScheme` | `BEARER` (only scheme defined in v0.1) |
+| `CredentialStore` / `InMemoryCredentialStore` | Per-job credential storage; `issue`, `revoke`, `outstanding(jobId)`, `pendingRevocations()` |
+| `CredentialProvisioner` | Interface: `suspend fun issue(ctx: IssuanceContext): List<Credential>` and `suspend fun revoke(credentialId: CredentialId)` |
 
 ---
 
@@ -269,12 +310,12 @@ JwtAuth.hmac(secret: ByteArray, audience: String): JwtAuth
 
 | Class | Description |
 |-------|-------------|
-| `Currency` | Value class wrapping a currency string |
-| `BudgetAmount` | `(currency, value: BigDecimal)`; `BudgetAmount.parse("USD:5.00")` |
-| `CostBudget` | `(budgets: List<BudgetAmount>)` — lease constraint container |
+| `Currency` | `@JvmInline value class Currency(code: String)` |
+| `BudgetAmount` | `(currency, value: BigDecimal)`; `BudgetAmount.parse("USD:5.00")`, `render()` |
+| `CostBudget` | `(budgets: List<BudgetAmount>)` — lease constraint container; `byCurrency(c)` |
 | `BudgetRegistry` | Per-job counters; `register`, `consume`, `terminate`, `remaining` |
 | `BudgetCounter` | Single-job counter; `consume(amount): Outcome` (`Ok` or `Exhausted`) |
-| `ModelUseLease` | `(patterns: List<String>)`; `allows(modelId)`, `subset(parent, child)` |
+| `ModelUseLease` | `(patterns: List<String>)`; `allows(modelId)`, `ModelUseLease.subset(parent, child)` |
 | `LeaseSubset` | Static helpers for subset validation |
 
 ---
@@ -290,10 +331,12 @@ EventLog.openFile(path: Path): EventLog
 
 | Method | Description |
 |--------|-------------|
-| `append(envelope): Long` | Append; throws `AlreadyExists` on dup `message_id` |
-| `replay(sessionId, afterMessageId?): Flow<Envelope>` | Replay envelopes |
-| `lookupIdempotent(key): String?` | Check idempotency key |
-| `recordIdempotent(key, value)` | Record idempotency result |
+| `suspend append(envelope): Long` | Append; throws `AlreadyExists` on dup `(session_id, message_id)` |
+| `replay(sessionId, afterMessageId?): Flow<Envelope>` | Cold flow; throws `DataLoss` if `afterMessageId` is missing |
+| `suspend lookupIdempotent(principal, key): JsonElement?` | Returns prior outcome if present and unexpired |
+| `suspend recordIdempotent(principal, key, outcome, expiresAt)` | Persist a per-principal idempotency outcome |
+| `suspend lastSeq(): Long` | Highest assigned sequence number |
+| `close()` | Close the underlying JDBC connection |
 
 ---
 
@@ -306,14 +349,19 @@ data class TraceContext(
     val traceId:      TraceId,
     val spanId:       SpanId,
     val parentSpanId: SpanId? = null,
-) : AbstractCoroutineContextElement(Key)
+) : AbstractCoroutineContextElement(Key) {
+    companion object Key : CoroutineContext.Key<TraceContext> {
+        fun newRoot(): TraceContext
+    }
+}
 ```
+
+Top-level helpers (in `dev.arcp.trace`):
 
 | Function | Description |
 |----------|-------------|
-| `TraceContext.newRoot()` | Create root span (random traceId + spanId) |
-| `currentTrace()` | Get ambient `TraceContext` from coroutine context |
-| `withSpan(name, block)` | Run block in child span; returns block result |
+| `suspend currentTrace(): TraceContext?` | Return the ambient `TraceContext`, if any |
+| `suspend withSpan(name, block: suspend (TraceContext) -> T): T` | Run `block` in a fresh child span keyed to `name` |
 
 ---
 
@@ -324,11 +372,22 @@ data class TraceContext(
 ```kotlin
 val ext = ExtensionRegistry()
 ext.advertise("arcpx.acme.email.v1")
-ext.acceptsType(wireType): Boolean
-ext.classifyUnknown(wireType, optional, advertised): UnknownAction
+ext.acceptsType(wireType): Boolean        // prefix match against advertised namespaces
+ext.advertised: Set<String>               // snapshot of accepted namespaces
+ExtensionRegistry.isValidName(name): Boolean
 ```
 
-`UnknownAction`: `Drop`, `Nack`.
+`classifyUnknown` is a top-level function (not a member of `ExtensionRegistry`):
+
+```kotlin
+fun classifyUnknown(
+    wireType: String,
+    optional: Boolean,
+    advertisedExtensions: Set<String>,
+): UnknownAction
+```
+
+`UnknownAction`: `Drop`, `Nack` (both `data object`s in a sealed interface).
 
 ---
 
@@ -336,8 +395,11 @@ ext.classifyUnknown(wireType, optional, advertised): UnknownAction
 
 Typed ID wrappers (all are `@JvmInline value class` wrapping `String`):
 
-`SessionId`, `JobId`, `MessageId`, `LeaseId`, `StreamId`,
-`PermissionName`, `TraceId`, `SpanId`.
+`MessageId`, `SessionId`, `JobId`, `StreamId`, `SubscriptionId`, `LeaseId`,
+`ArtifactId`, `TraceId`, `SpanId`, `PermissionName`, `ToolName`,
+`IdempotencyKey`.
+
+Most carry a companion `random()` factory that generates a fresh id.
 
 ---
 
@@ -345,15 +407,19 @@ Typed ID wrappers (all are `@JvmInline value class` wrapping `String`):
 
 ### `ErrorCode` enum
 
-24 codes; `wire: String`, `retryableByDefault: Boolean`.
+24 codes (including `OK`); each carries `wire: String` and
+`retryableByDefault: Boolean`.
 
 ```kotlin
-ErrorCode.fromWire("RATE_LIMITED")   // → RESOURCE_EXHAUSTED
+ErrorCode.fromWire("RATE_LIMITED")   // → RESOURCE_EXHAUSTED (alias accepted on decode only)
 ```
 
 ### `ARCPException` sealed class
 
-24 subclasses. Common pattern:
+23 concrete subclasses — every `ErrorCode` value except `OK` has a matching
+exception. `ARCPException` carries `code: ErrorCode` and `retryable:
+Boolean` (default `code.retryableByDefault`; `BudgetExhausted` overrides
+to `false`).
 
 ```kotlin
 try {
@@ -369,14 +435,19 @@ try {
 
 ### `arcpJson`
 
-Pre-configured `kotlinx.serialization` `Json` instance:
+Pre-configured `kotlinx.serialization` `Json` instance for ARCP wire JSON.
+Settings (`Json.kt`):
 
-```kotlin
-val json = arcpJson   // lenient, ignores unknown keys, custom serializers registered
-```
-
-Use `arcpJson` to parse raw ARCP JSON strings:
+- `classDiscriminator = "type"`
+- `ignoreUnknownKeys = true` (forward-compatible with extensions)
+- `encodeDefaults = false`
+- `explicitNulls = false`
+- `prettyPrint = false`
 
 ```kotlin
 val envelope = arcpJson.decodeFromString<Envelope>(rawJson)
 ```
+
+`buildArcpJson { … }` returns a `Json` configured identically with an extra
+`JsonBuilder` block — useful for callers that need to merge a custom
+`SerializersModule`.

@@ -65,7 +65,7 @@ Include the budget in the job's `leaseRequest`:
 
 ```kotlin
 client.send(sessionId, JobSubmit(
-    agent        = AgentRef.parse("summarise@1.0.0"),
+    agent        = "summarise@1.0.0",
     input        = input,
     leaseRequest = buildJsonObject {
         put("cost.budget", buildJsonArray { add("USD:5.00") })
@@ -124,13 +124,15 @@ ModelUseLease.subset(
 ## Provisioned credentials
 
 When a `CredentialProvisioner` is configured, the runtime issues per-job
-credentials after lease finalization. They arrive in `JobAccepted.credentials`
-and are redacted in logs:
+credentials after lease finalization. They arrive on `JobAccepted` as a
+`List<Credential>?` and each entry's secret is redacted in `toString()`:
 
 ```kotlin
 is JobAccepted -> {
-    val cred = accepted.credentials
-    // cred.value is the actual secret — Credential.toString() redacts it
+    accepted.credentials.orEmpty().forEach { cred ->
+        // cred.value is the actual secret — Credential.toString() redacts it
+        println(cred)   // "Credential(id=..., scheme=bearer, endpoint=..., value=<redacted>)"
+    }
 }
 ```
 
@@ -138,10 +140,11 @@ Credential shape:
 
 ```json
 {
-  "id": "cred_...",
-  "scheme": "bearer",
-  "value": "...",
+  "id":       "cred_...",
+  "scheme":   "bearer",
+  "value":    "...",
   "endpoint": "https://provider.example/v1",
+  "profile":  "default",
   "constraints": {
     "cost.budget": ["USD:1.00"],
     "model.use":   ["tier-fast/*"],
@@ -150,5 +153,11 @@ Credential shape:
 }
 ```
 
-Credentials are automatically revoked on job termination. Use
-`ARCPRuntime.rotateCredential(jobId)` to rotate mid-job.
+Credentials are automatically revoked on job termination. To rotate one
+mid-job, pass the credential id (and optionally a transport on which the
+runtime should emit a rotation status event):
+
+```kotlin
+runtime.rotateCredential(jobId, credentialId)                 // re-issue only
+runtime.rotateCredential(jobId, credentialId, transport)      // re-issue + notify peer
+```

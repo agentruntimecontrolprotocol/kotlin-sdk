@@ -46,16 +46,15 @@ with a `JobSubmit` or `Cancel` as appropriate.
 ## Agent delegation
 
 When a job needs to hand work to another agent it sends `AgentDelegate`
-(RFC §10.3). The child job is automatically constrained to a subset of the
+(RFC §14). The child job is automatically constrained to a subset of the
 parent's lease:
 
 ```kotlin
 // Inside an agent's execution context:
-session.send(AgentDelegate(
-    agent        = AgentRef.parse("classifier@1.0.0"),
-    input        = classifyInput,
-    leaseRequest = buildJsonObject { put("cost.budget", buildJsonArray { add("USD:0.50") }) },
-    reason       = "delegating classification sub-task",
+client.send(sessionId, AgentDelegate(
+    target  = "classifier@1.0.0",                 // wire-form name@version
+    task    = "classify",
+    context = buildJsonObject { put("text", "...") },
 ))
 ```
 
@@ -64,25 +63,36 @@ out results back to the parent. `ARCPException.LeaseSubsetViolation` is
 thrown if the child requests a broader budget than the parent's remaining
 balance.
 
+> v0.1 leaves `AgentDelegate` and `AgentHandoff` dispatch deferred — the
+> message types and capability flag (`agentHandoff`) are wired, but the
+> runtime does not yet spawn child jobs or transfer ownership; calls are
+> currently echoed as `Nack` with `UNIMPLEMENTED` unless the host runtime
+> overrides the handler.
+
 ## Agent handoff
 
 `AgentHandoff` terminates the current agent and transfers execution to
-another:
+another runtime:
 
 ```kotlin
-session.send(AgentHandoff(
-    agent  = AgentRef.parse("writer@1.0.0"),
-    input  = writerInput,
-    reason = "planning complete; handing off to writer",
+client.send(sessionId, AgentHandoff(
+    target            = "writer@1.0.0",
+    sessionId         = sessionId.value,           // optional
+    receivingRuntime  = RuntimeIdentity(
+        kind = "arcp-kotlin-sdk",
+        version = "1.1.0",
+    ),
+    handoffFor        = previousJobMessageId,      // optional correlation
 ))
 ```
 
 Unlike delegation, handoff does not create a child — the current job ends
-and a new one begins.
+and a new one begins on the receiving runtime.
 
 ## Ping / Pong — liveness
 
-Use `Ping`/`Pong` to check whether the remote end is still alive:
+Use `Ping`/`Pong` to check whether the remote end is still alive. The
+`nonce` is optional; receivers echo whatever they were given (or `null`):
 
 ```kotlin
 client.send(sessionId, Ping(nonce = "hello"))

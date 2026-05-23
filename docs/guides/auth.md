@@ -62,19 +62,22 @@ val jwtAuth   = JwtAuth(verifier, expectedAudience = "arcp-runtime")
 
 ## Client-side auth
 
-`ARCPClient` accepts the auth credential via `ARCPClient.bearer(token)`:
+`ARCPClient` takes an `Auth` block (the wire credentials block sent on
+`session.open`); use `ARCPClient.bearer(token)` for the common case:
 
 ```kotlin
 val client = ARCPClient(
-    transport   = clientTransport,
-    auth        = ARCPClient.bearer("token-alice"),
-    client      = ARCPClient.defaultClientInfo(),
+    transport    = clientTransport,
+    auth         = ARCPClient.bearer("token-alice"),  // returns Auth(scheme = BEARER, token = ...)
+    client       = ARCPClient.defaultClientInfo(),
     capabilities = Capabilities(),
 )
 ```
 
-During `client.open()` the client responds to any `SessionChallenge` with a
-`SessionAuthenticate` message carrying the token as a `bearer` credential.
+The credentials ride in `SessionOpen` itself rather than waiting for a
+challenge round-trip; the four-message handshake (RFC §8.1) only adds a
+`session.challenge`/`session.authenticate` pair when the runtime needs
+additional proof (e.g. a JWT nonce signature).
 
 ## Session challenge flow
 
@@ -92,7 +95,8 @@ it may skip the challenge and go straight to `SessionAccepted`.
 
 ## Trust levels
 
-The runtime assigns each session a `TrustLevel` based on authentication:
+The runtime assigns each session a `TrustLevel` based on authentication
+(RFC §15.3):
 
 | Level | Description |
 |-------|-------------|
@@ -101,4 +105,9 @@ The runtime assigns each session a `TrustLevel` based on authentication:
 | `TRUSTED` | Fully authenticated principal |
 | `PRIVILEGED` | Elevated administrative access |
 
-The trust level is visible in `SessionAccepted.trustLevel`.
+The trust level is reported by the runtime on `SessionAccepted.runtime`:
+
+```kotlin
+val session = client.open()
+val trust = session.runtime.trustLevel   // dev.arcp.messages.TrustLevel
+```

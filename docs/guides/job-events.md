@@ -16,16 +16,15 @@ is JobStarted -> println("Job ${msg.jobId} is now running")
 Human-readable progress indication, useful for display:
 
 ```kotlin
-is JobProgress -> println("[${msg.percent?.let { "$it%" } ?: "…"}] ${msg.message}")
+is JobProgress -> println("[${msg.percent?.let { "$it%" } ?: "..."}] ${msg.message ?: ""}")
 ```
 
 `JobProgress` fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `message` | `String` | Display text |
 | `percent` | `Int?` | 0–100, optional |
-| `data` | `JsonObject` | Structured progress data |
+| `message` | `String?` | Display text, optional |
 
 ## JobHeartbeat
 
@@ -53,10 +52,11 @@ HeartbeatRecovery.BLOCK` to park the job rather than kill it.
 
 ## JobStatusEvent
 
-General-purpose structured status update:
+General-purpose structured status update. Wire type is `status`; fields are
+`phase: String` and `body: JsonObject` (default `{}`):
 
 ```kotlin
-is JobStatusEvent -> println("Status: ${msg.status} phase=${msg.phase}")
+is JobStatusEvent -> println("phase=${msg.phase} body=${msg.body}")
 ```
 
 ## JobResultChunk — streaming results (RFC §8.4)
@@ -119,12 +119,16 @@ Terminal events end the job. Handle all three:
 
 ```kotlin
 is JobCompleted -> {
-    println("Completed in ${msg.runtimeMs}ms: ${msg.result}")
+    // result is JsonElement?; resultRef holds an artifact pointer when the
+    // payload was streamed via result_chunk.
+    println("Completed: result=${msg.result} resultRef=${msg.resultRef}")
 }
 is JobFailed -> {
-    println("Failed: code=${msg.error.code} ${msg.error.message}")
+    println("Failed: code=${msg.code} ${msg.message} (retryable=${msg.retryable})")
 }
 is JobCancelled -> {
-    println("Cancelled: ${msg.reason}")
+    println("Cancelled: code=${msg.code} reason=${msg.reason}")
 }
 ```
+
+`JobCancelled.code` defaults to `ErrorCode.CANCELLED`.

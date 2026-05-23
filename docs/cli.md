@@ -1,12 +1,13 @@
 # CLI — `arcp`
 
 The `arcp` binary is a thin JVM command-line tool built on the SDK library.
-It is distributed as the `:cli` Gradle module and published separately as
-`dev.arcp:arcp-cli`.
+It is distributed as the `:cli` Gradle module.
 
-> **Status**: v0.1 ships the `version` subcommand. The protocol-driving
-> subcommands (`serve`, `tail`, `send`, `replay`) are scheduled for v0.2,
-> when the WebSocket and stdio transports land.
+> **Status**: v0.1 ships the `version` subcommand and a `serve` stub. The
+> protocol-driving subcommands (`tail`, `send`, `replay`) plus a real
+> `serve` implementation are scheduled for v0.2, when the WebSocket and
+> stdio transports land. The `:cli` module is not currently published to
+> Maven Central — build it from source.
 
 ---
 
@@ -30,26 +31,32 @@ Or run directly through Gradle:
 
 ### `arcp version`
 
-Print SDK and protocol versions.
+Print SDK and protocol versions. The `Kotlin SDK` line reflects
+`dev.arcp.Version.SDK_VERSION` (currently `0.1.0` while the CLI matures
+ahead of the library v1.1 release):
 
 ```
 $ arcp version
 ARCP protocol: 1.1
-Kotlin SDK:    1.1.0
-SDK kind:      kotlin
+Kotlin SDK:    0.1.0
+SDK kind:      arcp-kotlin-sdk
 ```
 
-### `arcp serve` *(v0.2)*
+### `arcp serve`
 
-Run an ARCP runtime over a transport:
+Stub command — accepts `--transport=<name>` (default `memory`) and prints a
+v0.2 placeholder message. Real runtime hosting lands once the WebSocket and
+stdio transports ship:
 
 ```
-$ arcp serve --transport=websocket --port=8080
+$ arcp serve --transport=memory
+transport=memory — runtime serve mode is v0.2
 ```
 
 ### `arcp send` *(v0.2)*
 
-Submit a job to a running runtime:
+> Not implemented in v0.1 — `arcp send …` will exit with "no such
+> subcommand". The intended shape is:
 
 ```
 $ arcp send --url=wss://runtime.example.com/arcp \
@@ -59,7 +66,7 @@ $ arcp send --url=wss://runtime.example.com/arcp \
 
 ### `arcp replay` *(v0.2)*
 
-Replay a session log from an `EventLog` SQLite file:
+> Not implemented in v0.1. The intended shape is:
 
 ```
 $ arcp replay --db=session.db --session=sess_abcde
