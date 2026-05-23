@@ -94,7 +94,7 @@ to `false` per RFC §7.
 
 Use `session.list_jobs` to enumerate the principal's jobs. The
 `JobListFilter` accepts wire-form status strings (`"accepted"`, `"running"`,
-…) and an optional agent name plus created-at bounds:
+...) and an optional agent name plus created-at bounds:
 
 ```kotlin
 client.send(session.sessionId, SessionListJobs(

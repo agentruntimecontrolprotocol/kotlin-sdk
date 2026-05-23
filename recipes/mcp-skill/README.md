@@ -53,15 +53,15 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 
 ## What to look for
 
-- `[bridge] connected  sessionId=…` — ARCP session established.
-- `[host ] ← {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05",…}}`
+- `[bridge] connected  sessionId=...` — ARCP session established.
+- `[host ] ← {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05",...}}`
   — MCP `initialize` handshake completed.
-- `[host ] ← {"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"research",…}]}}`
+- `[host ] ← {"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"research",...}]}}`
   — `tools/list` returned the research skill.
-- `[bridge] tools/call research  query="advances in …"` — bridge received the
+- `[bridge] tools/call research  query="advances in ..."` — bridge received the
   `tools/call` and is dispatching to ARCP.
-- `[bridge] job accepted  jobId=…` — runtime accepted the job.
-- `[bridge] agent result  summary=…` — simulated agent produced a result.
+- `[bridge] job accepted  jobId=...` — runtime accepted the job.
+- `[bridge] agent result  summary=...` — simulated agent produced a result.
 - `[bridge] job completed  ackReceived=true` — runtime Acked the completion.
-- `[host ] ← {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":…}]}}`
+- `[host ] ← {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":...}]}}`
   — final MCP tool result returned to the host.

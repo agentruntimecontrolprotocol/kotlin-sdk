@@ -34,7 +34,7 @@ import kotlinx.datetime.Clock
 
 private suspend fun permissionDeniedScenario(client: ARCPClient) {
     println("\n--- Scenario 1: PERMISSION_DENIED ---")
-    println("Attempting to call 'send_reply' without a write lease …")
+    println("Attempting to call 'send_reply' without a write lease ...")
 
     try {
         // Agent only holds 'inbox_read' + 'inbox_summarise'.
@@ -70,7 +70,7 @@ private suspend fun permissionDeniedScenario(client: ARCPClient) {
 
 private suspend fun leaseExpiredScenario(client: ARCPClient) {
     println("\n--- Scenario 2: LEASE_EXPIRED ---")
-    println("Attempting a tool call with an expired lease …")
+    println("Attempting a tool call with an expired lease ...")
 
     try {
         val reply = client.request(

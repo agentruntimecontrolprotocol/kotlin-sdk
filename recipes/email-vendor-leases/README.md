@@ -42,11 +42,11 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 
 ## What to look for
 
-- `[client] credential issued …` — provisioned bearer credential for the job.
+- `[client] credential issued ...` — provisioned bearer credential for the job.
 - `[client] tool  inbox_list  → N messages` — lease check passed, call allowed.
-- `[client] tool  inbox_read(msg-001)  → subject: …` — read allowed.
-- `[client] tool  send_reply  → PERMISSION_DENIED (self-enforced, …)` — agent
+- `[client] tool  inbox_read(msg-001)  → subject: ...` — read allowed.
+- `[client] tool  send_reply  → PERMISSION_DENIED (self-enforced, ...)` — agent
   self-gates without even contacting the runtime.
-- `[client] event  x-vendor.acme.email.parsed  → nack(UNIMPLEMENTED) …` —
+- `[client] event  x-vendor.acme.email.parsed  → nack(UNIMPLEMENTED) ...` —
   vendor event Nacked; client continues gracefully.
 - `[client] job completed` — terminal event confirming clean shutdown.

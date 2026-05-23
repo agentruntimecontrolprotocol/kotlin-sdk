@@ -277,7 +277,7 @@ ARCP features this SDK negotiates during the `hello`/`welcome` handshake:
 
 ## Transport
 
-ARCP is transport-agnostic. This SDK ships an in-memory transport (`MemoryTransport`) used by the integration test suite and for in-process embedding of a runtime; the WebSocket and stdio transports defined in the spec are planned and not yet on the public API surface. Construct one with `MemoryTransport.pair()` for a connected (client, runtime) pair, and pass the appropriate end into the `ARCPClient(transport = …)` or `ARCPRuntime.accept(transport)` call.
+ARCP is transport-agnostic. This SDK ships an in-memory transport (`MemoryTransport`) used by the integration test suite and for in-process embedding of a runtime; the WebSocket and stdio transports defined in the spec are planned and not yet on the public API surface. Construct one with `MemoryTransport.pair()` for a connected (client, runtime) pair, and pass the appropriate end into the `ARCPClient(transport = ...)` or `ARCPRuntime.accept(transport)` call.
 
 ## API reference
 

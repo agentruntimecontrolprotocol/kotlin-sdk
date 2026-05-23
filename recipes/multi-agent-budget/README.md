@@ -33,7 +33,7 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 
 ## What to look for
 
-- `[client]  metric  cost.usd worker …` — worker spend reported while running.
-- `[client]  metric  cost.usd planner …` — planner overhead reported after
+- `[client]  metric  cost.usd worker ...` — worker spend reported while running.
+- `[client]  metric  cost.usd planner ...` — planner overhead reported after
   worker completes.
 - `[client]  planner completed` — terminal event; budget state is consistent.

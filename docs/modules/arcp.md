@@ -448,6 +448,6 @@ Settings (`Json.kt`):
 val envelope = arcpJson.decodeFromString<Envelope>(rawJson)
 ```
 
-`buildArcpJson { … }` returns a `Json` configured identically with an extra
+`buildArcpJson { ... }` returns a `Json` configured identically with an extra
 `JsonBuilder` block — useful for callers that need to merge a custom
 `SerializersModule`.

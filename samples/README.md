@@ -8,7 +8,7 @@ primitive it demonstrates.
 > `dev.arcp:arcp-sdk:1.0` SDK. Setup boilerplate (transport URL,
 > identity, auth) is elided with `val client: ARCPClient = TODO("...")`.
 > LLM and framework calls live in tiny stub files (`Agents.kt`,
-> `Steps.kt`, `Cheap.kt`, …) so the protocol code in `Main.kt` is what
+> `Steps.kt`, `Cheap.kt`, ...) so the protocol code in `Main.kt` is what
 > you read. The shared `com.arcp.samples._Wire.kt` provides the
 > Python-style `client.envelope(...)` / `client.request(...)` /
 > `client.events()` helpers that the v1.0 SDK will expose natively.

@@ -55,7 +55,7 @@ transport=memory — runtime serve mode is v0.2
 
 ### `arcp send` *(v0.2)*
 
-> Not implemented in v0.1 — `arcp send …` will exit with "no such
+> Not implemented in v0.1 — `arcp send ...` will exit with "no such
 > subcommand". The intended shape is:
 
 ```

@@ -47,13 +47,13 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 
 ## What to look for
 
-- `[client] session opened …` — handshake completed with the lightweight server.
-- `[client] job accepted …` — server accepted the job before streaming.
+- `[client] session opened ...` — handshake completed with the lightweight server.
+- `[client] job accepted ...` — server accepted the job before streaming.
 - `[client] chunk  seq=0  more=true  data="The"` through
   `[client] chunk  seq=4  more=false  data=" jumps"` — five UTF-8 chunks
   arriving in order.
 - `[client] assembled  "The quick brown fox jumps"` — `ResultChunkAssembler`
   concatenated all chunks into the final sentence.
-- `[client] resume  → nack(UNIMPLEMENTED) …` — server Nacked the resume
+- `[client] resume  → nack(UNIMPLEMENTED) ...` — server Nacked the resume
   request; client logged the response and exited cleanly.
 - `[client] done` — clean shutdown with no unhandled errors.
