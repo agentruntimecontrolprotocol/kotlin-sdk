@@ -43,13 +43,15 @@ For Maven users, the same coordinates apply (`groupId = dev.arcp`, `artifactId =
 Connect to a runtime, submit a job, stream its events to completion:
 
 ```kotlin
+import dev.arcp.auth.StaticBearerAuth
 import dev.arcp.client.ARCPClient
-import dev.arcp.envelope.Envelope
 import dev.arcp.messages.Capabilities
 import dev.arcp.messages.JobCompleted
 import dev.arcp.messages.JobFailed
 import dev.arcp.messages.JobSubmit
 import dev.arcp.messages.SessionClose
+import dev.arcp.runtime.ARCPRuntime
+import dev.arcp.runtime.AgentRegistry
 import dev.arcp.transport.MemoryTransport
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.runBlocking
@@ -57,10 +59,18 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 fun main(): Unit = runBlocking {
-    val (clientTransport, _) = MemoryTransport.pair() // swap for a networked transport
+    // Paired in-memory transport: client end <-> runtime end.
+    val (clientTransport, runtimeTransport) = MemoryTransport.pair()
+    val agents = AgentRegistry().apply { register("data-analyzer", "1.0.0", default = true) }
+    val runtime = ARCPRuntime(
+        supportedCapabilities = Capabilities(streaming = true),
+        agentRegistry = agents,
+        bearerAuth = StaticBearerAuth(mapOf("quickstart-token" to "quickstart")),
+    )
+    runtime.accept(runtimeTransport)
     ARCPClient(
         transport = clientTransport,
-        auth = ARCPClient.bearer(System.getenv("ARCP_TOKEN")),
+        auth = ARCPClient.bearer("quickstart-token"),
         client = ARCPClient.defaultClientInfo(principal = "quickstart"),
         capabilities = Capabilities(streaming = true),
     ).use { client ->
@@ -78,6 +88,7 @@ fun main(): Unit = runBlocking {
         }.collect {}
         client.send(session.sessionId, SessionClose())
     }
+    runtime.close()
 }
 ```
 
@@ -173,7 +184,7 @@ client.receive().takeWhile { env ->
     when (val p = env.payload) {
         is JobStatusEvent  -> { println("status: ${p.phase} ${p.body}"); true }
         is JobProgress     -> { println("progress: ${p.percent}% ${p.message}"); true }
-        is Metric          -> { println("metric: ${p.name}=${p.value} ${p.unit ?: ""}"); true }
+        is Metric          -> { println("metric: ${p.name}=${p.value} ${p.unit}"); true }
         is JobResultChunk  -> { chunks.accept(p); true }
         is JobCompleted    -> { println("result: ${p.result}"); false }
         is JobFailed       -> { println("failed: ${p.code} ${p.message}"); false }
@@ -222,7 +233,7 @@ try {
     client.receive().collect { env ->
         val m = env.payload as? Metric ?: return@collect
         if (m.name == StandardMetrics.COST_BUDGET_REMAINING) {
-            println("budget remaining: ${m.value} ${m.unit ?: ""}")
+            println("budget remaining: ${m.value} ${m.unit}")
         }
     }
 } catch (e: ARCPException.BudgetExhausted) {
@@ -263,18 +274,23 @@ ARCP features this SDK negotiates during the `hello`/`welcome` handshake:
 | Feature flag | Status |
 |---|---|
 | `heartbeat` | Supported |
-| `ack` | Partial |
+| `ack` | Catalog only — runtime returns `UNIMPLEMENTED` Nack on `subscribe`-style ack envelopes |
 | `list_jobs` | Supported |
-| `subscribe` | Partial |
+| `subscribe` | Catalog + helpers; runtime does **not** dispatch `subscribe`/`unsubscribe` yet |
 | `lease_expires_at` | Supported |
 | `cost.budget` | Supported |
-| `model.use` | Supported |
+| `model.use` | Catalog + helpers; runtime does not yet enforce per-call model use |
 | `provisioned_credentials` | Supported |
 | `progress` | Supported |
-| `result_chunk` | Supported |
+| `result_chunk` | Client-side assembly only; runtime does not emit chunks itself |
 | `agent_versions` | Supported |
 
-`ack` and `subscribe` are wired into the runtime and message catalog (envelopes round-trip, the runtime dispatches them), but `ARCPClient` does not yet expose convenience methods for either — they're driven via `client.send(...)` with the raw `Ack` / `Subscribe` message types.
+See [`docs/conformance.md`](docs/conformance.md) for a per-section
+breakdown of which message types are routed by `ARCPRuntime.handleEnvelope`
+versus types that exist only in the catalog. The session
+challenge/authenticate flow, delegation, artifacts dispatch, resume, and
+interrupt are all in the catalog but deferred from runtime dispatch — a
+peer that sends them today receives a correlated `UNIMPLEMENTED` Nack.
 
 ## Transport
 

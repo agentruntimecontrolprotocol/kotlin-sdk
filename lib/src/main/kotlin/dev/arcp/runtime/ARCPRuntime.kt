@@ -41,6 +41,8 @@ import dev.arcp.messages.Ping
 import dev.arcp.messages.Pong
 import dev.arcp.messages.RuntimeIdentity
 import dev.arcp.messages.SessionAccepted
+import dev.arcp.messages.SessionAuthenticate
+import dev.arcp.messages.SessionChallenge
 import dev.arcp.messages.SessionClose
 import dev.arcp.messages.SessionEvicted
 import dev.arcp.messages.SessionLease
@@ -59,6 +61,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -70,11 +73,13 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import java.io.IOException
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.min
+import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 
 private val log = KotlinLogging.logger {}
 
@@ -103,6 +108,13 @@ public class ARCPRuntime(
     private val budgets: BudgetRegistry = BudgetRegistry(),
     private val credentialProvisioner: CredentialProvisioner? = null,
     private val credentialStore: CredentialStore = InMemoryCredentialStore(),
+    /**
+     * When `true` (the default), terminal jobs are removed from the
+     * [JobInventory] after their events have drained. Set to `false`
+     * if the caller needs `session.list_jobs` to keep returning
+     * completed jobs indefinitely — usually for tests.
+     */
+    private val evictTerminalJobs: Boolean = true,
 ) : AutoCloseable {
     private val supervisor: Job = SupervisorJob()
     private val scope: CoroutineScope =
@@ -153,12 +165,39 @@ public class ARCPRuntime(
     private suspend fun runDispatchLoop(transport: Transport) {
         try {
             transport.receive().collect { env ->
-                handleEnvelope(env, transport)
+                dispatchOne(env, transport)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             log.info(e) { "session ended" }
+        }
+    }
+
+    /**
+     * Runs [handleEnvelope] inside a per-envelope try/catch. Application-level
+     * errors translate to a correlated `Nack`; `CancellationException` still
+     * unwinds the loop. The session stays usable after a single bad envelope
+     * (RFC §17 — malformed wire input must not tear down the session).
+     */
+    private suspend fun dispatchOne(
+        env: Envelope,
+        transport: Transport,
+    ) {
+        try {
+            handleEnvelope(env, transport)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: ARCPException) {
+            log.debug(e) { "envelope ${env.id.value} produced ${e.code.wire}" }
+            transport.send(nack(env, e))
+        } catch (e: IllegalArgumentException) {
+            log.debug(e) { "envelope ${env.id.value} rejected as invalid" }
+            transport.send(nack(env, ARCPException.InvalidArgument(e.message ?: "invalid", null)))
+        } catch (e: NumberFormatException) {
+            log.debug(e) { "envelope ${env.id.value} rejected as invalid number" }
+            val invalid = ARCPException.InvalidArgument(e.message ?: "invalid number", null)
+            transport.send(nack(env, invalid))
         }
     }
 
@@ -183,6 +222,22 @@ public class ARCPRuntime(
             is JobCompleted -> handleTerminalJob(env, "completed", transport)
             is JobFailed -> handleTerminalJob(env, "failed", transport)
             is JobCancelled -> handleTerminalJob(env, "cancelled", transport)
+            is SessionChallenge, is SessionAuthenticate ->
+                transport.send(
+                    Envelope(
+                        id = MessageId.random(),
+                        sessionId = env.sessionId,
+                        correlationId = env.id,
+                        payload =
+                            Nack(
+                                nackFor = env.id,
+                                code = ErrorCode.UNIMPLEMENTED,
+                                message =
+                                    "session challenge/authenticate flow is deferred; " +
+                                        "use direct-credential session.open (RFC §8.2)",
+                            ),
+                    ),
+                )
             is SessionClose -> {
                 env.sessionId?.let { sessions.remove(it) }
                 transport.close()
@@ -303,11 +358,20 @@ public class ARCPRuntime(
         }
         val amount = BudgetAmount(dev.arcp.lease.Currency(metric.unit), metric.value.asBigDecimal())
         when (val outcome = budgets.consume(jobId, amount)) {
-            BudgetCounter.Outcome.Ok -> emitRemainingBudget(env, jobId, amount, transport)
-            is BudgetCounter.Outcome.Exhausted -> {
-                emitRemainingBudget(env, jobId, amount, transport)
-                val error = ARCPException.BudgetExhausted(outcome.currency.code, jobId)
-                transport.send(nack(env, error))
+            BudgetRegistry.Outcome.Unregistered ->
+                log.info { "cost metric for unregistered job ${jobId.value}; ignoring" }
+            is BudgetRegistry.Outcome.Counted -> when (val counted = outcome.outcome) {
+                BudgetCounter.Outcome.Ok -> emitRemainingBudget(env, jobId, amount, transport)
+                is BudgetCounter.Outcome.Exhausted -> {
+                    emitRemainingBudget(env, jobId, amount, transport)
+                    val error = ARCPException.BudgetExhausted(counted.currency.code, jobId)
+                    transport.send(nack(env, error))
+                }
+                is BudgetCounter.Outcome.Rejected -> {
+                    emitRemainingBudget(env, jobId, amount, transport)
+                    val error = ARCPException.BudgetExhausted(counted.currency.code, jobId)
+                    transport.send(nack(env, error))
+                }
             }
         }
     }
@@ -375,10 +439,17 @@ public class ARCPRuntime(
         jobInventory.updateStatus(jobId, status)
         budgets.terminate(jobId)
         jobs.remove(jobId)
-        val provisioner = credentialProvisioner ?: return
-        credentialStore.outstanding(jobId).forEach { credential ->
-            revokeWithRetry(provisioner, credential)
+        val provisioner = credentialProvisioner
+        if (provisioner != null) {
+            credentialStore.outstanding(jobId).forEach { credential ->
+                revokeWithRetry(provisioner, credential)
+            }
         }
+        // Drop the inventory record once events have drained — long-lived
+        // runtimes that accept many short jobs cannot afford an unbounded
+        // in-memory inventory (#60). Implementations that want to retain
+        // terminal jobs for replay should override JobInventory.evict.
+        if (evictTerminalJobs) jobInventory.evict(jobId)
     }
 
     private suspend fun revokeWithRetry(
@@ -390,9 +461,27 @@ public class ARCPRuntime(
                 provisioner.revoke(credential.id)
                 credentialStore.remove(credential.id)
                 return
-            } catch (e: IOException) {
-                if (attempt == REVOKE_ATTEMPTS - 1) {
-                    log.warn(e) { "credential revocation failed for ${credential.id}" }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (
+                @Suppress("TooGenericExceptionCaught") e: Exception,
+            ) {
+                val final = attempt == REVOKE_ATTEMPTS - 1
+                if (final) {
+                    log.warn(e) {
+                        "credential revocation failed for ${credential.id.value} after " +
+                            "${REVOKE_ATTEMPTS} attempts"
+                    }
+                } else {
+                    log.warn(e) {
+                        "credential revocation attempt ${attempt + 1}/$REVOKE_ATTEMPTS " +
+                            "failed for ${credential.id.value}"
+                    }
+                    val backoffMs = min(
+                        REVOKE_BACKOFF_INITIAL_MS * REVOKE_BACKOFF_BASE.pow(attempt).toLong(),
+                        REVOKE_BACKOFF_CAP_MS,
+                    )
+                    delay(backoffMs.milliseconds)
                 }
             }
         }
@@ -713,5 +802,8 @@ public class ARCPRuntime(
         public val DEFAULT_SESSION_LEASE: Duration = 1.hours
 
         private const val REVOKE_ATTEMPTS: Int = 3
+        private const val REVOKE_BACKOFF_INITIAL_MS: Long = 250L
+        private const val REVOKE_BACKOFF_BASE: Double = 2.0
+        private const val REVOKE_BACKOFF_CAP_MS: Long = 5_000L
     }
 }

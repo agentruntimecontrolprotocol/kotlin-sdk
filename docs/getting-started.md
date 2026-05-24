@@ -21,9 +21,14 @@ are declared as `api` dependencies and are pulled in automatically.
 
 ## Minimal example
 
-The snippet below opens a session, submits a job, and closes cleanly.
-It uses `MemoryTransport` — the same transport the integration tests use;
-swap it for `WebSocketTransport` or `StdioTransport` in production.
+The snippet below pairs a client and runtime over `MemoryTransport`,
+registers one agent, opens a session, submits a job, and closes
+cleanly. It is the same shape the integration tests use and runs
+end-to-end as written.
+
+`MemoryTransport` is the only transport on the v0.1 public API surface
+(`dev.arcp.transport.Transport`); the WebSocket and stdio transports
+referenced elsewhere in the docs are planned for a future SDK release.
 
 ```kotlin
 import dev.arcp.client.ARCPClient
@@ -31,18 +36,22 @@ import dev.arcp.messages.Capabilities
 import dev.arcp.runtime.ARCPRuntime
 import dev.arcp.runtime.AgentRegistry
 import dev.arcp.transport.MemoryTransport
+import dev.arcp.auth.StaticBearerAuth
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     // 1. Paired in-memory transport (client ↔ runtime).
     val (clientTransport, runtimeTransport) = MemoryTransport.pair()
 
-    // 2. Runtime with one registered agent.
+    // 2. Runtime with one registered agent. The bearer auth on both
+    //    sides must agree — here the runtime maps "my-token" to a
+    //    principal name, and the client carries the same token.
     val registry = AgentRegistry()
     registry.register("summarise", "1.0.0", default = true)
     val runtime = ARCPRuntime(
         supportedCapabilities = Capabilities(streaming = true),
         agentRegistry = registry,
+        bearerAuth = StaticBearerAuth(mapOf("my-token" to "quickstart")),
     )
 
     // 3. Let the runtime accept the connection in the background.
@@ -90,5 +99,5 @@ cd kotlin-sdk
 ## Next steps
 
 - [Architecture](architecture.md) — understand the layering before writing more code
-- [Transports](transports.md) — connect over WebSocket or stdio
+- [Transports](transports.md) — currently only `MemoryTransport` is public; WebSocket/stdio are planned
 - [Guides](README.md#guides) — deep-dives on sessions, jobs, leases, and more

@@ -1,6 +1,6 @@
 # ARCP Kotlin Samples
 
-Fourteen single-purpose programs, each named for the protocol
+Thirteen single-purpose programs, each named for the protocol
 primitive it demonstrates.
 
 > **Illustrative, not runnable.** Each example imports from the
@@ -28,7 +28,6 @@ primitive it demonstrates.
 | [`resumability/`](./src/main/kotlin/com/arcp/samples/resumability) | Crash and resume via `exitProcess(137)` + `resume` envelope. | §10, §19, §6.4 |
 | [`reasoning_streams/`](./src/main/kotlin/com/arcp/samples/reasoningstreams) | `kind: thought` stream + a peer runtime that subscribes and delegates critiques back. | §11.4, §13, §14 |
 | [`extensions/`](./src/main/kotlin/com/arcp/samples/extensions) | Custom `arcpx.sdr.*.v1` extension namespace with correct unknown-message handling. | §21 |
-| [`human_input/`](./src/main/kotlin/com/arcp/samples/humaninput) | `human.input.request` fanned across phone/email/Slack; first-wins resolution. | §12 |
 | [`cancellation/`](./src/main/kotlin/com/arcp/samples/cancellation) | Cooperative `cancel` (terminate) vs `interrupt` (pause and ask). | §10.4–§10.5 |
 | [`mcp/`](./src/main/kotlin/com/arcp/samples/mcp) | ARCP runtime fronting an MCP server: `tool.invoke` → MCP `call_tool`. | §20 |
 

@@ -5,10 +5,15 @@ import dev.arcp.messages.AgentDescriptor
 import dev.arcp.messages.AgentRef
 import java.util.concurrent.ConcurrentHashMap
 
-/** Runtime registry for versioned agents advertised in session capabilities. */
+/**
+ * Runtime registry for versioned agents advertised in session capabilities.
+ *
+ * Each agent's version map is held as an immutable [Map] updated through
+ * [ConcurrentHashMap.compute], so [resolve] and [descriptors] never
+ * observe a half-written entry while [register] is in progress.
+ */
 public class AgentRegistry {
-    private val versions: ConcurrentHashMap<String, MutableMap<String, Boolean>> =
-        ConcurrentHashMap()
+    private val versions: ConcurrentHashMap<String, Map<String, Boolean>> = ConcurrentHashMap()
 
     /** Registers an agent version and optionally marks it as the default. */
     public fun register(
@@ -17,11 +22,19 @@ public class AgentRegistry {
         default: Boolean = false,
     ) {
         val ref = AgentRef(name, version)
-        val registered = versions.computeIfAbsent(ref.name) { linkedMapOf() }
-        if (default) {
-            registered.keys.forEach { registered[it] = false }
+        val versionKey = ref.version ?: version
+        versions.compute(ref.name) { _, existing ->
+            val cleared =
+                if (default) {
+                    existing?.mapValues { false } ?: emptyMap()
+                } else {
+                    existing ?: emptyMap()
+                }
+            // Preserve insertion order via LinkedHashMap so descriptors() is stable.
+            val next = LinkedHashMap(cleared)
+            next[versionKey] = default
+            next
         }
-        registered[ref.version ?: version] = default
     }
 
     /** Resolves a bare or pinned reference to an available concrete version. */

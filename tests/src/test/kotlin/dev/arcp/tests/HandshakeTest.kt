@@ -77,7 +77,10 @@ class HandshakeTest :
             }
         }
 
-        "client requesting unsupported extension is rejected" {
+        "client advertising an unknown vendor extension is accepted (#57)" {
+            // Per RFC §21 vendor extensions are optional unless required. The
+            // runtime must drop unknown extensions from the negotiated set
+            // rather than rejecting the entire session.
             runTest {
                 val (clientTransport, serverTransport) = MemoryTransport.pair()
                 val runtime =
@@ -94,7 +97,10 @@ class HandshakeTest :
                         capabilities = Capabilities(extensions = listOf("arcpx.acme.cache.v1")),
                     )
                 client.use {
-                    shouldThrow<ARCPException.Unimplemented> { client.open() }
+                    val accepted = client.open()
+                    accepted.sessionId shouldNotBe null
+                    // The unknown extension is dropped from the negotiated set.
+                    accepted.capabilities.extensions shouldBe emptyList()
                 }
                 runtime.close()
             }

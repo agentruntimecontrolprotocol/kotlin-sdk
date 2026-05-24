@@ -10,10 +10,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("permission.request")
 public data class PermissionRequest(
+    /** Permission name (`fs.read`, `tool.call`, ...). */
     val permission: PermissionName,
+    /** Resource the permission applies to. */
     val resource: String,
+    /** Optional operation hint (e.g. `read`, `write`, `delete`). */
     val operation: String? = null,
+    /** Optional human-readable rationale shown to a reviewer. */
     val reason: String? = null,
+    /** Desired lease duration; the grantor may shorten or override. */
     @SerialName("requested_lease_seconds")
     val requestedLeaseSeconds: Long? = null,
 ) : MessageType
@@ -22,8 +27,11 @@ public data class PermissionRequest(
 @Serializable
 @SerialName("permission.grant")
 public data class PermissionGrant(
+    /** Permission being granted. */
     val permission: PermissionName,
+    /** Resource the grant applies to. */
     val resource: String,
+    /** Actual lease duration; null means "as requested". */
     @SerialName("lease_seconds")
     val leaseSeconds: Long? = null,
 ) : MessageType
@@ -32,8 +40,11 @@ public data class PermissionGrant(
 @Serializable
 @SerialName("permission.deny")
 public data class PermissionDeny(
+    /** Permission denied. */
     val permission: PermissionName,
+    /** Resource denied. */
     val resource: String,
+    /** Optional reason surfaced to the requester. */
     val reason: String? = null,
 ) : MessageType
 
@@ -41,11 +52,16 @@ public data class PermissionDeny(
 @Serializable
 @SerialName("lease.granted")
 public data class LeaseGranted(
+    /** Server-assigned lease id. */
     @SerialName("lease_id")
     val leaseId: LeaseId,
+    /** Permission the lease grants. */
     val permission: PermissionName,
+    /** Resource the lease applies to. */
     val resource: String,
+    /** Optional operation hint (`read`, `write`, ...). */
     val operation: String? = null,
+    /** Absolute expiry timestamp. */
     @SerialName("expires_at")
     val expiresAt: Instant,
 ) : MessageType
@@ -54,8 +70,10 @@ public data class LeaseGranted(
 @Serializable
 @SerialName("lease.refresh")
 public data class LeaseRefresh(
+    /** Lease to extend. */
     @SerialName("lease_id")
     val leaseId: LeaseId,
+    /** Desired additional duration; the grantor may shorten. */
     @SerialName("requested_extension_seconds")
     val requestedExtensionSeconds: Long? = null,
 ) : MessageType
@@ -64,8 +82,10 @@ public data class LeaseRefresh(
 @Serializable
 @SerialName("lease.extended")
 public data class LeaseExtended(
+    /** Lease that was extended. */
     @SerialName("lease_id")
     val leaseId: LeaseId,
+    /** New absolute expiry. */
     @SerialName("expires_at")
     val expiresAt: Instant,
 ) : MessageType
@@ -74,7 +94,9 @@ public data class LeaseExtended(
 @Serializable
 @SerialName("lease.revoked")
 public data class LeaseRevoked(
+    /** Lease that was revoked. */
     @SerialName("lease_id")
     val leaseId: LeaseId,
+    /** Reason surfaced to the holder. */
     val reason: String,
 ) : MessageType
