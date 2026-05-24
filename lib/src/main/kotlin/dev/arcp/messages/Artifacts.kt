@@ -11,13 +11,19 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public data class ArtifactRefSpec(
+    /** Server-assigned id; opaque to the client. */
     @SerialName("artifact_id")
     val artifactId: ArtifactId,
+    /** Canonical fetch URI (e.g. `arcp://session/.../artifact/...`). */
     val uri: String,
+    /** MIME type of the payload. */
     @SerialName("media_type")
     val mediaType: String,
+    /** Size in bytes. */
     val size: Long,
+    /** Lowercase hex SHA-256 of the body, or `null` if not computed. */
     val sha256: String? = null,
+    /** Optional expiry deadline; readers must treat past-expiry artifacts as missing. */
     @SerialName("expires_at")
     val expiresAt: Instant? = null,
 )

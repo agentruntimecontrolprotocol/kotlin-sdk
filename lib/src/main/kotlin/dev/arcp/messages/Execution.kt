@@ -15,7 +15,9 @@ import kotlinx.serialization.json.JsonObject
 @Serializable
 @SerialName("tool.invoke")
 public data class ToolInvoke(
+    /** Fully-qualified tool name. */
     val tool: ToolName,
+    /** Tool-specific argument object. Opaque to the protocol. */
     val arguments: JsonObject = JsonObject(emptyMap()),
 ) : MessageType
 
@@ -23,7 +25,9 @@ public data class ToolInvoke(
 @Serializable
 @SerialName("tool.result")
 public data class ToolResult(
+    /** Inline result; mutually exclusive with [resultRef]. */
     val value: JsonElement? = null,
+    /** Artifact pointer for large results (RFC §16). */
     @SerialName("result_ref")
     val resultRef: JsonElement? = null,
 ) : MessageType
@@ -32,10 +36,15 @@ public data class ToolResult(
 @Serializable
 @SerialName("tool.error")
 public data class ToolError(
+    /** Canonical error code. */
     val code: ErrorCode,
+    /** Human-readable message. */
     val message: String,
+    /** `true` when the caller may safely retry. */
     val retryable: Boolean? = null,
+    /** Structured error context. */
     val details: JsonElement? = null,
+    /** Underlying upstream error, when one is available. */
     val cause: JsonElement? = null,
 ) : MessageType
 

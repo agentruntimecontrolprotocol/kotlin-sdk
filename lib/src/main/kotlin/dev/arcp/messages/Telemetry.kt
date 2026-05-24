@@ -33,8 +33,10 @@ public enum class LogLevel {
 @Serializable
 @SerialName("event.emit")
 public data class EventEmit(
+    /** Application-defined event name; namespaced per RFC §21 when vendor-specific. */
     @SerialName("event_type")
     val eventType: String,
+    /** Free-form structured payload. */
     val data: JsonObject = JsonObject(emptyMap()),
 ) : MessageType
 
@@ -42,12 +44,25 @@ public data class EventEmit(
 @Serializable
 @SerialName("log")
 public data class Log(
+    /** Severity level. */
     val level: LogLevel,
+    /** Human-readable message. */
     val message: String,
+    /** Structured attributes (key/value bag). */
     val attributes: JsonObject = JsonObject(emptyMap()),
 ) : MessageType
 
-/** `metric` — telemetry sample (RFC §17.3). */
+/**
+ * `metric` — telemetry sample (RFC §17.3).
+ *
+ * @property name Metric name; use [StandardMetrics] constants where possible
+ *   and namespace per RFC §21 otherwise.
+ * @property value Numeric or string value. The wire form is a JSON primitive
+ *   so non-numeric metrics (e.g. error codes) round-trip without coercion.
+ * @property unit Unit string ("USD", "ms", "tokens", ...). Non-nullable on
+ *   the wire — emitters must always set it.
+ * @property dims Optional dimension/label map, e.g. `{"phase": "exec"}`.
+ */
 @Serializable
 @SerialName("metric")
 public data class Metric(
@@ -61,13 +76,19 @@ public data class Metric(
 @Serializable
 @SerialName("trace.span")
 public data class TraceSpan(
+    /** Span name. */
     val name: String,
+    /** Optional span kind (`client`, `server`, `internal`, ...). */
     val kind: String? = null,
+    /** Wall-clock start time. */
     @SerialName("started_at")
     val startedAt: Instant,
+    /** Wall-clock end time, when the span has closed. */
     @SerialName("ended_at")
     val endedAt: Instant? = null,
+    /** Structured span attributes. */
     val attributes: JsonObject = JsonObject(emptyMap()),
+    /** Optional list of span events; opaque JSON to the SDK. */
     val events: JsonElement? = null,
 ) : MessageType
 

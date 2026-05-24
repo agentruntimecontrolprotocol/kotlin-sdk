@@ -11,12 +11,15 @@ public abstract interface class dev/arcp/auth/BearerAuth {
 
 public final class dev/arcp/auth/JwtAuth {
 	public static final field Companion Ldev/arcp/auth/JwtAuth$Companion;
-	public fun <init> (Lcom/nimbusds/jose/JWSVerifier;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/nimbusds/jose/JWSVerifier;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/nimbusds/jose/JWSVerifier;Ljava/lang/String;Ljava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun verify (Ljava/lang/String;)Ljava/lang/String;
 }
 
 public final class dev/arcp/auth/JwtAuth$Companion {
-	public final fun hmac ([BLjava/lang/String;)Ldev/arcp/auth/JwtAuth;
+	public final fun getDEFAULT_CLOCK_SKEW-UwyO8pc ()J
+	public final fun hmac-Wn2Vu4Y ([BLjava/lang/String;Ljava/lang/String;J)Ldev/arcp/auth/JwtAuth;
+	public static synthetic fun hmac-Wn2Vu4Y$default (Ldev/arcp/auth/JwtAuth$Companion;[BLjava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Ldev/arcp/auth/JwtAuth;
 }
 
 public final class dev/arcp/auth/StaticBearerAuth : dev/arcp/auth/BearerAuth {
@@ -91,7 +94,7 @@ public final class dev/arcp/credentials/Credential {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/credentials/Credential$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/credentials/Credential$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/credentials/Credential$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/credentials/Credential;
@@ -124,7 +127,7 @@ public final class dev/arcp/credentials/CredentialConstraints {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/credentials/CredentialConstraints$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/credentials/CredentialConstraints$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/credentials/CredentialConstraints$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/credentials/CredentialConstraints;
@@ -154,7 +157,7 @@ public final class dev/arcp/credentials/CredentialId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/credentials/CredentialId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/credentials/CredentialId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/credentials/CredentialId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -541,7 +544,7 @@ public final class dev/arcp/ids/ArtifactId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/ArtifactId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/ArtifactId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/ArtifactId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -572,7 +575,7 @@ public final class dev/arcp/ids/IdempotencyKey {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/IdempotencyKey$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/IdempotencyKey$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/IdempotencyKey$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -602,7 +605,7 @@ public final class dev/arcp/ids/JobId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/JobId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/JobId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/JobId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -633,7 +636,7 @@ public final class dev/arcp/ids/LeaseId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/LeaseId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/LeaseId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/LeaseId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -664,7 +667,7 @@ public final class dev/arcp/ids/MessageId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/MessageId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/MessageId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/MessageId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -695,7 +698,7 @@ public final class dev/arcp/ids/PermissionName {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/PermissionName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/PermissionName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/PermissionName$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -725,7 +728,7 @@ public final class dev/arcp/ids/SessionId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/SessionId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/SessionId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/SessionId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -756,7 +759,7 @@ public final class dev/arcp/ids/SpanId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/SpanId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/SpanId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/SpanId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -787,7 +790,7 @@ public final class dev/arcp/ids/StreamId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/StreamId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/StreamId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/StreamId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -818,7 +821,7 @@ public final class dev/arcp/ids/SubscriptionId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/SubscriptionId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/SubscriptionId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/SubscriptionId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -849,7 +852,7 @@ public final class dev/arcp/ids/ToolName {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/ToolName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/ToolName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/ToolName$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -879,7 +882,7 @@ public final class dev/arcp/ids/TraceId {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/ids/TraceId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/ids/TraceId$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/ids/TraceId$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -954,12 +957,48 @@ public final class dev/arcp/lease/BudgetCounter$Outcome$Ok : dev/arcp/lease/Budg
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class dev/arcp/lease/BudgetCounter$Outcome$Rejected : dev/arcp/lease/BudgetCounter$Outcome {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/math/BigDecimal;Ljava/math/BigDecimal;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-S_UYvFw ()Ljava/lang/String;
+	public final fun component2 ()Ljava/math/BigDecimal;
+	public final fun component3 ()Ljava/math/BigDecimal;
+	public final fun copy-w_8BWxE (Ljava/lang/String;Ljava/math/BigDecimal;Ljava/math/BigDecimal;)Ldev/arcp/lease/BudgetCounter$Outcome$Rejected;
+	public static synthetic fun copy-w_8BWxE$default (Ldev/arcp/lease/BudgetCounter$Outcome$Rejected;Ljava/lang/String;Ljava/math/BigDecimal;Ljava/math/BigDecimal;ILjava/lang/Object;)Ldev/arcp/lease/BudgetCounter$Outcome$Rejected;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvailable ()Ljava/math/BigDecimal;
+	public final fun getCurrency-S_UYvFw ()Ljava/lang/String;
+	public final fun getRequested ()Ljava/math/BigDecimal;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class dev/arcp/lease/BudgetRegistry {
 	public fun <init> ()V
-	public final fun consume-tBvcXsc (Ljava/lang/String;Ldev/arcp/lease/BudgetAmount;)Ldev/arcp/lease/BudgetCounter$Outcome;
+	public final fun consume-tBvcXsc (Ljava/lang/String;Ldev/arcp/lease/BudgetAmount;)Ldev/arcp/lease/BudgetRegistry$Outcome;
 	public final fun register-tBvcXsc (Ljava/lang/String;Ldev/arcp/lease/CostBudget;)V
 	public final fun remaining-2ATt4A4 (Ljava/lang/String;)Ldev/arcp/lease/CostBudget;
 	public final fun terminate-2ATt4A4 (Ljava/lang/String;)V
+}
+
+public abstract interface class dev/arcp/lease/BudgetRegistry$Outcome {
+}
+
+public final class dev/arcp/lease/BudgetRegistry$Outcome$Counted : dev/arcp/lease/BudgetRegistry$Outcome {
+	public fun <init> (Ldev/arcp/lease/BudgetCounter$Outcome;)V
+	public final fun component1 ()Ldev/arcp/lease/BudgetCounter$Outcome;
+	public final fun copy (Ldev/arcp/lease/BudgetCounter$Outcome;)Ldev/arcp/lease/BudgetRegistry$Outcome$Counted;
+	public static synthetic fun copy$default (Ldev/arcp/lease/BudgetRegistry$Outcome$Counted;Ldev/arcp/lease/BudgetCounter$Outcome;ILjava/lang/Object;)Ldev/arcp/lease/BudgetRegistry$Outcome$Counted;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOutcome ()Ldev/arcp/lease/BudgetCounter$Outcome;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/arcp/lease/BudgetRegistry$Outcome$Unregistered : dev/arcp/lease/BudgetRegistry$Outcome {
+	public static final field INSTANCE Ldev/arcp/lease/BudgetRegistry$Outcome$Unregistered;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/arcp/lease/CostBudget {
@@ -989,7 +1028,7 @@ public final class dev/arcp/lease/Currency {
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/lease/Currency$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/lease/Currency$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/lease/Currency$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -1039,7 +1078,7 @@ public final class dev/arcp/messages/Ack : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Ack$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Ack$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Ack$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Ack;
@@ -1071,7 +1110,7 @@ public final class dev/arcp/messages/AgentDelegate : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/AgentDelegate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/AgentDelegate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/AgentDelegate$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/AgentDelegate;
@@ -1103,7 +1142,7 @@ public final class dev/arcp/messages/AgentDescriptor {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/AgentDescriptor$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/AgentDescriptor$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/AgentDescriptor$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/AgentDescriptor;
@@ -1139,7 +1178,7 @@ public final class dev/arcp/messages/AgentHandoff : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/AgentHandoff$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/AgentHandoff$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/AgentHandoff$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/AgentHandoff;
@@ -1187,7 +1226,7 @@ public final class dev/arcp/messages/ArtifactFetch : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ArtifactFetch$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ArtifactFetch$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ArtifactFetch$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ArtifactFetch;
@@ -1225,7 +1264,7 @@ public final class dev/arcp/messages/ArtifactPut : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ArtifactPut$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ArtifactPut$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ArtifactPut$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ArtifactPut;
@@ -1255,7 +1294,7 @@ public final class dev/arcp/messages/ArtifactRefMessage : dev/arcp/messages/Mess
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ArtifactRefMessage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ArtifactRefMessage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ArtifactRefMessage$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ArtifactRefMessage;
@@ -1293,7 +1332,7 @@ public final class dev/arcp/messages/ArtifactRefSpec {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ArtifactRefSpec$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ArtifactRefSpec$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ArtifactRefSpec$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ArtifactRefSpec;
@@ -1320,7 +1359,7 @@ public final class dev/arcp/messages/ArtifactRelease : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ArtifactRelease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ArtifactRelease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ArtifactRelease$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ArtifactRelease;
@@ -1352,7 +1391,7 @@ public final class dev/arcp/messages/Auth {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Auth$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Auth$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Auth$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Auth;
@@ -1402,7 +1441,7 @@ public final class dev/arcp/messages/Backpressure : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Backpressure$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Backpressure$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Backpressure$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Backpressure;
@@ -1436,7 +1475,7 @@ public final class dev/arcp/messages/Cancel : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Cancel$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Cancel$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Cancel$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Cancel;
@@ -1463,7 +1502,7 @@ public final class dev/arcp/messages/CancelAccepted : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/CancelAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/CancelAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/CancelAccepted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/CancelAccepted;
@@ -1492,7 +1531,7 @@ public final class dev/arcp/messages/CancelRefused : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/CancelRefused$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/CancelRefused$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/CancelRefused$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/CancelRefused;
@@ -1568,7 +1607,7 @@ public final class dev/arcp/messages/Capabilities {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Capabilities$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Capabilities$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Capabilities$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Capabilities;
@@ -1598,7 +1637,7 @@ public final class dev/arcp/messages/CheckpointCreate : dev/arcp/messages/Messag
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/CheckpointCreate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/CheckpointCreate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/CheckpointCreate$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/CheckpointCreate;
@@ -1630,7 +1669,7 @@ public final class dev/arcp/messages/CheckpointRestore : dev/arcp/messages/Messa
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/CheckpointRestore$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/CheckpointRestore$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/CheckpointRestore$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/CheckpointRestore;
@@ -1664,7 +1703,7 @@ public final class dev/arcp/messages/ClientInfo {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ClientInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ClientInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ClientInfo$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ClientInfo;
@@ -1694,7 +1733,7 @@ public final class dev/arcp/messages/EventEmit : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/EventEmit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/EventEmit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/EventEmit$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/EventEmit;
@@ -1738,7 +1777,7 @@ public final class dev/arcp/messages/Interrupt : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Interrupt$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Interrupt$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Interrupt$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Interrupt;
@@ -1772,7 +1811,7 @@ public final class dev/arcp/messages/JobAccepted : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobAccepted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobAccepted;
@@ -1803,7 +1842,7 @@ public final class dev/arcp/messages/JobCancelled : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobCancelled$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobCancelled$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobCancelled$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobCancelled;
@@ -1835,7 +1874,7 @@ public final class dev/arcp/messages/JobCheckpoint : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobCheckpoint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobCheckpoint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobCheckpoint$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobCheckpoint;
@@ -1866,7 +1905,7 @@ public final class dev/arcp/messages/JobCompleted : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobCompleted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobCompleted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobCompleted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobCompleted;
@@ -1900,7 +1939,7 @@ public final class dev/arcp/messages/JobFailed : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobFailed$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobFailed$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobFailed$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobFailed;
@@ -1931,7 +1970,7 @@ public final class dev/arcp/messages/JobHeartbeat : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobHeartbeat$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobHeartbeat$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobHeartbeat$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobHeartbeat;
@@ -1994,7 +2033,7 @@ public final class dev/arcp/messages/JobListEntry {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobListEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobListEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobListEntry$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListEntry;
@@ -2029,7 +2068,7 @@ public final class dev/arcp/messages/JobListFilter {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobListFilter$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobListFilter$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobListFilter$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListFilter;
@@ -2060,7 +2099,7 @@ public final class dev/arcp/messages/JobListLease {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobListLease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobListLease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobListLease$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobListLease;
@@ -2091,7 +2130,7 @@ public final class dev/arcp/messages/JobProgress : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobProgress$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobProgress$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobProgress$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobProgress;
@@ -2125,7 +2164,7 @@ public final class dev/arcp/messages/JobResult : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobResult$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobResult$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobResult$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobResult;
@@ -2160,7 +2199,7 @@ public final class dev/arcp/messages/JobResultChunk : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobResultChunk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobResultChunk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobResultChunk$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobResultChunk;
@@ -2189,7 +2228,7 @@ public final class dev/arcp/messages/JobSchedule : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobSchedule$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobSchedule$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobSchedule$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobSchedule;
@@ -2216,7 +2255,7 @@ public final class dev/arcp/messages/JobStarted : dev/arcp/messages/MessageType 
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobStarted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobStarted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobStarted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobStarted;
@@ -2246,7 +2285,7 @@ public final class dev/arcp/messages/JobStatusEvent : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobStatusEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobStatusEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobStatusEvent$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobStatusEvent;
@@ -2284,7 +2323,7 @@ public final class dev/arcp/messages/JobSubmit : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/JobSubmit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/JobSubmit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/JobSubmit$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/JobSubmit;
@@ -2313,7 +2352,7 @@ public final class dev/arcp/messages/LeaseExtended : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/LeaseExtended$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/LeaseExtended$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/LeaseExtended$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/LeaseExtended;
@@ -2349,7 +2388,7 @@ public final class dev/arcp/messages/LeaseGranted : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/LeaseGranted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/LeaseGranted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/LeaseGranted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/LeaseGranted;
@@ -2379,7 +2418,7 @@ public final class dev/arcp/messages/LeaseRefresh : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/LeaseRefresh$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/LeaseRefresh$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/LeaseRefresh$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/LeaseRefresh;
@@ -2408,7 +2447,7 @@ public final class dev/arcp/messages/LeaseRevoked : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/LeaseRevoked$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/LeaseRevoked$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/LeaseRevoked$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/LeaseRevoked;
@@ -2440,7 +2479,7 @@ public final class dev/arcp/messages/Log : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Log$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Log$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Log$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Log;
@@ -2499,7 +2538,7 @@ public final class dev/arcp/messages/Metric : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Metric$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Metric$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Metric$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Metric;
@@ -2535,7 +2574,7 @@ public final class dev/arcp/messages/Nack : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Nack$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Nack$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Nack$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Nack;
@@ -2567,7 +2606,7 @@ public final class dev/arcp/messages/PermissionDeny : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/PermissionDeny$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/PermissionDeny$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/PermissionDeny$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/PermissionDeny;
@@ -2599,7 +2638,7 @@ public final class dev/arcp/messages/PermissionGrant : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/PermissionGrant$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/PermissionGrant$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/PermissionGrant$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/PermissionGrant;
@@ -2635,7 +2674,7 @@ public final class dev/arcp/messages/PermissionRequest : dev/arcp/messages/Messa
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/PermissionRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/PermissionRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/PermissionRequest$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/PermissionRequest;
@@ -2664,7 +2703,7 @@ public final class dev/arcp/messages/Ping : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Ping$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Ping$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Ping$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Ping;
@@ -2693,7 +2732,7 @@ public final class dev/arcp/messages/Pong : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Pong$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Pong$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Pong$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Pong;
@@ -2742,7 +2781,7 @@ public final class dev/arcp/messages/Resume : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Resume$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Resume$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Resume$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Resume;
@@ -2776,7 +2815,7 @@ public final class dev/arcp/messages/RuntimeIdentity {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/RuntimeIdentity$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/RuntimeIdentity$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/RuntimeIdentity$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/RuntimeIdentity;
@@ -2810,7 +2849,7 @@ public final class dev/arcp/messages/SessionAccepted : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionAccepted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionAccepted;
@@ -2840,7 +2879,7 @@ public final class dev/arcp/messages/SessionAuthenticate : dev/arcp/messages/Mes
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionAuthenticate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionAuthenticate$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionAuthenticate$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionAuthenticate;
@@ -2872,7 +2911,7 @@ public final class dev/arcp/messages/SessionChallenge : dev/arcp/messages/Messag
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionChallenge$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionChallenge$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionChallenge$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionChallenge;
@@ -2901,7 +2940,7 @@ public final class dev/arcp/messages/SessionClose : dev/arcp/messages/MessageTyp
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionClose$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionClose$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionClose$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionClose;
@@ -2930,7 +2969,7 @@ public final class dev/arcp/messages/SessionEvicted : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionEvicted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionEvicted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionEvicted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionEvicted;
@@ -2962,7 +3001,7 @@ public final class dev/arcp/messages/SessionJobs : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionJobs$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionJobs;
@@ -2989,7 +3028,7 @@ public final class dev/arcp/messages/SessionLease {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionLease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionLease$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionLease$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionLease;
@@ -3023,7 +3062,7 @@ public final class dev/arcp/messages/SessionListJobs : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionListJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionListJobs$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionListJobs$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionListJobs;
@@ -3054,7 +3093,7 @@ public final class dev/arcp/messages/SessionOpen : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionOpen$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionOpen$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionOpen$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionOpen;
@@ -3085,7 +3124,7 @@ public final class dev/arcp/messages/SessionRefresh : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionRefresh$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionRefresh$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionRefresh$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionRefresh;
@@ -3114,7 +3153,7 @@ public final class dev/arcp/messages/SessionRejected : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionRejected$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionRejected$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionRejected$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionRejected;
@@ -3141,7 +3180,7 @@ public final class dev/arcp/messages/SessionUnauthenticated : dev/arcp/messages/
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SessionUnauthenticated$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SessionUnauthenticated$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SessionUnauthenticated$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SessionUnauthenticated;
@@ -3196,7 +3235,7 @@ public final class dev/arcp/messages/StreamChunk : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/StreamChunk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/StreamChunk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/StreamChunk$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/StreamChunk;
@@ -3225,7 +3264,7 @@ public final class dev/arcp/messages/StreamClose : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/StreamClose$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/StreamClose$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/StreamClose$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/StreamClose;
@@ -3254,7 +3293,7 @@ public final class dev/arcp/messages/StreamError : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/StreamError$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/StreamError$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/StreamError$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/StreamError;
@@ -3303,7 +3342,7 @@ public final class dev/arcp/messages/StreamOpen : dev/arcp/messages/MessageType 
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/StreamOpen$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/StreamOpen$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/StreamOpen$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/StreamOpen;
@@ -3333,7 +3372,7 @@ public final class dev/arcp/messages/Subscribe : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Subscribe$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Subscribe$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Subscribe$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Subscribe;
@@ -3360,7 +3399,7 @@ public final class dev/arcp/messages/SubscribeAccepted : dev/arcp/messages/Messa
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SubscribeAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SubscribeAccepted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SubscribeAccepted$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SubscribeAccepted;
@@ -3391,7 +3430,7 @@ public final class dev/arcp/messages/SubscribeClosed : dev/arcp/messages/Message
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SubscribeClosed$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SubscribeClosed$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SubscribeClosed$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SubscribeClosed;
@@ -3418,7 +3457,7 @@ public final class dev/arcp/messages/SubscribeEvent : dev/arcp/messages/MessageT
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SubscribeEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SubscribeEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SubscribeEvent$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SubscribeEvent;
@@ -3457,7 +3496,7 @@ public final class dev/arcp/messages/SubscriptionFilter {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SubscriptionFilter$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SubscriptionFilter$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SubscriptionFilter$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SubscriptionFilter;
@@ -3485,7 +3524,7 @@ public final class dev/arcp/messages/SubscriptionSince {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/SubscriptionSince$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/SubscriptionSince$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/SubscriptionSince$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/SubscriptionSince;
@@ -3521,7 +3560,7 @@ public final class dev/arcp/messages/ToolError : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ToolError$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ToolError$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ToolError$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ToolError;
@@ -3551,7 +3590,7 @@ public final class dev/arcp/messages/ToolInvoke : dev/arcp/messages/MessageType 
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ToolInvoke$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ToolInvoke$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ToolInvoke$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ToolInvoke;
@@ -3582,7 +3621,7 @@ public final class dev/arcp/messages/ToolResult : dev/arcp/messages/MessageType 
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/ToolResult$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/ToolResult$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/ToolResult$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/ToolResult;
@@ -3620,7 +3659,7 @@ public final class dev/arcp/messages/TraceSpan : dev/arcp/messages/MessageType {
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/TraceSpan$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/TraceSpan$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/TraceSpan$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/TraceSpan;
@@ -3662,7 +3701,7 @@ public final class dev/arcp/messages/Unsubscribe : dev/arcp/messages/MessageType
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/Unsubscribe$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/Unsubscribe$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/Unsubscribe$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/Unsubscribe;
@@ -3691,7 +3730,7 @@ public final class dev/arcp/messages/WorkflowComplete : dev/arcp/messages/Messag
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/WorkflowComplete$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/WorkflowComplete$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/WorkflowComplete$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/WorkflowComplete;
@@ -3721,7 +3760,7 @@ public final class dev/arcp/messages/WorkflowStart : dev/arcp/messages/MessageTy
 	public fun toString ()Ljava/lang/String;
 }
 
-public synthetic class dev/arcp/messages/WorkflowStart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class dev/arcp/messages/WorkflowStart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Ldev/arcp/messages/WorkflowStart$$serializer;
 	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ldev/arcp/messages/WorkflowStart;
@@ -3738,8 +3777,8 @@ public final class dev/arcp/messages/WorkflowStart$Companion {
 
 public final class dev/arcp/runtime/ARCPRuntime : java/lang/AutoCloseable {
 	public static final field Companion Ldev/arcp/runtime/ARCPRuntime$Companion;
-	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/arcp/messages/Capabilities;Ldev/arcp/messages/RuntimeIdentity;Ldev/arcp/auth/BearerAuth;Ldev/arcp/auth/JwtAuth;JLdev/arcp/runtime/AgentRegistry;Ldev/arcp/runtime/JobInventory;Ldev/arcp/lease/BudgetRegistry;Ldev/arcp/credentials/CredentialProvisioner;Ldev/arcp/credentials/CredentialStore;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun accept (Ldev/arcp/transport/Transport;)Lkotlinx/coroutines/Job;
 	public fun close ()V
 	public final fun evict-eGHAo4s (Ldev/arcp/transport/Transport;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -3868,20 +3907,46 @@ public final class dev/arcp/runtime/DefaultUpstreamErrorTranslator : dev/arcp/ru
 
 public final class dev/arcp/runtime/InMemoryJobInventory : dev/arcp/runtime/JobInventory {
 	public fun <init> ()V
+	public fun evict-2ATt4A4 (Ljava/lang/String;)Z
+	public final fun getSize ()I
 	public fun list-wZblZb4 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun record (Ldev/arcp/messages/JobListEntry;Ljava/lang/String;)V
 	public fun updateStatus-tBvcXsc (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public abstract interface class dev/arcp/runtime/JobInventory {
+	public fun evict-2ATt4A4 (Ljava/lang/String;)Z
 	public abstract fun list-wZblZb4 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListFilter;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun record (Ldev/arcp/messages/JobListEntry;Ljava/lang/String;)V
 	public abstract fun updateStatus-tBvcXsc (Ljava/lang/String;Ljava/lang/String;)V
 }
 
+public final class dev/arcp/runtime/JobInventory$DefaultImpls {
+	public static fun evict-2ATt4A4 (Ldev/arcp/runtime/JobInventory;Ljava/lang/String;)Z
+}
+
 public final class dev/arcp/runtime/ReservedEventKinds {
 	public static final field INSTANCE Ldev/arcp/runtime/ReservedEventKinds;
 	public final fun getALL ()Ljava/util/Set;
+}
+
+public final class dev/arcp/runtime/RuleBasedUpstreamErrorTranslator : dev/arcp/runtime/UpstreamErrorTranslator {
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> ([Ldev/arcp/runtime/RuleBasedUpstreamErrorTranslator$Rule;)V
+	public fun translate (Ljava/lang/Throwable;)Ldev/arcp/error/ARCPException;
+}
+
+public final class dev/arcp/runtime/RuleBasedUpstreamErrorTranslator$Rule {
+	public fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public final fun component1 ()Lkotlin/jvm/functions/Function1;
+	public final fun component2 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ldev/arcp/runtime/RuleBasedUpstreamErrorTranslator$Rule;
+	public static synthetic fun copy$default (Ldev/arcp/runtime/RuleBasedUpstreamErrorTranslator$Rule;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ldev/arcp/runtime/RuleBasedUpstreamErrorTranslator$Rule;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMapper ()Lkotlin/jvm/functions/Function1;
+	public final fun getPredicate ()Lkotlin/jvm/functions/Function1;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract class dev/arcp/runtime/SessionState {

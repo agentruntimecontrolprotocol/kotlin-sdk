@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.JsonElement
 import java.nio.file.Path
 import java.sql.Connection
@@ -23,20 +25,27 @@ private val log = KotlinLogging.logger {}
  * Append-only SQLite event log (RFC §6.4, §19).
  *
  * The log is globally ordered by an autoincrement sequence. Per-message
- * idempotency is enforced by a `UNIQUE (session_id, message_id)` constraint
- * — duplicate appends are detected and rejected as
- * [ARCPException.AlreadyExists]. The log also stores logical idempotency
+ * idempotency is enforced over `(COALESCE(session_id, ''), message_id)`,
+ * so duplicate appends are detected even for pre-session envelopes that
+ * carry a `null` session id (SQLite treats `NULL` values as distinct in
+ * a plain unique constraint). The log also stores logical idempotency
  * outcomes (RFC §6.4) and binary artifacts (RFC §16).
  *
- * All public APIs are `suspend` and dispatch JDBC work onto [Dispatchers.IO].
+ * All public APIs are `suspend` and dispatch JDBC work onto
+ * [Dispatchers.IO]. All access to the wrapped [Connection] is serialized
+ * through an internal [Mutex] — JDBC connections are not safe to use
+ * concurrently from multiple coroutines.
  */
 public class EventLog private constructor(
     private val connection: Connection,
 ) : AutoCloseable {
+    private val connectionLock: Mutex = Mutex()
+
     /**
      * Appends [envelope] to the log. Returns the assigned monotonic sequence
      * number. Re-appending an envelope with the same `(session_id, message_id)`
-     * raises [ARCPException.AlreadyExists].
+     * raises [ARCPException.AlreadyExists] — including for envelopes that
+     * carry a `null` session id.
      */
     public suspend fun append(envelope: Envelope): Long = withIo {
         try {
@@ -68,7 +77,7 @@ public class EventLog private constructor(
         ps: java.sql.PreparedStatement,
         envelope: Envelope,
     ) {
-        ps.setString(1, envelope.sessionId?.value)
+        ps.setString(1, envelope.sessionId?.value ?: NULL_SESSION_SENTINEL)
         ps.setString(2, envelope.id.value)
         ps.setString(3, envelope.type)
         ps.setString(4, envelope.timestamp.toString())
@@ -112,13 +121,15 @@ public class EventLog private constructor(
             WHERE session_id = ? AND seq > ?
             ORDER BY seq ASC
             """.trimIndent()
-        connection.prepareStatement(sql).use { ps ->
-            ps.setString(1, sessionId.value)
-            ps.setLong(2, cursorSeq)
-            ps.executeQuery().use { rs ->
-                while (rs.next()) {
-                    val body = rs.getString(1)
-                    emit(arcpJson.decodeFromString(Envelope.serializer(), body))
+        connectionLock.withLock {
+            connection.prepareStatement(sql).use { ps ->
+                ps.setString(1, sessionId.value)
+                ps.setLong(2, cursorSeq)
+                ps.executeQuery().use { rs ->
+                    while (rs.next()) {
+                        val body = rs.getString(1)
+                        emit(arcpJson.decodeFromString(Envelope.serializer(), body))
+                    }
                 }
             }
         }
@@ -218,7 +229,7 @@ public class EventLog private constructor(
 
     private suspend inline fun <T> withIo(crossinline block: () -> T): T =
         kotlinx.coroutines.withContext(Dispatchers.IO) {
-            block()
+            connectionLock.withLock { block() }
         }
 
     override fun close() {
@@ -232,6 +243,14 @@ public class EventLog private constructor(
     public companion object {
         /** Resource path of the embedded schema file. */
         public const val SCHEMA_RESOURCE: String = "/arcp/store/schema.sql"
+
+        /**
+         * Sentinel session id used in place of `NULL` for the uniqueness
+         * constraint on `(session_id, message_id)`. SQLite treats NULLs in
+         * a UNIQUE constraint as distinct, so pre-session envelopes would
+         * silently bypass idempotency without this substitution (#49).
+         */
+        private const val NULL_SESSION_SENTINEL: String = ""
 
         private val INSERT_ENVELOPE_SQL =
             """

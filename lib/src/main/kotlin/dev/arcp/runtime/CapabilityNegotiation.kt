@@ -10,6 +10,13 @@ import dev.arcp.messages.Capabilities
  * negotiated only if both parties advertise it. Required client features
  * the runtime does not support are returned in [unsupported] so the runtime
  * can reject the session.
+ *
+ * Vendor extensions (`arcpx.*`) are explicitly *not* included in
+ * [unsupported]: per RFC §21 unknown extensions are optional and the
+ * negotiated extension set is the intersection of both sides. A peer
+ * that *requires* an extension surface must request a corresponding
+ * boolean capability or send the extension's required messages, which
+ * will hit the `classifyUnknown`/`Nack` path at dispatch time.
  */
 public data class CapabilityNegotiation(
     val negotiated: Capabilities,
@@ -27,7 +34,6 @@ public fun negotiate(
 ): CapabilityNegotiation {
     val unsupported = mutableListOf<String>()
     val merged = mergeCapabilities(proposed, supported, unsupported)
-    unsupported += proposed.extensions - supported.extensions.toSet()
     return CapabilityNegotiation(merged, unsupported)
 }
 
@@ -61,12 +67,20 @@ private fun mergeCapabilities(
     )
 }
 
+/**
+ * Computes the negotiated `binary_encoding` list. The result is the
+ * intersection of both sides; if either side omitted the field entirely
+ * (i.e. carries the default `["base64"]`) the intersection naturally
+ * includes `base64`. Two peers that explicitly advertise disjoint,
+ * non-default lists return an empty list — the caller must then refuse
+ * features that require an encoding.
+ */
 private fun negotiateBinaryEncoding(
     proposed: Capabilities,
     supported: Capabilities,
 ): List<String> {
-    val both = supported.binaryEncoding.intersect(proposed.binaryEncoding.toSet())
-    return both.toList().ifEmpty { listOf("base64") }
+    val intersection = supported.binaryEncoding.intersect(proposed.binaryEncoding.toSet())
+    return intersection.toList()
 }
 
 private fun negotiateExtensions(

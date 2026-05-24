@@ -97,6 +97,22 @@ Two layers must pass before a PR merges:
 CI runs both on every PR. A PR that changes which feature flags the SDK
 negotiates must also update the README feature matrix in the same change.
 
+### Coverage
+
+The aggregate Kover coverage thresholds (line ≥ 75 %, branch ≥ 45 %) are
+enforced at the root level so `:lib` unit tests and the `:tests`
+integration suite both contribute to one report. Reproduce the
+measurement locally with:
+
+```sh
+./gradlew test koverXmlReport koverVerify
+```
+
+To raise (or temporarily relax) the floor without editing the build,
+pass `-Pkover.minLineCoverage=N` and/or `-Pkover.minBranchCoverage=N`.
+Ratchet the defaults up in `build.gradle.kts` as more of the runtime
+dispatch surface lands real tests.
+
 ## Coding standards
 
 This repo enforces formatting with ktlint, static analysis with detekt, and

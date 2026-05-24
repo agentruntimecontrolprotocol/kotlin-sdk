@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.detekt) apply false
-    alias(libs.plugins.kover) apply false
+    alias(libs.plugins.kover)
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.nmcp) apply false
     alias(libs.plugins.nmcp.aggregation)
@@ -77,4 +77,47 @@ nmcpAggregation {
 
 dependencies {
     nmcpAggregation(project(":lib"))
+}
+
+// ---------------------------------------------------------------------------
+// Kover aggregation: roll :lib unit tests and the :tests integration suite
+// into a single coverage report and enforce a floor on every CI run (#56).
+//
+// Thresholds: the floor is set to what `./gradlew test koverXmlReport
+// koverVerify` reports as the current measurement, so CI passes today and any
+// regression below the floor fails the build. Ratchet the numbers up as more
+// of the runtime dispatch surface lands real tests — `coverage.line.minimum`
+// and `coverage.branch.minimum` are the only knobs to touch.
+// ---------------------------------------------------------------------------
+dependencies {
+    kover(project(":lib"))
+    kover(project(":tests"))
+}
+
+kover {
+    reports {
+        verify {
+            rule {
+                groupBy = kotlinx.kover.gradle.plugin.dsl.GroupingEntityType.APPLICATION
+                bound {
+                    minValue = providers.gradleProperty("kover.minLineCoverage")
+                        .map { it.toInt() }
+                        .orElse(75)
+                    coverageUnits =
+                        kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                    aggregationForGroup =
+                        kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                }
+                bound {
+                    minValue = providers.gradleProperty("kover.minBranchCoverage")
+                        .map { it.toInt() }
+                        .orElse(45)
+                    coverageUnits =
+                        kotlinx.kover.gradle.plugin.dsl.CoverageUnit.BRANCH
+                    aggregationForGroup =
+                        kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE
+                }
+            }
+        }
+    }
 }

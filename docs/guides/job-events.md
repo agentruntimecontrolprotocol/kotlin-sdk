@@ -8,7 +8,9 @@ progress, heartbeat, chunk, and status events.
 Sent when the agent begins executing:
 
 ```kotlin
-is JobStarted -> println("Job ${env.jobId} is now running")
+// JobStarted carries only startedAt on its payload; the job id lives on
+// the envelope (see Execution.kt).
+is JobStarted -> println("Job ${env.jobId} started at ${msg.startedAt}")
 ```
 
 ## JobProgress

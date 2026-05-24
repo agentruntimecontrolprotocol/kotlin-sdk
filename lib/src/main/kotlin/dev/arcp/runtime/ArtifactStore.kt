@@ -11,9 +11,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -46,7 +50,18 @@ public class ArtifactStore private constructor(
     private val scope: CoroutineScope =
         CoroutineScope(supervisor + Dispatchers.IO + CoroutineName("arcp-artifacts"))
 
-    init {
+    /**
+     * Serializes all access to [connection]. JDBC connections are not
+     * safe to use concurrently from multiple coroutines, and the
+     * background sweep job races against caller [put]/[fetch]/[release]
+     * traffic.
+     *
+     * `adopt(connection)` callers must coordinate access to the shared
+     * connection with whatever other code uses it — this lock only
+     * covers calls made through *this* store.
+     */
+    private val connectionLock: Mutex = Mutex()
+    private val sweepJob: Job =
         scope.launch {
             while (isActive) {
                 delay(sweepInterval)
@@ -54,7 +69,6 @@ public class ArtifactStore private constructor(
                     .onFailure { log.warn(it) { "artifact sweep failed" } }
             }
         }
-    }
 
     /**
      * Persists [request] under its artifact id. Returns an [ArtifactRefSpec]
@@ -68,7 +82,7 @@ public class ArtifactStore private constructor(
         withContext(Dispatchers.IO) {
             val effectiveExpiry = computeExpiry(request.expiresAt)
             val sha256 = sha256Hex(request.data)
-            persistArtifact(request, effectiveExpiry, sha256)
+            connectionLock.withLock { persistArtifact(request, effectiveExpiry, sha256) }
             ArtifactRefSpec(
                 artifactId = request.artifactId,
                 uri = artifactUri(request.sessionId, request.artifactId),
@@ -144,6 +158,10 @@ public class ArtifactStore private constructor(
      * if the artifact is unknown or has expired.
      */
     public suspend fun fetch(artifactId: ArtifactId): ArtifactBody = withContext(Dispatchers.IO) {
+        connectionLock.withLock { fetchLocked(artifactId) }
+    }
+
+    private fun fetchLocked(artifactId: ArtifactId): ArtifactBody {
         val sql =
             """
             SELECT media_type, size_bytes, sha256, expires_at_iso, body_blob
@@ -152,33 +170,39 @@ public class ArtifactStore private constructor(
             """.trimIndent()
         connection.prepareStatement(sql).use { ps ->
             ps.setString(1, artifactId.value)
-            ps.executeQuery().use { rs ->
-                if (!rs.next()) {
-                    throw ARCPException.NotFound("artifact ${artifactId.value} not found")
-                }
-                val expiresIso = rs.getString(4)
-                val expires = expiresIso?.let(Instant::parse)
-                if (expires != null && expires < Clock.System.now()) {
-                    throw ARCPException.NotFound("artifact ${artifactId.value} expired")
-                }
-                ArtifactBody(
-                    artifactId = artifactId,
-                    mediaType = rs.getString(1),
-                    size = rs.getLong(2),
-                    sha256 = rs.getString(3),
-                    expiresAt = expires,
-                    bytes = rs.getBytes(5),
-                )
-            }
+            return ps.executeQuery().use { rs -> readArtifactBody(rs, artifactId) }
         }
+    }
+
+    private fun readArtifactBody(
+        rs: java.sql.ResultSet,
+        artifactId: ArtifactId,
+    ): ArtifactBody {
+        if (!rs.next()) {
+            throw ARCPException.NotFound("artifact ${artifactId.value} not found")
+        }
+        val expires = rs.getString(4)?.let(Instant::parse)
+        if (expires != null && expires < Clock.System.now()) {
+            throw ARCPException.NotFound("artifact ${artifactId.value} expired")
+        }
+        return ArtifactBody(
+            artifactId = artifactId,
+            mediaType = rs.getString(1),
+            size = rs.getLong(2),
+            sha256 = rs.getString(3),
+            expiresAt = expires,
+            bytes = rs.getBytes(5),
+        )
     }
 
     /** Deletes [artifactId]. Returns `true` if a row was removed. */
     public suspend fun release(artifactId: ArtifactId): Boolean = withContext(Dispatchers.IO) {
         val sql = "DELETE FROM arcp_artifact WHERE artifact_id = ?"
-        connection.prepareStatement(sql).use { ps ->
-            ps.setString(1, artifactId.value)
-            ps.executeUpdate() > 0
+        connectionLock.withLock {
+            connection.prepareStatement(sql).use { ps ->
+                ps.setString(1, artifactId.value)
+                ps.executeUpdate() > 0
+            }
         }
     }
 
@@ -191,13 +215,22 @@ public class ArtifactStore private constructor(
         val sql =
             "DELETE FROM arcp_artifact " +
                 "WHERE expires_at_iso IS NOT NULL AND expires_at_iso < ?"
-        connection.prepareStatement(sql).use { ps ->
-            ps.setString(1, now)
-            ps.executeUpdate()
+        connectionLock.withLock {
+            connection.prepareStatement(sql).use { ps ->
+                ps.setString(1, now)
+                ps.executeUpdate()
+            }
         }
     }
 
+    /**
+     * Cancels the background sweep and (when this store owns its
+     * connection) closes the JDBC connection. Waits for an in-flight
+     * sweep iteration to unwind before closing so it never runs against
+     * a closed connection.
+     */
     override fun close() {
+        runBlocking { sweepJob.cancelAndJoin() }
         scope.cancel()
         if (ownsConnection) {
             runCatching { connection.close() }

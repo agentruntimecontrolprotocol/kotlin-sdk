@@ -22,6 +22,13 @@ dependencies {
     runtimeOnly(libs.logback.classic)
 }
 
+// Each entry maps a Gradle task name to the sample's main class. The list is
+// the source of truth; the README is regenerated from these entries by hand.
+//
+// Invariant: every mainClass below must point to a source file under
+// `src/main/kotlin/...`. The init check enforces this so a sample cannot be
+// announced (and then fail at run time) when its source has been deleted —
+// see #55.
 val sampleClasses =
     mapOf(
         "runSubscriptions" to "com.arcp.samples.subscriptions.MainKt",
@@ -35,7 +42,6 @@ val sampleClasses =
         "runResumability" to "com.arcp.samples.resumability.MainKt",
         "runReasoningStreams" to "com.arcp.samples.reasoningstreams.MainKt",
         "runExtensions" to "com.arcp.samples.extensions.MainKt",
-        "runHumanInput" to "com.arcp.samples.humaninput.MainKt",
         "runCancellation" to "com.arcp.samples.cancellation.MainKt",
         "runMcp" to "com.arcp.samples.mcp.MainKt",
         "runListJobs" to "com.arcp.samples.listjobs.MainKt",
@@ -46,7 +52,18 @@ val sampleClasses =
         "runLitellmRecipe" to "com.arcp.samples.recipes.litellm.MainKt",
     )
 
+private fun classpathRelative(mainClassFqn: String): String {
+    val pkg = mainClassFqn.substringBeforeLast('.')
+    val cls = mainClassFqn.substringAfterLast('.').removeSuffix("Kt")
+    val pkgPath = pkg.replace('.', '/')
+    return "src/main/kotlin/$pkgPath/$cls.kt"
+}
+
 sampleClasses.forEach { (name, mainClassFqn) ->
+    val source = file(classpathRelative(mainClassFqn))
+    check(source.exists()) {
+        "sample task '$name' points to $mainClassFqn but ${source.relativeTo(rootDir)} is missing"
+    }
     tasks.register<JavaExec>(name) {
         group = "samples"
         description = "Run sample $name"

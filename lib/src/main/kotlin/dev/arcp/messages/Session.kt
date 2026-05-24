@@ -25,38 +25,65 @@ public enum class HeartbeatRecovery {
 /**
  * Negotiated capability set (RFC §7).
  *
- * Absent boolean fields default to `false` per §7, except `interrupt`,
- * which defaults to `true` for SDK ergonomics. The `extensions` list
- * advertises the namespaces accepted on this session (RFC §21.2).
+ * Absent boolean fields default to `false` per RFC §7. The single
+ * deliberate exception is [interrupt], which defaults to `true` for
+ * pause-and-ask ergonomics — a peer that intends to *opt out* must
+ * advertise `interrupt = false` explicitly. See RFC §10.5 for the
+ * interrupt semantics this aligns with.
+ *
+ * The `extensions` list advertises the vendor namespaces accepted on
+ * this session (RFC §21.2). Unknown extensions on the wire are
+ * silently dropped from the negotiated result and do not reject a
+ * session — unsupported *required* features still do.
  */
 @Serializable
 public data class Capabilities(
+    /** Streaming via `stream.*` / `result_chunk`. */
     val streaming: Boolean = false,
+    /** Jobs persist across transport disconnects (RFC §10). */
     @SerialName("durable_jobs")
     val durableJobs: Boolean = false,
+    /** `job.checkpoint` / resume from checkpoint (RFC §10). */
     val checkpoints: Boolean = false,
+    /** Sidecar binary frames (RFC §11.3). v0.1 supports inline base64 only. */
     @SerialName("binary_streams")
     val binaryStreams: Boolean = false,
+    /** `agent.handoff` between runtimes (RFC §14). */
     @SerialName("agent_handoff")
     val agentHandoff: Boolean = false,
+    /** Inline artifact references (RFC §16). */
     val artifacts: Boolean = false,
+    /** Read-only subscriptions to live jobs (RFC §13). */
     val subscriptions: Boolean = false,
+    /** `job.schedule` for deferred or recurring work (RFC §10.6). */
     @SerialName("scheduled_jobs")
     val scheduledJobs: Boolean = false,
+    /** Per-job credential issue/revoke (RFC §9.8). */
     @SerialName("provisioned_credentials")
     val provisionedCredentials: Boolean = false,
+    /** `model.use` lease enforcement (RFC §9.7). */
     @SerialName("model.use")
     val modelUse: Boolean = false,
+    /** Anonymous (`scheme = none`) sessions accepted. */
     val anonymous: Boolean = false,
-    /** Deliberately defaults to `true` for pause-and-ask ergonomics. */
+    /**
+     * Cooperative interrupt support (RFC §10.5). Deliberately defaults
+     * to `true` — see the class KDoc for the rationale. A peer that
+     * wants to opt out must advertise `interrupt = false` explicitly.
+     */
     val interrupt: Boolean = true,
+    /** Heartbeat cadence in seconds (RFC §10.3). */
     @SerialName("heartbeat_interval_seconds")
     val heartbeatIntervalSeconds: Int = DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
+    /** Heartbeat-recovery policy (RFC §10.3). */
     @SerialName("heartbeat_recovery")
     val heartbeatRecovery: HeartbeatRecovery = HeartbeatRecovery.FAIL,
+    /** Supported `binary` stream encodings (RFC §11.3). */
     @SerialName("binary_encoding")
     val binaryEncoding: List<String> = listOf("base64"),
+    /** Vendor extensions advertised (`arcpx.*`, RFC §21). */
     val extensions: List<String> = emptyList(),
+    /** Versioned agents this runtime exposes (RFC §7.5). */
     val agents: List<AgentDescriptor> = emptyList(),
 ) {
     public companion object {
@@ -87,26 +114,37 @@ public enum class AuthScheme {
 /** Credentials block on `session.open` (RFC §8.2). */
 @Serializable
 public data class Auth(
+    /** Authentication scheme used by [token]. */
     val scheme: AuthScheme,
+    /** Opaque token (bearer string, JWT, etc.). Required for non-`none` schemes. */
     val token: String? = null,
+    /** Optional client/runtime fingerprint, e.g. mTLS thumbprint. */
     val fingerprint: String? = null,
 )
 
 /** Client identity attestation (RFC §8.2). */
 @Serializable
 public data class ClientInfo(
+    /** Client SDK kind, e.g. `arcp-kotlin`. */
     val kind: String,
+    /** Client SDK version. */
     val version: String,
+    /** Optional transport-level fingerprint (mTLS, etc.). */
     val fingerprint: String? = null,
+    /** Optional principal hint; the runtime ultimately decides identity. */
     val principal: String? = null,
 )
 
 /** Runtime identity returned in `session.accepted` (RFC §8.3). */
 @Serializable
 public data class RuntimeIdentity(
+    /** Runtime kind, e.g. `arcp-kotlin-runtime`. */
     val kind: String,
+    /** Runtime SDK version. */
     val version: String,
+    /** Optional transport-level fingerprint, e.g. mTLS leaf SHA-256. */
     val fingerprint: String? = null,
+    /** Trust classification advertised to the client (RFC §15.3). */
     @SerialName("trust_level")
     val trustLevel: TrustLevel = TrustLevel.UNTRUSTED,
 )
