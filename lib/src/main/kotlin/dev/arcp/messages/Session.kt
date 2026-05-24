@@ -25,7 +25,8 @@ public enum class HeartbeatRecovery {
 /**
  * Negotiated capability set (RFC §7).
  *
- * Absent boolean fields default to `false` per §7. The `extensions` list
+ * Absent boolean fields default to `false` per §7, except `interrupt`,
+ * which defaults to `true` for SDK ergonomics. The `extensions` list
  * advertises the namespaces accepted on this session (RFC §21.2).
  */
 @Serializable
@@ -47,6 +48,7 @@ public data class Capabilities(
     @SerialName("model.use")
     val modelUse: Boolean = false,
     val anonymous: Boolean = false,
+    /** Deliberately defaults to `true` for pause-and-ask ergonomics. */
     val interrupt: Boolean = true,
     @SerialName("heartbeat_interval_seconds")
     val heartbeatIntervalSeconds: Int = DEFAULT_HEARTBEAT_INTERVAL_SECONDS,

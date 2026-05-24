@@ -173,7 +173,7 @@ client.receive().takeWhile { env ->
     when (val p = env.payload) {
         is JobStatusEvent  -> { println("status: ${p.phase} ${p.body}"); true }
         is JobProgress     -> { println("progress: ${p.percent}% ${p.message}"); true }
-        is Metric          -> { println("metric: ${p.name}=${p.value} ${p.unit ?: ""}"); true }
+        is Metric          -> { println("metric: ${p.name}=${p.value} ${p.unit}"); true }
         is JobResultChunk  -> { chunks.accept(p); true }
         is JobCompleted    -> { println("result: ${p.result}"); false }
         is JobFailed       -> { println("failed: ${p.code} ${p.message}"); false }
@@ -222,7 +222,7 @@ try {
     client.receive().collect { env ->
         val m = env.payload as? Metric ?: return@collect
         if (m.name == StandardMetrics.COST_BUDGET_REMAINING) {
-            println("budget remaining: ${m.value} ${m.unit ?: ""}")
+            println("budget remaining: ${m.value} ${m.unit}")
         }
     }
 } catch (e: ARCPException.BudgetExhausted) {

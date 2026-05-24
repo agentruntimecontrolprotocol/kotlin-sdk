@@ -6,7 +6,12 @@ import dev.arcp.messages.ResultChunkEncoding
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-/** Client-side accumulator for `result_chunk` streams (RFC v1.1 §8.4). */
+/**
+ * Client-side accumulator for `result_chunk` streams (RFC v1.1 §8.4).
+ *
+ * Not thread-safe: use one assembler per result stream and call [accept]
+ * from a single coroutine.
+ */
 public class ResultChunkAssembler(
     private val maxAssembledSize: Long = DEFAULT_MAX_ASSEMBLED_SIZE,
 ) {
