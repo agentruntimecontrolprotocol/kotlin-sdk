@@ -48,3 +48,6 @@ local.properties
 
 # Conformance pass discovery (per Kotlin conformance prompt)
 .claude/kotlin-conformance-discovery.md
+
+# Generated API docs (Dokka GFM output consumed by the www site at build time)
+docs/api/

@@ -23,6 +23,11 @@ kotlin {
 }
 
 dependencies {
+    // Dokka GFM plugin — emit GitHub-flavored Markdown for the www site,
+    // which ingests <lang>-sdk/docs/**/*.md at build time. Output lands in
+    // kotlin-sdk/docs/api/ (see the dokka {} block below).
+    dokkaPlugin("org.jetbrains.dokka:gfm-plugin:${libs.versions.dokka.get()}")
+
     api(libs.kotlinx.coroutines.core)
     api(libs.kotlinx.serialization.json)
     api(libs.kotlinx.datetime)
@@ -49,6 +54,22 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+// ---------------------------------------------------------------------------
+// Dokka GFM configuration. The www site at /Users/nficano/code/arpc/www
+// reads <lang>-sdk/docs/**/*.md at build time, so we redirect the Markdown
+// output to ../docs/api/ (kotlin-sdk/docs/api/). The HTML publication is
+// disabled because dokka-gfm-plugin and Dokka's default HTML plugin both
+// register a `locationProvider` extension, which produces a
+// "Conflicting overrides" error if both run in the same generate task.
+// Regenerate with: `./gradlew :lib:dokkaGenerate` (or `make docs-api`).
+// ---------------------------------------------------------------------------
+dokka {
+    moduleName.set("arcp")
+    dokkaPublications.configureEach {
+        outputDirectory.set(rootDir.resolve("docs/api"))
+    }
 }
 
 java {
