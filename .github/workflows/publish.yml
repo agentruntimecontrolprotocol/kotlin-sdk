@@ -49,7 +49,7 @@ jobs:
 
       - name: Validate Gradle wrapper
         # gradle/actions/wrapper-validation v4.4.4
-        uses: gradle/actions/wrapper-validation@ac638b010cf58a27ee6c972d7336334ccaf61c96
+        uses: gradle/actions/wrapper-validation@5e2ebd065dc2488b7a6ad670704656cbbe1e8f60
 
       - name: Build and test
         run: ./gradlew --no-daemon assemble test
