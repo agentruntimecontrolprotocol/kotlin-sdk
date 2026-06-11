@@ -35,7 +35,7 @@ permissions:
 jobs:
   test:
     name: test (JDK ${{ matrix.java }})
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, arm64, arcp]
     strategy:
       fail-fast: false
       matrix:
