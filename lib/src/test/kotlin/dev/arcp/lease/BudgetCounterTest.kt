@@ -19,6 +19,21 @@ class BudgetCounterTest :
                 BudgetCounter.Outcome.Exhausted(Currency("USD"))
         }
 
+        "over-spend decrements to zero and reports exhausted (§9.6)" {
+            val counter = BudgetCounter(CostBudget(listOf(BudgetAmount.parse("USD:5.00"))))
+            counter.consume(BudgetAmount.parse("USD:7.00")) shouldBe
+                BudgetCounter.Outcome.Exhausted(Currency("USD"))
+            counter.remaining(Currency("USD")) shouldBe BigDecimal.ZERO
+        }
+
+        "subsequent spends after over-spend keep reporting exhausted (§9.6)" {
+            val counter = BudgetCounter(CostBudget(listOf(BudgetAmount.parse("USD:5.00"))))
+            counter.consume(BudgetAmount.parse("USD:7.00"))
+            counter.consume(BudgetAmount.parse("USD:0.01")) shouldBe
+                BudgetCounter.Outcome.Exhausted(Currency("USD"))
+            counter.remaining(Currency("USD")) shouldBe BigDecimal.ZERO
+        }
+
         "rejects negative amount" {
             val counter = BudgetCounter(CostBudget(listOf(BudgetAmount.parse("USD:1.00"))))
             shouldThrow<IllegalArgumentException> {
