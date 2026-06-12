@@ -3,7 +3,7 @@ package dev.arcp.runtime
 import dev.arcp.error.ErrorCode
 import dev.arcp.ids.SessionId
 import dev.arcp.messages.Capabilities
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Authoritative session state machine (RFC §8 / §9).

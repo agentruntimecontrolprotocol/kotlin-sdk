@@ -10,8 +10,6 @@ import dev.arcp.ids.SubscriptionId
 import dev.arcp.ids.TraceId
 import dev.arcp.json.arcpJson
 import dev.arcp.messages.MessageType
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -28,6 +26,8 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Canonical ARCP message envelope (RFC §6.1).

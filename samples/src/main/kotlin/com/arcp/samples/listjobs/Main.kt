@@ -6,7 +6,7 @@ import dev.arcp.messages.JobListEntry
 import dev.arcp.messages.JobListFilter
 import dev.arcp.runtime.InMemoryJobInventory
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 public fun main(): Unit = runBlocking {
     val inventory = InMemoryJobInventory()

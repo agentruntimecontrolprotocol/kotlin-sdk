@@ -2,7 +2,7 @@ package dev.arcp.runtime
 
 import dev.arcp.ids.ArtifactId
 import dev.arcp.ids.SessionId
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Parameter object for [ArtifactStore.put].

@@ -2,7 +2,7 @@ package dev.arcp.error
 
 import dev.arcp.ids.LeaseId
 import dev.arcp.ids.PermissionName
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Base type for every error that originates inside the ARCP runtime or client.

@@ -9,7 +9,7 @@ import dev.arcp.ids.LeaseId
 import dev.arcp.ids.PermissionName
 import dev.arcp.lease.ModelUseLease
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 /**
  * Demonstrates three categories of lease violation (RFC §9.5):

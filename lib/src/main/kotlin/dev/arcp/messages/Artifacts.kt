@@ -1,9 +1,9 @@
 package dev.arcp.messages
 
 import dev.arcp.ids.ArtifactId
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 
 /**
  * Canonical artifact pointer (RFC §16.1). Embedded inside payloads where a

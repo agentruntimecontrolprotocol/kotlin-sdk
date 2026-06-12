@@ -11,7 +11,7 @@ import dev.arcp.trace.currentTrace
 import dev.arcp.trace.withSpan
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 

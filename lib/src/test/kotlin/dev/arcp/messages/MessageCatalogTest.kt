@@ -19,10 +19,10 @@ import dev.arcp.ids.ToolName
 import dev.arcp.json.arcpJson
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlin.time.Instant
 
 class MessageCatalogTest :
     StringSpec({
