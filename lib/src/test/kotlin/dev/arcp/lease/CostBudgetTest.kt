@@ -17,6 +17,28 @@ class CostBudgetTest :
             }
         }
 
+        "rejects negative amount (§9.6)" {
+            shouldThrow<IllegalArgumentException> {
+                BudgetAmount.parse("USD:-5.00")
+            }
+        }
+
+        "rejects explicit plus sign (§9.6)" {
+            shouldThrow<IllegalArgumentException> {
+                BudgetAmount.parse("USD:+5")
+            }
+        }
+
+        "rejects scientific notation (§9.6)" {
+            shouldThrow<IllegalArgumentException> {
+                BudgetAmount.parse("USD:1e3")
+            }
+        }
+
+        "accepts plain integer credits amount" {
+            BudgetAmount.parse("credits:1000").render() shouldBe "credits:1000"
+        }
+
         "rejects duplicate currency in CostBudget" {
             shouldThrow<IllegalArgumentException> {
                 CostBudget(

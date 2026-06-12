@@ -32,13 +32,24 @@ public data class BudgetAmount(
     public fun render(): String = "${currency.code}:${value.toPlainString()}"
 
     public companion object {
-        /** Parses a `currency:decimal` budget amount. */
+        /**
+         * §9.6 amount grammar: `decimal ::= digits ( "." digits )?` — no
+         * sign, no exponent, no leading/trailing dot.
+         */
+        private val DECIMAL_GRAMMAR = Regex("^[0-9]+(\\.[0-9]+)?$")
+
+        /** Parses a `currency:decimal` budget amount (RFC v1.1 §9.6). */
         public fun parse(value: String): BudgetAmount {
             val split = value.split(":", limit = 2)
             require(split.size == 2 && split[0].isNotBlank() && split[1].isNotBlank()) {
                 "budget amount must use currency:decimal"
             }
-            return BudgetAmount(Currency(split[0]), split[1].toBigDecimal())
+            val decimal = split[1]
+            require(DECIMAL_GRAMMAR.matches(decimal)) {
+                "budget amount decimal must match digits(.digits)? without sign or exponent: " +
+                    "'$decimal'"
+            }
+            return BudgetAmount(Currency(split[0]), decimal.toBigDecimal())
         }
     }
 }
