@@ -9,12 +9,19 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 class EventLogTest :
     StringSpec({
@@ -113,6 +120,41 @@ class EventLogTest :
                         expiresAt = Instant.parse("2000-01-01T00:00:00Z"),
                     )
                     log.lookupIdempotent("p", "k") shouldBe null
+                }
+            }
+        }
+
+        "concurrent append progresses while a slow replay collector is mid-stream" {
+            runBlocking {
+                EventLog.openInMemory().use { log ->
+                    val sess = SessionId("sess_concurrent")
+                    repeat(5) { log.append(envelope("seed_$it", sess)) }
+
+                    val collectorEntered = CompletableDeferred<Unit>()
+                    val collectorReleased = CompletableDeferred<Unit>()
+
+                    val collector =
+                        launch(Dispatchers.IO) {
+                            log.replay(sess).collect {
+                                if (!collectorEntered.isCompleted) {
+                                    collectorEntered.complete(Unit)
+                                }
+                                // Stall the collector to prove the connection
+                                // lock is NOT held across emit.
+                                collectorReleased.await()
+                            }
+                        }
+
+                    collectorEntered.await()
+                    // Must not block while the slow collector is mid-stream.
+                    val seq =
+                        withTimeout(5.seconds) {
+                            log.append(envelope("during_replay", sess))
+                        }
+                    (seq > 0) shouldBe true
+
+                    collectorReleased.complete(Unit)
+                    collector.join()
                 }
             }
         }

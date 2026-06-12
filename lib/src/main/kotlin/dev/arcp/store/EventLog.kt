@@ -105,35 +105,52 @@ public class EventLog private constructor(
         sessionId: SessionId,
         afterMessageId: MessageId? = null,
     ): Flow<Envelope> = flow {
-        val cursorSeq =
-            if (afterMessageId == null) {
-                -1L
-            } else {
-                findSeq(sessionId, afterMessageId)
-                    ?: throw ARCPException.DataLoss(
-                        "no message ${afterMessageId.value} for session ${sessionId.value}",
-                    )
+        // Resolve the cursor and read all matching rows while holding the
+        // connection lock, then release it *before* emitting. JDBC connections
+        // are not safe for concurrent use, so every connection touch must be
+        // serialized (#48); but `emit` suspends until the (possibly slow)
+        // downstream collector processes the value, and `Mutex` is not
+        // reentrant — holding the lock across `emit` would stall every other
+        // EventLog operation and could deadlock if the collector re-enters
+        // the log. Buffering decoded envelopes keeps both invariants.
+        val envelopes =
+            connectionLock.withLock {
+                val cursorSeq =
+                    if (afterMessageId == null) {
+                        -1L
+                    } else {
+                        findSeq(sessionId, afterMessageId)
+                            ?: throw ARCPException.DataLoss(
+                                "no message ${afterMessageId.value} for session ${sessionId.value}",
+                            )
+                    }
+                collectRows(sessionId, cursorSeq)
             }
+        envelopes.forEach { emit(it) }
+    }.flowOn(Dispatchers.IO)
 
+    private fun collectRows(
+        sessionId: SessionId,
+        cursorSeq: Long,
+    ): List<Envelope> {
         val sql =
             """
             SELECT body_json FROM arcp_envelope
             WHERE session_id = ? AND seq > ?
             ORDER BY seq ASC
             """.trimIndent()
-        connectionLock.withLock {
-            connection.prepareStatement(sql).use { ps ->
-                ps.setString(1, sessionId.value)
-                ps.setLong(2, cursorSeq)
-                ps.executeQuery().use { rs ->
+        return connection.prepareStatement(sql).use { ps ->
+            ps.setString(1, sessionId.value)
+            ps.setLong(2, cursorSeq)
+            ps.executeQuery().use { rs ->
+                buildList {
                     while (rs.next()) {
-                        val body = rs.getString(1)
-                        emit(arcpJson.decodeFromString(Envelope.serializer(), body))
+                        add(arcpJson.decodeFromString(Envelope.serializer(), rs.getString(1)))
                     }
                 }
             }
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
     /**
      * Returns the previously-recorded outcome for [principal]+[idempotencyKey],
