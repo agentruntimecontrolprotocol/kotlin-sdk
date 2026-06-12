@@ -7,11 +7,13 @@ import dev.arcp.envelope.Envelope
 import dev.arcp.error.ErrorCode
 import dev.arcp.ids.MessageId
 import dev.arcp.ids.TraceId
+import dev.arcp.json.arcpJson
 import dev.arcp.messages.Capabilities
 import dev.arcp.messages.JobAccepted
 import dev.arcp.messages.JobCompleted
 import dev.arcp.messages.JobSubmit
 import dev.arcp.messages.Nack
+import dev.arcp.messages.SessionJobs
 import dev.arcp.runtime.ARCPRuntime
 import dev.arcp.runtime.AgentRegistry
 import dev.arcp.transport.MemoryTransport
@@ -20,6 +22,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldNotContain
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonArray
@@ -221,6 +224,60 @@ class ProvisionedCredentialFlowTest :
 
                 // Inventory should hold only the accepted job.
                 client.listJobs(session.sessionId).jobs shouldHaveSize 1
+
+                runtime.close()
+                client.close()
+            }
+        }
+
+        "session.jobs never re-emits the provisioned credential secret (§14)" {
+            runTest {
+                val registry =
+                    AgentRegistry().also { it.register("worker", "1.0.0", default = true) }
+                val provisioner = InMemoryCredentialProvisioner()
+                val (clientTransport, serverTransport) = MemoryTransport.pair()
+                val runtime =
+                    ARCPRuntime(
+                        supportedCapabilities =
+                            Capabilities(durableJobs = true, provisionedCredentials = true),
+                        bearerAuth = StaticBearerAuth(mapOf("good-token" to "user@example")),
+                        agentRegistry = registry,
+                        credentialProvisioner = provisioner,
+                    )
+                runtime.accept(serverTransport)
+                val client =
+                    ARCPClient(
+                        transport = clientTransport,
+                        auth = ARCPClient.bearer("good-token"),
+                        client = ARCPClient.defaultClientInfo("tester"),
+                        capabilities =
+                            Capabilities(durableJobs = true, provisionedCredentials = true),
+                    )
+                val session = client.open()
+
+                val submitId =
+                    client.send(
+                        session.sessionId,
+                        JobSubmit(
+                            agent = "worker",
+                            leaseRequest =
+                                JsonObject(
+                                    mapOf(
+                                        "cost.budget" to
+                                            JsonArray(listOf(JsonPrimitive("USD:1.00"))),
+                                    ),
+                                ),
+                        ),
+                    )
+                val accepted =
+                    client.receive().first { it.correlationId == submitId }.payload as JobAccepted
+                val secret = accepted.credentials!!.single().value
+
+                val listed: SessionJobs = client.listJobs(session.sessionId)
+                listed.jobs shouldHaveSize 1
+                val wire = arcpJson.encodeToString(SessionJobs.serializer(), listed)
+                wire shouldNotContain secret
+                wire shouldNotContain "\"credentials\""
 
                 runtime.close()
                 client.close()

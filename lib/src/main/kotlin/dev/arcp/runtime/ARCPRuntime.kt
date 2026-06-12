@@ -324,6 +324,9 @@ public class ARCPRuntime(
                 modelUse = modelUse,
                 expiresAt = expiresAt,
             )
+        // The provisioned credential secret is surfaced only on job.accepted
+        // (§9.8.2) and is intentionally NOT persisted in the introspection
+        // inventory nor re-emitted on session.jobs (§14).
         jobInventory.record(
             JobListEntry(
                 jobId = jobId,
@@ -333,7 +336,6 @@ public class ARCPRuntime(
                 parentJobId = null,
                 createdAt = acceptedAt,
                 traceId = env.traceId,
-                credentials = credentials.ifEmpty { null },
             ),
             ownerPrincipal = principal,
         )

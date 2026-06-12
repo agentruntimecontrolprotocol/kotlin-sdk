@@ -1,6 +1,5 @@
 package dev.arcp.messages
 
-import dev.arcp.credentials.Credential
 import dev.arcp.error.ErrorCode
 import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
@@ -303,7 +302,6 @@ public data class JobListEntry(
     val traceId: TraceId? = null,
     @SerialName("last_event_seq")
     val lastEventSeq: Long? = null,
-    val credentials: List<Credential>? = null,
 )
 
 /** `session.jobs` — response to [SessionListJobs]. */
