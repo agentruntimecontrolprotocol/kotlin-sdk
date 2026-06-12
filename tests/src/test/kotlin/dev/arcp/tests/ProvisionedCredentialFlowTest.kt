@@ -4,12 +4,14 @@ import dev.arcp.auth.StaticBearerAuth
 import dev.arcp.client.ARCPClient
 import dev.arcp.credentials.InMemoryCredentialProvisioner
 import dev.arcp.envelope.Envelope
+import dev.arcp.error.ErrorCode
 import dev.arcp.ids.MessageId
 import dev.arcp.ids.TraceId
 import dev.arcp.messages.Capabilities
 import dev.arcp.messages.JobAccepted
 import dev.arcp.messages.JobCompleted
 import dev.arcp.messages.JobSubmit
+import dev.arcp.messages.Nack
 import dev.arcp.runtime.ARCPRuntime
 import dev.arcp.runtime.AgentRegistry
 import dev.arcp.transport.MemoryTransport
@@ -158,6 +160,67 @@ class ProvisionedCredentialFlowTest :
                     ?.jsonPrimitive
                     ?.content shouldBe expiresAt
                 acceptedEnvelope.traceId shouldBe traceId
+
+                runtime.close()
+                client.close()
+            }
+        }
+
+        "rejects past and non-UTC lease expires_at; accepts future UTC (§9.5)" {
+            runTest {
+                val registry =
+                    AgentRegistry().also { it.register("worker", "1.0.0", default = true) }
+                val (clientTransport, serverTransport) = MemoryTransport.pair()
+                val runtime =
+                    ARCPRuntime(
+                        supportedCapabilities = Capabilities(durableJobs = true),
+                        bearerAuth = StaticBearerAuth(mapOf("good-token" to "user@example")),
+                        agentRegistry = registry,
+                    )
+                runtime.accept(serverTransport)
+                val client =
+                    ARCPClient(
+                        transport = clientTransport,
+                        auth = ARCPClient.bearer("good-token"),
+                        client = ARCPClient.defaultClientInfo("tester"),
+                        capabilities = Capabilities(durableJobs = true),
+                    )
+                val session = client.open()
+
+                suspend fun submitWithExpiry(expiry: String): Envelope {
+                    val id = MessageId.random()
+                    clientTransport.send(
+                        Envelope(
+                            id = id,
+                            sessionId = session.sessionId,
+                            payload =
+                                JobSubmit(
+                                    agent = "worker",
+                                    leaseConstraints =
+                                        JsonObject(
+                                            mapOf("expires_at" to JsonPrimitive(expiry)),
+                                        ),
+                                ),
+                        ),
+                    )
+                    return client.receive().first { it.correlationId == id }
+                }
+
+                // Past timestamp → rejected, no job recorded.
+                val past = submitWithExpiry("2000-01-01T00:00:00Z").payload
+                (past as Nack).code shouldBe ErrorCode.INVALID_ARGUMENT
+
+                // Non-UTC offset → rejected.
+                val offset = submitWithExpiry("2999-01-01T00:00:00+05:00").payload
+                (offset as Nack).code shouldBe ErrorCode.INVALID_ARGUMENT
+
+                // Future UTC → accepted unchanged.
+                val future = submitWithExpiry("2999-01-01T00:00:00Z").payload
+                (future as JobAccepted).lease!!.expiresAt.toString() shouldBe
+                    "2999-01-01T00:00:00Z"
+
+                // Inventory should hold only the accepted job.
+                client.listJobs(session.sessionId).jobs shouldHaveSize 1
 
                 runtime.close()
                 client.close()

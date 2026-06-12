@@ -598,11 +598,38 @@ public class ARCPRuntime(
         return values.takeIf { it.isNotEmpty() }?.let(::ModelUseLease)
     }
 
-    private fun parseExpiresAt(leaseConstraints: JsonObject?): Instant? = leaseConstraints
-        ?.get("expires_at")
-        ?.jsonPrimitive
-        ?.contentOrNull
-        ?.let(Instant::parse)
+    private fun parseExpiresAt(leaseConstraints: JsonObject?): Instant? {
+        val raw =
+            leaseConstraints
+                ?.get("expires_at")
+                ?.jsonPrimitive
+                ?.contentOrNull
+                ?: return null
+        // §9.5: expires_at is ISO 8601, MUST be UTC (`Z` suffix), and MUST be
+        // in the future. Offsets and past/invalid values are INVALID_REQUEST.
+        if (!raw.endsWith("Z")) {
+            throw ARCPException.InvalidArgument(
+                "expires_at must be UTC with a 'Z' suffix",
+                "expires_at",
+            )
+        }
+        val parsed =
+            try {
+                Instant.parse(raw)
+            } catch (e: IllegalArgumentException) {
+                throw ARCPException.InvalidArgument(
+                    "expires_at is not a valid ISO 8601 timestamp: ${e.message}",
+                    "expires_at",
+                )
+            }
+        if (parsed <= Clock.System.now()) {
+            throw ARCPException.InvalidArgument(
+                "expires_at must be in the future",
+                "expires_at",
+            )
+        }
+        return parsed
+    }
 
     private fun leaseSummary(
         lease: CostBudget?,
