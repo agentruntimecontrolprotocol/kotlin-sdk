@@ -1795,19 +1795,25 @@ public final class dev/arcp/messages/Interrupt$Companion {
 
 public final class dev/arcp/messages/JobAccepted : dev/arcp/messages/MessageType {
 	public static final field Companion Ldev/arcp/messages/JobAccepted$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Lkotlinx/serialization/json/JsonObject;Ljava/util/Map;Lkotlinx/datetime/Instant;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Lkotlinx/serialization/json/JsonObject;Ljava/util/Map;Lkotlinx/datetime/Instant;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-vE1LxjM ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lkotlinx/datetime/Instant;
-	public final fun component4 ()Ljava/util/List;
-	public final fun copy-cTIbTjQ (Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;)Ldev/arcp/messages/JobAccepted;
-	public static synthetic fun copy-cTIbTjQ$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;Ljava/lang/String;Lkotlinx/datetime/Instant;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
+	public final fun component3 ()Ldev/arcp/messages/JobListLease;
+	public final fun component4 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Lkotlinx/datetime/Instant;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy-27DMSx4 (Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Lkotlinx/serialization/json/JsonObject;Ljava/util/Map;Lkotlinx/datetime/Instant;Ljava/util/List;)Ldev/arcp/messages/JobAccepted;
+	public static synthetic fun copy-27DMSx4$default (Ldev/arcp/messages/JobAccepted;Ljava/lang/String;Ljava/lang/String;Ldev/arcp/messages/JobListLease;Lkotlinx/serialization/json/JsonObject;Ljava/util/Map;Lkotlinx/datetime/Instant;Ljava/util/List;ILjava/lang/Object;)Ldev/arcp/messages/JobAccepted;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAcceptedAt ()Lkotlinx/datetime/Instant;
 	public final fun getAgent ()Ljava/lang/String;
+	public final fun getBudget ()Ljava/util/Map;
 	public final fun getCredentials ()Ljava/util/List;
 	public final fun getJobId-vE1LxjM ()Ljava/lang/String;
+	public final fun getLease ()Ldev/arcp/messages/JobListLease;
+	public final fun getLeaseConstraints ()Lkotlinx/serialization/json/JsonObject;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

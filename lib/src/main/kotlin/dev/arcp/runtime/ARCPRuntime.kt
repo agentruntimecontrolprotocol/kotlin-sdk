@@ -312,6 +312,9 @@ public class ARCPRuntime(
             JobAccepted(
                 jobId = jobId,
                 agent = resolved.render(),
+                lease = leaseSummary(lease, modelUse, expiresAt),
+                leaseConstraints = request.leaseConstraints,
+                budget = lease?.budgets?.associate { it.currency.code to it.value.toPlainString() },
                 acceptedAt = acceptedAt,
                 credentials = credentials.ifEmpty { null },
             )
@@ -339,6 +342,7 @@ public class ARCPRuntime(
                 id = MessageId.random(),
                 sessionId = env.sessionId,
                 jobId = jobId,
+                traceId = env.traceId,
                 correlationId = env.id,
                 payload = accepted,
             ),

@@ -48,13 +48,20 @@ public data class ToolError(
     val cause: JsonElement? = null,
 ) : MessageType
 
-/** `job.accepted` — runtime accepted a job command (RFC §10.2). */
+/** `job.accepted` — runtime accepted a job command (RFC v1.1 §7.1). */
 @Serializable
 @SerialName("job.accepted")
 public data class JobAccepted(
     @SerialName("job_id")
     val jobId: JobId,
     val agent: String? = null,
+    /** Effective lease echoed back to the client (§7.1). */
+    val lease: JobListLease? = null,
+    /** Lease constraints from the submit, echoed verbatim (§7.1). */
+    @SerialName("lease_constraints")
+    val leaseConstraints: JsonObject? = null,
+    /** Initial budget counters (currency → amount) when `cost.budget` is in the lease (§7.1). */
+    val budget: Map<String, String>? = null,
     @SerialName("accepted_at")
     val acceptedAt: Instant? = null,
     val credentials: List<Credential>? = null,
