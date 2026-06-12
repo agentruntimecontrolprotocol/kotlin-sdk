@@ -66,6 +66,13 @@ class ResultChunkAssemblerTest :
             }
         }
 
+        "rejects a stream that does not start at chunk_seq 0 (#81)" {
+            val assembler = ResultChunkAssembler()
+            shouldThrow<ARCPException.OutOfRange> {
+                assembler.accept(chunk("res", 1, "lost-first-chunk", more = false))
+            }
+        }
+
         "rejects total size exceeding cap" {
             val assembler = ResultChunkAssembler(maxAssembledSize = 8)
             assembler.accept(chunk("res", 0, "12345", more = true))

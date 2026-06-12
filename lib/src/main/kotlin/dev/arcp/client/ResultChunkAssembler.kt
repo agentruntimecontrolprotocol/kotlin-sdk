@@ -90,12 +90,20 @@ public class ResultChunkAssembler(
             private set
 
         fun validateChunk(chunk: JobResultChunk) {
-            lastSeq?.let { previous ->
-                if (chunk.chunkSeq != previous + 1L) {
+            val previous = lastSeq
+            if (previous == null) {
+                // §8.4: chunk_seq is a 0-based index. A stream that does not
+                // begin at chunk 0 has lost its prefix; assembling it would
+                // silently truncate the result, so reject it outright.
+                if (chunk.chunkSeq != 0L) {
                     throw ARCPException.OutOfRange(
-                        "result_chunk sequence must be strictly monotonic",
+                        "result_chunk stream must start at chunk_seq 0",
                     )
                 }
+            } else if (chunk.chunkSeq != previous + 1L) {
+                throw ARCPException.OutOfRange(
+                    "result_chunk sequence must be strictly monotonic",
+                )
             }
             firstEncoding?.let { first ->
                 if (first != chunk.encoding) {
