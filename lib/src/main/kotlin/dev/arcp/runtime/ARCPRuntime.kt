@@ -16,7 +16,9 @@ import dev.arcp.error.ARCPException
 import dev.arcp.error.ErrorCode
 import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
+import dev.arcp.ids.PermissionName
 import dev.arcp.ids.SessionId
+import dev.arcp.json.arcpJson
 import dev.arcp.lease.BudgetAmount
 import dev.arcp.lease.BudgetCounter
 import dev.arcp.lease.BudgetRegistry
@@ -123,6 +125,14 @@ public class ARCPRuntime(
         ConcurrentHashMap()
     private val jobs: ConcurrentHashMap<JobId, RuntimeJob> = ConcurrentHashMap()
 
+    /**
+     * Idempotency outcomes keyed by `(principal, idempotency_key)` (§7.2).
+     * A repeated key with identical parameters replays the stored
+     * `job.accepted`; a conflicting one yields `DUPLICATE_KEY`.
+     */
+    private val idempotency: ConcurrentHashMap<IdempotencyKey, StoredSubmission> =
+        ConcurrentHashMap()
+
     init {
         credentialProvisioner?.let { provisioner ->
             scope.launch {
@@ -155,12 +165,25 @@ public class ARCPRuntime(
         transport.send(outcome.reply)
 
         if (outcome.session is SessionState.Authenticated) {
-            sessions[outcome.session.sessionId] = outcome.session
-            runDispatchLoop(transport)
+            val sessionId = outcome.session.sessionId
+            sessions[sessionId] = outcome.session
+            // Release the session entry whenever the connection ends —
+            // whether via session.close, a swallowed dispatch-loop error, or
+            // a silent transport drop. Without this the map grows without
+            // bound as short or dropped connections accumulate (#79).
+            try {
+                runDispatchLoop(transport)
+            } finally {
+                sessions.remove(sessionId)
+            }
         } else {
             transport.close()
         }
     }
+
+    /** Number of authenticated sessions currently retained (for tests; #79). */
+    internal val activeSessionCount: Int
+        get() = sessions.size
 
     private suspend fun runDispatchLoop(transport: Transport) {
         try {
@@ -282,24 +305,10 @@ public class ARCPRuntime(
         transport: Transport,
     ) {
         val principal = principalFor(env.sessionId)
-        val resolved =
-            try {
-                agentRegistry.resolve(
-                    dev.arcp.messages.AgentRef
-                        .parse(request.agent),
-                )
-            } catch (e: ARCPException.AgentVersionNotAvailable) {
-                transport.send(nack(env, e))
-                return
-            } catch (e: ARCPException.NotFound) {
-                transport.send(nack(env, e))
-                return
-            } catch (e: IllegalArgumentException) {
-                transport.send(
-                    nack(env, ARCPException.InvalidArgument(e.message ?: "invalid agent", "agent")),
-                )
-                return
-            }
+        request.idempotencyKey?.let { key ->
+            if (replayIdempotent(env, request, principal, key, transport)) return
+        }
+        val resolved = resolveAgentOrNack(env, request, transport) ?: return
 
         val jobId = JobId.random()
         val lease = parseCostBudget(request.leaseRequest)
@@ -320,6 +329,7 @@ public class ARCPRuntime(
             )
         jobs[jobId] =
             RuntimeJob(
+                ownerPrincipal = principal,
                 costBudget = lease,
                 modelUse = modelUse,
                 expiresAt = expiresAt,
@@ -339,6 +349,10 @@ public class ARCPRuntime(
             ),
             ownerPrincipal = principal,
         )
+        request.idempotencyKey?.let { key ->
+            idempotency[IdempotencyKey(principal, key)] =
+                StoredSubmission(fingerprint(request), jobId, accepted)
+        }
         transport.send(
             Envelope(
                 id = MessageId.random(),
@@ -351,12 +365,90 @@ public class ARCPRuntime(
         )
     }
 
+    /**
+     * Resolves the submitted agent reference, sending a correlated `Nack` and
+     * returning `null` when the agent (or pinned version) is not available.
+     */
+    private suspend fun resolveAgentOrNack(
+        env: Envelope,
+        request: JobSubmit,
+        transport: Transport,
+    ): dev.arcp.messages.AgentRef? = try {
+        agentRegistry.resolve(
+            dev.arcp.messages.AgentRef
+                .parse(request.agent),
+        )
+    } catch (e: ARCPException.AgentVersionNotAvailable) {
+        transport.send(nack(env, e))
+        null
+    } catch (e: ARCPException.NotFound) {
+        transport.send(nack(env, e))
+        null
+    } catch (e: IllegalArgumentException) {
+        transport.send(
+            nack(env, ARCPException.InvalidArgument(e.message ?: "invalid agent", "agent")),
+        )
+        null
+    }
+
+    /**
+     * §7.2 idempotency: when a prior outcome exists for `(principal, key)`,
+     * replays the stored `job.accepted` for identical parameters or rejects
+     * with `DUPLICATE_KEY` (mapped to `ALREADY_EXISTS`) for conflicting ones.
+     * Returns `true` when the submission was fully handled here.
+     */
+    private suspend fun replayIdempotent(
+        env: Envelope,
+        request: JobSubmit,
+        principal: String,
+        key: String,
+        transport: Transport,
+    ): Boolean {
+        val prior = idempotency[IdempotencyKey(principal, key)] ?: return false
+        if (prior.fingerprint != fingerprint(request)) {
+            transport.send(
+                nack(
+                    env,
+                    ARCPException.AlreadyExists(
+                        "idempotency_key '$key' was reused with conflicting parameters " +
+                            "(DUPLICATE_KEY)",
+                    ),
+                ),
+            )
+            return true
+        }
+        transport.send(
+            Envelope(
+                id = MessageId.random(),
+                sessionId = env.sessionId,
+                jobId = prior.jobId,
+                traceId = env.traceId,
+                correlationId = env.id,
+                payload = prior.accepted,
+            ),
+        )
+        return true
+    }
+
+    /**
+     * Stable fingerprint of a submission's effective parameters, excluding
+     * the idempotency key itself, used to detect conflicting reuse (§7.2).
+     */
+    private fun fingerprint(request: JobSubmit): String =
+        arcpJson.encodeToString(JobSubmit.serializer(), request.copy(idempotencyKey = null))
+
     private suspend fun handleMetric(
         env: Envelope,
         metric: Metric,
         transport: Transport,
     ) {
         val jobId = env.jobId ?: return
+        // A metric must not poison another principal's budget (§14): only the
+        // job's owner may report cost against it.
+        if (!authorizedForJob(env, jobId)) {
+            transport.send(nack(env, permissionDenied("job.metric", jobId.value)))
+            return
+        }
         if (!metric.name.startsWith("cost.") ||
             metric.name == StandardMetrics.COST_BUDGET_REMAINING
         ) {
@@ -397,6 +489,14 @@ public class ARCPRuntime(
             return
         }
         val jobId = JobId(request.targetId)
+        // §7.6/§14: cancellation is reserved for the submitting principal; a
+        // state subscription MUST NOT confer cancel authority. Reject any
+        // other principal (and unknown jobs) without terminating the job or
+        // revoking its credentials, and without leaking job existence.
+        if (jobs[jobId]?.ownerPrincipal != principalFor(env.sessionId)) {
+            transport.send(nack(env, permissionDenied("job.cancel", request.targetId)))
+            return
+        }
         terminalCleanup(jobId, "cancelled")
         transport.send(reply(env, CancelAccepted(targetId = request.targetId)))
     }
@@ -406,7 +506,16 @@ public class ARCPRuntime(
         status: String,
         transport: Transport,
     ) {
-        env.jobId?.let { terminalCleanup(it, status) }
+        val jobId = env.jobId
+        if (jobId != null) {
+            // Only the owning principal may drive a job to a terminal state
+            // (§14); reject foreign terminal events without mutating the job.
+            if (!authorizedForJob(env, jobId)) {
+                transport.send(nack(env, permissionDenied("job.$status", jobId.value)))
+                return
+            }
+            terminalCleanup(jobId, status)
+        }
         transport.send(
             reply(
                 env,
@@ -414,6 +523,29 @@ public class ARCPRuntime(
             ),
         )
     }
+
+    /**
+     * Authorizes a job-scoped operation against the session principal (§14).
+     * An active job is accessible only to its owner; a job that is not (or no
+     * longer) active is treated as accessible so idempotent terminal/metric
+     * cleanup for the owner is preserved.
+     */
+    private fun authorizedForJob(
+        env: Envelope,
+        jobId: JobId,
+    ): Boolean {
+        val job = jobs[jobId] ?: return true
+        return job.ownerPrincipal == principalFor(env.sessionId)
+    }
+
+    private fun permissionDenied(
+        action: String,
+        resource: String,
+    ): ARCPException = ARCPException.PermissionDenied(
+        permission = PermissionName(action),
+        resource = resource,
+        message = "principal is not authorized for $action on $resource",
+    )
 
     private suspend fun issueCredentials(
         jobId: JobId,
@@ -811,6 +943,9 @@ public class ARCPRuntime(
                 payload = SessionEvicted(code = ErrorCode.CANCELLED, reason = reason),
             ),
         )
+        // Drop the retained session state on eviction so an evicted session
+        // does not linger in the map (#79).
+        sessions.remove(sessionId)
         transport.close()
     }
 
@@ -824,10 +959,24 @@ public class ARCPRuntime(
     )
 
     private data class RuntimeJob(
+        val ownerPrincipal: String,
         val parentJobId: JobId? = null,
         val costBudget: CostBudget? = null,
         val modelUse: ModelUseLease? = null,
         val expiresAt: Instant? = null,
+    )
+
+    /** Composite idempotency key scoped per principal (§7.2). */
+    private data class IdempotencyKey(
+        val principal: String,
+        val key: String,
+    )
+
+    /** Stored outcome for a prior idempotent submission (§7.2). */
+    private data class StoredSubmission(
+        val fingerprint: String,
+        val jobId: JobId,
+        val accepted: JobAccepted,
     )
 
     public companion object {
