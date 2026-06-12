@@ -15,7 +15,7 @@ import dev.arcp.messages.SessionLease
 import dev.arcp.messages.SessionOpen
 import dev.arcp.messages.SessionRejected
 import dev.arcp.messages.SessionUnauthenticated
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlin.time.Duration
 
 /** Result of the session handshake: the resulting state and the reply to send. */

@@ -18,7 +18,7 @@ import dev.arcp.messages.SessionOpen
 import dev.arcp.messages.JobSubmit
 import dev.arcp.transport.Transport
 import kotlinx.coroutines.flow.collect
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 
 // ---------------------------------------------------------------------------

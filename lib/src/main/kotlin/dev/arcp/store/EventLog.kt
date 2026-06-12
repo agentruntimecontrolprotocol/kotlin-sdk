@@ -170,9 +170,9 @@ public class EventLog private constructor(
             ps.setString(2, idempotencyKey)
             ps.executeQuery().use { rs ->
                 if (!rs.next()) return@use null
-                val expires = kotlinx.datetime.Instant.parse(rs.getString(2))
+                val expires = kotlin.time.Instant.parse(rs.getString(2))
                 if (expires <
-                    kotlinx.datetime.Clock.System
+                    kotlin.time.Clock.System
                         .now()
                 ) {
                     return@use null
@@ -191,7 +191,7 @@ public class EventLog private constructor(
         principal: String,
         idempotencyKey: String,
         outcome: JsonElement,
-        expiresAt: kotlinx.datetime.Instant,
+        expiresAt: kotlin.time.Instant,
     ) {
         withIo {
             val sql =
@@ -206,7 +206,7 @@ public class EventLog private constructor(
                 ps.setString(3, outcome.toString())
                 ps.setString(
                     4,
-                    kotlinx.datetime.Clock.System
+                    kotlin.time.Clock.System
                         .now()
                         .toString(),
                 )

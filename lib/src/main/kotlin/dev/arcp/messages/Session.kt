@@ -5,9 +5,9 @@ import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
 import dev.arcp.ids.SessionId
 import dev.arcp.ids.TraceId
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 
 /**
  * Heartbeat-recovery policy advertised in [Capabilities] (RFC §10.3).

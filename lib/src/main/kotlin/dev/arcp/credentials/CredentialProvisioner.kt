@@ -3,7 +3,7 @@ package dev.arcp.credentials
 import dev.arcp.ids.JobId
 import dev.arcp.lease.CostBudget
 import dev.arcp.lease.ModelUseLease
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /** Issues and revokes lease-bound credentials for accepted jobs. */
 public interface CredentialProvisioner {

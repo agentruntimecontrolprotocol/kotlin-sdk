@@ -5,8 +5,8 @@ import dev.arcp.ids.SessionId
 import dev.arcp.lease.CostBudget
 import dev.arcp.lease.ModelUseLease
 import dev.arcp.messages.JobAccepted
-import kotlinx.datetime.Instant
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Instant
 
 /** Active (non-terminal) job state retained by the runtime. */
 internal data class RuntimeJob(

@@ -15,8 +15,8 @@ import dev.arcp.messages.JobListEntry
 import dev.arcp.messages.JobSubmit
 import dev.arcp.messages.SessionListJobs
 import dev.arcp.transport.Transport
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Handles the client-driven job commands `session.list_jobs` and `job.submit`,

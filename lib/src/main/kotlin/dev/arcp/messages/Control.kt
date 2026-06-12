@@ -5,10 +5,10 @@ import dev.arcp.ids.JobId
 import dev.arcp.ids.MessageId
 import dev.arcp.ids.SessionId
 import dev.arcp.ids.StreamId
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import kotlin.time.Instant
 
 /**
  * `ping` — liveness probe (RFC §6.2 Control). Receivers reply with [Pong].
