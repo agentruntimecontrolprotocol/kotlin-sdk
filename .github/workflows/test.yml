@@ -57,7 +57,7 @@ jobs:
 
       - name: Validate Gradle wrapper
         # gradle/actions/wrapper-validation v4.4.4
-        uses: gradle/actions/wrapper-validation@5e2ebd065dc2488b7a6ad670704656cbbe1e8f60
+        uses: gradle/actions/wrapper-validation@3f131e8634966bd73d06cc69884922b02e6faf92
 
       # Scoped to lib/cli/tests. samples/ contains demo packages with
       # underscored names and filenames that intentionally don't follow the
