@@ -23,7 +23,11 @@ jobs:
       matrix:
         include:
           - language: java-kotlin
-            build-mode: autobuild
+            # Buildless extraction: the autobuilder compiles via the Kotlin
+            # daemon, which fails whenever the project's Kotlin version is newer
+            # than the bundled CodeQL extractor supports (e.g. Kotlin 2.4.0 on
+            # CodeQL 2.25.6). `none` decouples analysis from the toolchain.
+            build-mode: none
 
     steps:
       - name: Checkout repository
